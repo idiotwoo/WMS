@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+ 
+ <configuration>
+ 	<plugins>
+ 		<plugin interceptor="com.github.pagehelper.PageHelper">
+  			<property name="dialog" value="mysql"/>
+  			<property name="offsetAsPage" value="false"/>
+  			<property name="rowBoundsWithCount" value="true"/>
+  			<property name="pageSizeZero" value="true"/>
+  			<property name="reasonable" value="false"/>
+  			<property name="params" value="pageNum=pageHelperStart;pageSize=pageHelperRows;"/>
+  			<property name="supportMethodsArguments" value="false"/>
+  			<property name="returnPageInfo" value="none"/>
+  		</plugin>
+ 	</plugins>
+ </configuration>

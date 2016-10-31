@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ken.wms.dao.UserMapper">
+
+	<resultMap type="com.ken.wms.domain.User" id="user">
+		<id property="id" column="USER_ID"/>
+		<result property="userName" column="USER_USERNAME"/>
+		<result property="password" column="USER_PASSWORD"/>
+	</resultMap>
+	
+	<select id="selectById" resultMap="user">
+		select
+			s.USER_ID,
+			s.USER_USERNAME,
+			s.USER_PASSWORD
+		from 
+			wms_user s
+		where 
+			s.USER_ID = #{id}
+	</select>
+	
+	<select id="selectByName" resultMap="user">
+		select
+			s.USER_ID,
+			s.USER_USERNAME,
+			s.USER_PASSWORD
+		from 
+			wms_user s
+		where 
+			s.USER_USERNAME = #{userName}
+	</select>
+	
+	<select id="selectAll" resultMap="user">
+		select
+			s.USER_ID,
+			s.USER_USERNAME,
+			s.USER_PASSWORD
+		from 
+			wms_user s
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true">
+		insert into wms_user(USER_ID,USER_USERNAME,USER_PASSWORD)
+		values (#{id},#{userName},#{password})
+	</insert>
+	
+	<update id="updateById">
+		update wms_user set
+			USER_USERNAME = #{userName},
+			USER_PASSWORD = #{password}
+		where
+			USER_ID = #{id}
+	</update>
+	
+	<delete id="deleteById">
+		delete from wms_user
+		where 
+			USER_ID = #{id}
+	</delete>
+
+</mapper>

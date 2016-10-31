@@ -1,0 +1,11 @@
+body {
+	background: url(../../../media/images/backgroundPic.png);
+	background-size: 100%;
+	background-position: center;
+
+	margin-top:150px;
+}
+
+#checkCodeImg:hover{
+	cursor: pointer;
+}
