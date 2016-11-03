@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.ken.wms.dao.MenuMapper">
+
+	<resultMap type="com.ken.wms.domain.Menu" id="menu">
+		<id property="id" column="MENU_ID"/>
+		<result property="menuTitle" column="MENU_TITLE"/>
+		<result property="menuDesc" column="MENU_DESC"/>
+		<result property="menuURL" column="MENU_URL"/>
+		<result property="parentMenuTitle" column="PARENT_TITLE"/>
+	</resultMap>
+	
+	<select id="selectAll" resultMap="menu">
+		select
+			m1.MENU_ID,
+			m1.MENU_TITLE,
+			m1.MENU_DESC,
+			m1.MENU_URL,
+			m2.MENU_TITLE as PARENT_TITLE
+		from
+			wms_menu m1,wms_menu m2
+		where
+			m1.PARNET_ID = m2.MENU_ID
+	</select>
+	
+	<select id="selectByRoleName" resultMap="menu">
+		select
+			m1.MENU_ID,
+			m1.MENU_TITLE,
+			m1.MENU_DESC,
+			m1.MENU_URL,
+			m2.MENU_TITLE as PARENT_TITLE
+		from
+			wms_menu m1,wms_menu m2,wms_role_menu rm,wms_roles r
+		where
+			m1.PARNET_ID = m2.MENU_ID and
+			m1.MENU_ID = rm.MENU_ID and
+			r.ROLE_ID = rm.ROLE_ID and
+			r.ROLE_NAME = #{roleName}
+	</select>
+</mapper>

@@ -1,12 +1,17 @@
 package com.ken.wms.domain;
 
+/**
+ * 货物信息
+ * @author Ken
+ *
+ */
 public class Goods {
 
-	private Integer id;
-	private String name;
-	private String type;
-	private String size;
-	private double value;
+	private Integer id;// 货物ID
+	private String name;// 货物名
+	private String type;// 货物类型
+	private String size;// 货物规格
+	private double value;// 货物价值
 
 	public Integer getId() {
 		return id;

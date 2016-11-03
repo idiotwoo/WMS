@@ -1,5 +1,6 @@
 package com.ken.wms.security;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,8 @@ public class SecurityService {
 	@Autowired
 	private ActionPermissionMapper actionPermissionMapper;
 	
+	// 系统注册的角色信息
+	private List<Role> roles;
 	// role 权限的映射信息
 	private Map<String, List<ActionPermission>> permissionMap;
 	// role url 前缀的映射信息
@@ -40,9 +43,10 @@ public class SecurityService {
 		// 初始化 permissionMapper & urlPrefixMap
 		permissionMap = new HashMap<>();
 		urlPrefixMap = new HashMap<>();
+		roles = new ArrayList<>();
 		
 		// 查询已经注册的 Role
-		List<Role> roles = roleMapper.selectAll();
+		roles = roleMapper.selectAll();
 		if(roles == null)
 			return;
 		
@@ -115,5 +119,13 @@ public class SecurityService {
 	 */
 	public Role getRole(Integer userId){
 		return roleMapper.selectByUserId(userId);
+	}
+	
+	/**
+	 * 返回所有已经注册的 role 信息
+	 * @return
+	 */
+	public List<Role> getAllRole(){
+		return this.roles;
 	}
 }

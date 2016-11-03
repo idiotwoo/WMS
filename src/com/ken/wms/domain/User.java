@@ -1,15 +1,15 @@
 package com.ken.wms.domain;
 
 /**
- * 
+ * 系统的使用用户
  * @author Ken
  *
  */
 public class User {
 
-	private Integer id;
-	private String userName;
-	private String password;
+	private Integer id;// 用户ID
+	private String userName;// 用户名
+	private String password;// 用户密码
 
 	public Integer getId() {
 		return id;

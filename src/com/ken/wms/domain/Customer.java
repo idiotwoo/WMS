@@ -1,13 +1,18 @@
 package com.ken.wms.domain;
 
+/**
+ * 客户信息
+ * @author Ken
+ *
+ */
 public class Customer {
 
-	private Integer id;
-	private String name;
-	private String personInCharge;
-	private String tel;
-	private String email;
-	private String address;
+	private Integer id;// 客户ID
+	private String name;// 客户名
+	private String personInCharge;// 负责人
+	private String tel;// 联系电话
+	private String email;// 电子邮件
+	private String address;// 地址
 
 	public Integer getId() {
 		return id;

@@ -16,61 +16,62 @@ import com.ken.wms.controller.Enum.AccountStatus;
 
 /**
  * 自定义用户授权拦截器
+ * 
  * @author Ken
  *
  */
 public class SecurityInterceptor implements HandlerInterceptor {
 
 	private static Logger log = Logger.getLogger("application");
-	
+
 	private static final String DEFAULT_URI = "/WEB-INF/jsp/login.jsp";
-	
+
 	@Autowired
 	private SecurityService securityService;
-	
+
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		
-		//获得 Session
+
+		// 获得 Session
 		HttpSession session = request.getSession();
-		
+
 		// 获取用户的信息
 		String accountStatus = (String) session.getAttribute("account_status");
 		String role = (String) session.getAttribute("role");
-		if(accountStatus == null || role == null){
+		if (accountStatus == null || accountStatus.equals(AccountStatus.SIGNOUT.toString()) || role == null) {
 			redirectToDefault(request, response);
 			return false;
 		}
-		log.debug("accountStatus from session" + accountStatus + ";role from session" + role);
-		
+
 		// 解析 URL
 		String roleName = null;
 		String modelName = null;
 		String methodName = null;
 		String url = request.getRequestURI();
-		String [] strs = url.trim().split("/");
-		if(strs.length == 2)
+		String[] strs = url.trim().split("/");
+		if (strs.length == 2)
 			return true;
-		else if(strs.length >= 4){
+		else if (strs.length >= 4) {
 			roleName = strs[2];
 			modelName = strs[3];
 			methodName = strs[4];
-		}else{
+		} else {
 			log.debug("URL:" + url + ";redirect");
 			redirectToDefault(request, response);
 			return false;
 		}
-		log.debug("request URL:" + url + ";roleName:" + roleName + ";modeName:" + modelName + ";methodName:" + methodName);
-		
+		log.debug("request URL:" + url + ";roleName:" + roleName + ";modeName:" + modelName + ";methodName:"
+				+ methodName);
+
 		// 用户权限验证
 		// 登陆状态
-		if(accountStatus.equals(AccountStatus.SIGNIN.toString())){
+		if (accountStatus.equals(AccountStatus.SIGNIN.toString())) {
 			// role 角色验证
-			if(securityService.isRole(role, roleName)){
+			if (securityService.isRole(role, roleName)) {
 				String urlRequest = "/" + modelName + "/" + methodName;
 				// URL 请求权限验证
-				if(securityService.isAuthorise(role, urlRequest)){
+				if (securityService.isAuthorise(role, urlRequest)) {
 					String requestURL = url.replaceFirst("/" + roleName, "");
 					// 请求重定向
 					log.debug("authorise success->requestURL:" + requestURL);
@@ -78,39 +79,41 @@ public class SecurityInterceptor implements HandlerInterceptor {
 				}
 			}
 		}
-		
+
 		redirectToDefault(request, response);
 		return false;
-		
-		
-//		log.debug("receive a new request");
-//		
-//		// 获得 session
-//		HttpSession session = request.getSession();
-//
-//		// 获取用户的账户类型以及账户状态
-//		String accountStatus = (String) session.getAttribute("account_status");
-//		String accountType = (String) session.getAttribute("account_type");
-//
-//		// 解析URL
-//		String[] URI = request.getRequestURI().trim().split("/");
-//		String URIRoot = URI[2];
-//		String uriTarget = null;
-//		if (URIRoot.equals(URI_PREFIX_SYATEMADMIN))
-//			uriTarget = URI_PREFIX_SYATEMADMIN;
-//		else if (URIRoot.equals(URI_PREFIX_COMMONSADMIN))
-//			uriTarget = URI_PREFIX_COMMONSADMIN;
-//
-//		if (accountStatus != null && accountStatus.equals(AccountStatus.SIGNIN.toString())) {
-//			if (accountType != null && (uriTarget.equals(URI_PREFIX_SYATEMADMIN)
-//					&& accountType.equals(AccountType.SYSTEMADMIN.toString())
-//					|| uriTarget.equals(URI_PREFIX_COMMONSADMIN) && accountType.equals(AccountType.COMMONSADMIN.toString())))
-//				return true;
-//		}
-//
-//		// 重定向
-//		redirect(request, response);
-//		return false;
+
+		// log.debug("receive a new request");
+		//
+		// // 获得 session
+		// HttpSession session = request.getSession();
+		//
+		// // 获取用户的账户类型以及账户状态
+		// String accountStatus = (String)
+		// session.getAttribute("account_status");
+		// String accountType = (String) session.getAttribute("account_type");
+		//
+		// // 解析URL
+		// String[] URI = request.getRequestURI().trim().split("/");
+		// String URIRoot = URI[2];
+		// String uriTarget = null;
+		// if (URIRoot.equals(URI_PREFIX_SYATEMADMIN))
+		// uriTarget = URI_PREFIX_SYATEMADMIN;
+		// else if (URIRoot.equals(URI_PREFIX_COMMONSADMIN))
+		// uriTarget = URI_PREFIX_COMMONSADMIN;
+		//
+		// if (accountStatus != null &&
+		// accountStatus.equals(AccountStatus.SIGNIN.toString())) {
+		// if (accountType != null && (uriTarget.equals(URI_PREFIX_SYATEMADMIN)
+		// && accountType.equals(AccountType.SYSTEMADMIN.toString())
+		// || uriTarget.equals(URI_PREFIX_COMMONSADMIN) &&
+		// accountType.equals(AccountType.COMMONSADMIN.toString())))
+		// return true;
+		// }
+		//
+		// // 重定向
+		// redirect(request, response);
+		// return false;
 	}
 
 	@Override

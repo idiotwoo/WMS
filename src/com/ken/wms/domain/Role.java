@@ -1,16 +1,16 @@
 package com.ken.wms.domain;
 
 /**
- * 
+ * 系统使用的角色信息
  * @author Ken
  *
  */
 public class Role {
 
-	private Integer id;
-	private String roleName;
-	private String roleDesc;
-	private String rolePrefix;
+	private Integer id;// 角色ID
+	private String roleName;// 角色名
+	private String roleDesc;// 角色描述
+	private String rolePrefix;// 角色 request URL 的前缀
 
 	public Integer getId() {
 		return id;

@@ -10,10 +10,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.ken.wms.controller.Enum.ResponseStatus;
 import com.ken.wms.dao.ActionPermissionMapper;
+import com.ken.wms.dao.MenuMapper;
 import com.ken.wms.dao.RoleMapper;
 import com.ken.wms.dao.SupplierMapper;
 import com.ken.wms.dao.UserMapper;
 import com.ken.wms.domain.ActionPermission;
+import com.ken.wms.domain.Menu;
 import com.ken.wms.domain.Role;
 import com.ken.wms.domain.Supplier;
 import com.ken.wms.domain.User;
@@ -31,6 +33,8 @@ public class MapperTest {
 	private RoleMapper roleMapper;
 	@Autowired
 	private ActionPermissionMapper permissionMapper;
+	@Autowired
+	private MenuMapper menuMapper;
 	
 	@Test
 	public void test() {
@@ -38,6 +42,19 @@ public class MapperTest {
 		
 		for (Supplier supplier : suppliers) {
 			System.out.println(supplier);
+		}
+	}
+	
+	@Test
+	public void testMenuMapper(){
+//		List<Menu> menus = menuMapper.selectAll();
+//		for (Menu menu : menus) {
+//			System.out.println(menu);
+//		}
+		
+		List<Menu> menus = menuMapper.selectByRoleName("commonsAdmin");
+		for (Menu menu : menus) {
+			System.out.println(menu);
 		}
 	}
 	

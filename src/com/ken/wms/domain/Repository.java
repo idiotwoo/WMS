@@ -1,10 +1,15 @@
 package com.ken.wms.domain;
 
+/**
+ * 仓库信息
+ * @author Ken
+ *
+ */
 public class Repository {
 
-	private Integer id;
-	private String address;
-	private String status;
+	private Integer id;// 仓库ID
+	private String address;// 仓库地址
+	private String status;// 仓库状态
 
 	public Integer getId() {
 		return id;

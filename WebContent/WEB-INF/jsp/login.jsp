@@ -50,18 +50,6 @@
 							</div>
 
 							<div class="form-group">
-								<label for="" class="control-label col-md-4 col-sm-4">
-									身份类型: </label>
-								<div class="col-md-5 col-sm-5">
-									<select name="type" id="userType" class="form-control">
-										<option value="commonsAdmin">仓库管理员</option>
-										<option value="systemAdmin">系统管理员</option>
-									</select>
-								</div>
-								<div class="col-md-3"></div>
-							</div>
-
-							<div class="form-group">
 								<label class="control-label col-md-4 col-sm-4"> <!-- <span class="glyphicon glyphicon-lock"></span> -->
 									验证码：
 								</label>
@@ -137,7 +125,10 @@
 						validators : {
 							notEmpty : {
 								message : '用户名不能为空'
-							},
+							},regexp: {
+		                        regexp: '[0-9]+',
+		                        message: '只允许输入数字'
+		                    },
 							callback : {}
 						}
 					},
@@ -170,7 +161,6 @@
 				// 发送数据到后端 进行验证
 				var userID = $('#userID').val();
 				var password = $('#password').val();
-				var userType = $('#userType').val();
 				var checkCode = $('#checkCode').val();
 
 				// 加密
@@ -179,7 +169,6 @@
 				var data = {
 					"id" : userID,
 					"password" : password,
-					"userType" : userType,
 				}
 				$.ajax({
 					type:"POST",
@@ -192,14 +181,25 @@
 						
 						// 分析返回的 JSON 数据
 						if(response.result == 'error'){
-							for(var field in response.errorMsg){
-								
-								// 更新 callback 错误信息，以及为错误对应的字段添加 错误信息
-								//bv.updateMessage(field,'callback',response.errorMsg[field]);
-								//bv.updateStatus(field,'INVALID','callback');
+							var errorMessage;
+							var field;
+							if(response.errorMsg == "userIDError"){
+								errorMessage = "用户名错误";
+								field = "userID";
 							}
+							else if(response.errorMsg == "passwordError"){
+								errorMessage = "密码或验证码错误";
+								field = "password";
+								$('#password').val("");
+							}
+								
+							// 更新 callback 错误信息，以及为错误对应的字段添加 错误信息
+							bv.updateMessage(field,'callback',errorMessage);
+							bv.updateStatus(field,'INVALID','callback');
+							bv.updateStatus("checkCode",'INVALID','callback');
 							
-							$('#checkCodeImg').attr("src","account/commons/checkCode/" + new Date().getTime());
+							$('#checkCodeImg').attr("src","commons/account/checkCode/" + new Date().getTime());
+							$('#checkCode').val("");
 						}else{
 							// 页面跳转
 							var URL = response.url;

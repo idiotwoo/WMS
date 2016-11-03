@@ -47,7 +47,7 @@
 		values (#{id},#{userName},#{password})
 	</insert>
 	
-	<update id="updateById">
+	<update id="update">
 		update wms_user set
 			USER_USERNAME = #{userName},
 			USER_PASSWORD = #{password}

@@ -1,9 +1,14 @@
 package com.ken.wms.domain;
 
+/**
+ * 仓库内区域信息
+ * @author Ken
+ *
+ */
 public class Area {
 
-	private Integer id;
-	private String repositoryBelong;
+	private Integer id;// 区域ID
+	private String repositoryBelong;// 所属仓库
 
 	public Integer getId() {
 		return id;

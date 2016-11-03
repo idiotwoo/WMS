@@ -1,16 +1,16 @@
 package com.ken.wms.domain;
 
 /**
- * 
+ * 请求资源动作权限信息
  * @author Ken
  *
  */
 public class ActionPermission {
 
-	private Integer id;
-	private String actionName;
-	private String actionDesc;
-	private String actionParam;
+	private Integer id;// 动作ID
+	private String actionName;// 动作名
+	private String actionDesc;// 动作描述
+	private String actionParam;// 动作 URL 参数
 
 	public Integer getId() {
 		return id;

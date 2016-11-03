@@ -88,10 +88,75 @@ create table wms_record_out
 
 create table wms_record_storage
 (
-	RECORD_GOODID int not null,
+	RECORD_GOODID int not null auto_increment,
     RECORD_AREAID int not null,
     RECORD_NUMBER int not null,
     primary key(RECORD_GOODID,RECORD_AREAID),
     foreign key (RECORD_GOODID) references wms_goods(GOOD_ID),
     foreign key (RECORD_AREAID) references wms_area(AREA_ID)
+)engine=innodb;
+
+
+
+create table wms_user
+(
+	USER_ID int not null auto_increment,
+    USER_USERNAME varchar(30) not null,
+    USER_PASSWORD varchar(40) not null,
+    primary key (USER_ID)
+)engine=innodb;
+
+create table wms_roles
+(
+	ROLE_ID int not null auto_increment,
+    ROLE_NAME varchar(20) not null,
+    ROLE_DESC varchar(30),
+    ROLE_URL_PREFIX varchar(20) not null,
+    primary key(ROLE_ID)
+)engine=innodb;
+
+create table wms_menu
+(
+	MENU_ID int not null auto_increment,
+    MENU_TITLE varchar(20) not null,
+    MENU_DESC varchar(30),
+    MENU_URL varchar(50),
+    PARNET_ID int not null,
+    ISPARENT int not null,
+    primary key(MENU_ID)
+)engine=innodb;
+
+create table wms_action
+(
+	ACTION_ID int not null auto_increment,
+    ACTION_NAME varchar(30) not null,
+    ACTION_DESC varchar(30),
+    ACTION_PARAM varchar(30) not null,
+    primary key(ACTION_ID)
+)engine=innodb;
+
+create table wms_user_role
+(
+	ROLE_ID int not null,
+    USER_ID int not null,
+    primary key(ROLE_ID,USER_ID),
+    foreign key(ROLE_ID) references wms_roles(ROLE_ID),
+    foreign key(USER_ID) references wms_user(USER_ID)
+)engine=innodb;
+
+create table wms_role_menu
+(
+    ROLE_ID int not null,
+    MENU_ID int not null,
+    primary key(ROLE_ID,MENU_ID),
+    foreign key (MENU_ID) references wms_menu(MENU_ID)
+)engine=innodb;
+
+create table wms_role_action
+(
+	ACTION_ID int not null,
+    ROLE_ID int not null,
+    primary key(ACTION_ID,ROLE_ID),
+    foreign key(ROLE_ID) references wms_roles(ROLE_ID),
+    foreign key(ACTION_ID) references wms_action(ACTION_ID)
 )engine=innodb;
