@@ -18,6 +18,11 @@
 		<context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
 	</context:component-scan>
 	
+	<!-- 配置 ExcelUtil -->
+	<bean id="ExcelUtil" class="com.ken.wms.service.util.ExcelUtil">
+		<constructor-arg type="java.lang.String" value="config/ExcelUtilConfig.xml"/>
+	</bean>
+	
 	<!-- 持久化配置 -->
 	
 	<!-- 配置数据源 -->

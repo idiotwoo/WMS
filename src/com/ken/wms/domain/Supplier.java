@@ -2,6 +2,7 @@ package com.ken.wms.domain;
 
 /**
  * 供应商信息
+ * 
  * @author Ken
  *
  */
@@ -59,16 +60,6 @@ public class Supplier {
 	}
 
 	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public Supplier(Integer id, String name, String personInCharge, String tel, String email, String address) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.personInCharge = personInCharge;
-		this.tel = tel;
-		this.email = email;
 		this.address = address;
 	}
 

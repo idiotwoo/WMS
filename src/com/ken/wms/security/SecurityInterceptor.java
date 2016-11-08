@@ -32,6 +32,7 @@ public class SecurityInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
+		log.debug("security Interceptor start-------------------------");
 
 		// 获得 Session
 		HttpSession session = request.getSession();
@@ -52,7 +53,7 @@ public class SecurityInterceptor implements HandlerInterceptor {
 		String[] strs = url.trim().split("/");
 		if (strs.length == 2)
 			return true;
-		else if (strs.length >= 4) {
+		else if (strs.length >= 5) {
 			roleName = strs[2];
 			modelName = strs[3];
 			methodName = strs[4];
@@ -70,50 +71,25 @@ public class SecurityInterceptor implements HandlerInterceptor {
 			// role 角色验证
 			if (securityService.isRole(role, roleName)) {
 				String urlRequest = "/" + modelName + "/" + methodName;
+				log.debug("role validate pass");
 				// URL 请求权限验证
 				if (securityService.isAuthorise(role, urlRequest)) {
-					String requestURL = url.replaceFirst("/" + roleName, "");
-					// 请求重定向
-					log.debug("authorise success->requestURL:" + requestURL);
-					request.getRequestDispatcher(requestURL).forward(request, response);
+					log.debug("request permission validate pass");
+//					int index = url.indexOf('/');
+//					index = url.indexOf('/', index + 1);
+//					String requestURL = url.substring(index + 1).replaceFirst(roleName, "");
+////					String requestURL = url.replaceFirst("/" + roleName, "");
+//					// 请求重定向
+//					log.debug("authorise success->requestURL:" + requestURL);
+//					request.getRequestDispatcher(requestURL).forward(request, response);
+					return true;
 				}
 			}
 		}
 
 		redirectToDefault(request, response);
+		log.debug("security Interceptor end-------------------------");
 		return false;
-
-		// log.debug("receive a new request");
-		//
-		// // 获得 session
-		// HttpSession session = request.getSession();
-		//
-		// // 获取用户的账户类型以及账户状态
-		// String accountStatus = (String)
-		// session.getAttribute("account_status");
-		// String accountType = (String) session.getAttribute("account_type");
-		//
-		// // 解析URL
-		// String[] URI = request.getRequestURI().trim().split("/");
-		// String URIRoot = URI[2];
-		// String uriTarget = null;
-		// if (URIRoot.equals(URI_PREFIX_SYATEMADMIN))
-		// uriTarget = URI_PREFIX_SYATEMADMIN;
-		// else if (URIRoot.equals(URI_PREFIX_COMMONSADMIN))
-		// uriTarget = URI_PREFIX_COMMONSADMIN;
-		//
-		// if (accountStatus != null &&
-		// accountStatus.equals(AccountStatus.SIGNIN.toString())) {
-		// if (accountType != null && (uriTarget.equals(URI_PREFIX_SYATEMADMIN)
-		// && accountType.equals(AccountType.SYSTEMADMIN.toString())
-		// || uriTarget.equals(URI_PREFIX_COMMONSADMIN) &&
-		// accountType.equals(AccountType.COMMONSADMIN.toString())))
-		// return true;
-		// }
-		//
-		// // 重定向
-		// redirect(request, response);
-		// return false;
 	}
 
 	@Override

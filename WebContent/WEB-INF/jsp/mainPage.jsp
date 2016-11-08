@@ -73,7 +73,7 @@
 							<div class="col-md-10" style="text-align: center">
 								<div class="col-md-4 col-sm-4">
 									<a href="#" class="thumbnail"> <img
-										src="images/icons/find.png" alt="成绩查询"
+										src="media/icons/stock_search-512.png" alt="库存查询"
 										class="img-rounded link" style="width: 150px; height: 150px;">
 										<div class="caption">
 											<h3>库存查询</h3>
@@ -82,7 +82,7 @@
 								</div>
 								<div class="col-md-4 col-sm-4">
 									<a href="#" class="thumbnail"> <img
-										src="images/icons/edit.png" alt="教学评价"
+										src="media/icons/stock_in-512.png" alt="货物入库"
 										class="img-rounded link" style="width: 150px; height: 150px;">
 										<div class="caption">
 											<h3>货物入库</h3>
@@ -91,7 +91,7 @@
 								</div>
 								<div class="col-md-4 col-sm-4">
 									<a href="#" class="thumbnail"> <img
-										src="images/icons/maintain.png" alt="信息维护"
+										src="media/icons/stock_out-512.png" alt="货物出库"
 										class="img-rounded link" style="width: 150px; height: 150px;">
 										<div class="caption">
 											<h3>货物出库</h3>
@@ -125,5 +125,7 @@
 		src="${pageContext.request.contextPath}/js/jquery.md5.js"></script>
 	<script type="text/javascript"
 		src="${pageContext.request.contextPath}/js/mainPage.js"></script>
+	<script type="text/javascript"
+		src="${pageContext.request.contextPath}/js/ajaxfileupload.js"></script>
 </body>
 </html>

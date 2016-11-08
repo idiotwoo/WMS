@@ -13,6 +13,7 @@
 				invalid:'glyphicon glyphicon-remove',
 				validating:'glyphicon glyphicon-refresh'
 			},
+			excluded: [':disabled'],
 			fields:{// 字段验证
 				oldPassword:{// 原密码
 					validators:{
@@ -99,6 +100,7 @@
 						// 否则更新成功，弹出模态框并清空表单
 						$('#passwordEditSuccess').modal('show');
 						$('#reset').trigger("click");
+						$('#form').bootstrapValidator("resetForm",true); 
 					}
 					
 				},
@@ -210,8 +212,20 @@
 				</h4>
 			</div>
 			<div class="modal-body">
-				<div style="margin:30px 0;text-align:center">
-					<h4>密码修改成功</h4>
+				<div class="row">
+					<div class="col-md-4"></div>
+					<div class="col-md-4">
+						<div style="text-align: center;">
+							<img src="media/icons/success-icon.png" alt=""
+								style="width: 100px; height: 100px;">
+						</div>
+					</div>
+					<div class="col-md-4"></div>
+				</div>
+				<div class="row" style="margin-top: 10px">
+					<div class="col-md-4"></div>
+					<div class="col-md-4" style="text-align:center;"><h4>密码修改成功</h4></div>
+					<div class="col-md-4"></div>
 				</div>
 			</div>
 			<div class="modal-footer">

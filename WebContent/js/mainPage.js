@@ -9,10 +9,17 @@ var ParentMenuModel = '<div class="panel panel-default currentP">'
 		+ '</ul></div></div>';
 var subMenuModel = '<li class="list-group-item curItem"><a href="javascript:void(0)" id="" class="menu_item" name=""></a></li>';
 
+var requestPrefix;
 $(function() {
 	sideBarInit();
 	signOut();
+	getRequestPrefix();
 });
+
+// 获取请求前缀
+function getRequestPrefix(){
+	requestPrefix = $('#requestPrefix').text();
+}
 
 // 加载侧边栏
 function sideBarInit() {

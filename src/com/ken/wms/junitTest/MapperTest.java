@@ -1,5 +1,6 @@
 package com.ken.wms.junitTest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
@@ -12,6 +13,7 @@ import com.ken.wms.controller.Enum.ResponseStatus;
 import com.ken.wms.dao.ActionPermissionMapper;
 import com.ken.wms.dao.MenuMapper;
 import com.ken.wms.dao.RoleMapper;
+import com.ken.wms.dao.StockInMapper;
 import com.ken.wms.dao.SupplierMapper;
 import com.ken.wms.dao.UserMapper;
 import com.ken.wms.domain.ActionPermission;
@@ -35,6 +37,8 @@ public class MapperTest {
 	private ActionPermissionMapper permissionMapper;
 	@Autowired
 	private MenuMapper menuMapper;
+	@Autowired
+	private StockInMapper stockInMapper;
 	
 	@Test
 	public void test() {
@@ -131,5 +135,112 @@ public class MapperTest {
 		//test delete operation
 //		userMapper.deleteById(3);
 	}
-
+	
+	@Test
+	public void supplierMapperTest(){
+		// test select operation
+//		Supplier supplier = supplierMapper.selectById(2);
+//		System.out.println(supplier);
+//		Supplier supplier = supplierMapper.selectBuName("AA");
+//		System.out.println(supplier);
+//		List<Supplier> suppliers = supplierMapper.selectAll();
+//		for (Supplier supplier : suppliers) {
+//			System.out.println(supplier);
+//		}
+		
+		// test insert operation
+//		Supplier supplier = new Supplier();
+//		supplier.setName("cc");
+//		supplier.setPersonInCharge("person");
+//		supplier.setTel("789");
+//		supplier.setEmail("789@outlook.com");
+//		supplier.setAddress("FoShan");
+//		supplierMapper.insert(supplier);
+		Supplier supplier1 = new Supplier();
+		Supplier supplier2 = new Supplier();
+		supplier1.setName("DD");
+		supplier1.setPersonInCharge("person1");
+		supplier1.setTel("123456");
+		supplier1.setEmail("123456@outlook.com");
+		supplier1.setAddress("BeiJing");
+		supplier2.setName("EE");
+		supplier2.setPersonInCharge("person2");
+		supplier2.setTel("456789");
+		supplier2.setEmail("456789@outlook.com");
+		supplier2.setAddress("TianJing");
+		List<Supplier> suppliers = new ArrayList<>();
+		suppliers.add(supplier1);
+		suppliers.add(supplier2);
+		supplierMapper.insertBatch(suppliers);
+		
+		// test update operation
+//		Supplier supplier = supplierMapper.selectById(3);
+//		supplier.setPersonInCharge("person0");
+//		supplierMapper.update(supplier);
+//		Supplier supplier = supplierMapper.selectById(3);
+//		supplier.setId(null);
+//		supplierMapper.update(supplier);
+		
+		// test delete operation
+//		supplierMapper.deleteById(4);
+//		supplierMapper.deleteByName("EE");
+		
+//		List<Supplier> suppliers = supplierMapper.selectApproximateByName("A");
+//		if(suppliers != null){
+//			System.out.println(suppliers.size());
+//			for (Supplier supplier : suppliers) {
+//				System.out.println(supplier);
+//			}
+//		}
+		// return id test
+//		Supplier supplier = new Supplier();
+//		supplier.setName("EE");
+//		supplier.setPersonInCharge("person2");
+//		supplier.setTel("7123d89");
+//		supplier.setEmail("712d389@outlook.com");
+//		supplier.setAddress("HongKong");
+//		supplierMapper.insert(supplier);
+//		if(supplier.getId() == null){
+//			System.out.println("fail");
+//		}else{
+//			System.out.println("success");
+//			System.out.println(supplier.getId());
+//		}
+	}
+		
+	@Test
+	public void stockInTest(){
+		// select operation test
+//		List<StockIn> stockIns = stockInMapper.selectAll();
+//		for (StockIn stockIn : stockIns) {
+//			System.out.println(stockIn);
+//		}
+//		List<StockIn> stockIns = stockInMapper.selectBySupplierID(2);
+//		for (StockIn stockIn : stockIns) {
+//			System.out.println(stockIn);
+//		}
+//		List<StockIn> stockIns = stockInMapper.selectByGoodID(1);
+//		for (StockIn stockIn : stockIns) {
+//			System.out.println(stockIn);
+//		}
+//		StockIn stockIns = stockInMapper.selectByID(11);
+//		System.out.println(stockIns);
+		
+//		// insert operation test
+//		StockIn stockIn = new StockIn();
+//		stockIn.setSupplierID(2);
+//		stockIn.setGoodID(1);
+//		stockIn.setNumber(1000);
+//		stockIn.setTime(new Date(new java.util.Date().getTime()));
+//		stockIn.setPersonInCharge("AA");
+//		stockInMapper.insert(stockIn);
+		
+		// update operation test
+//		StockIn stockIn = stockInMapper.selectByID(12);
+//		stockIn.setNumber(1500);
+//		stockInMapper.update(stockIn);
+		
+		// delete operation test
+//		stockInMapper.deleteByID(12);
+	}
 }
