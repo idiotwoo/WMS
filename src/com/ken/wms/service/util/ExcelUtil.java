@@ -1,5 +1,7 @@
 package com.ken.wms.service.util;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.sql.Date;
@@ -9,6 +11,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.apache.commons.configuration2.XMLConfiguration;
@@ -54,7 +57,7 @@ public class ExcelUtil {
 	private void init(String fileLocation) {
 		// 创建对象的 excelMappingInfo 映射
 		excelMappingInfo = new HashMap<>();
-		
+
 		Configurations configs = new Configurations();
 		try {
 			xmlConfig = configs.xml(fileLocation);
@@ -62,16 +65,16 @@ public class ExcelUtil {
 			e.printStackTrace();
 		}
 
-		if(xmlConfig == null){
+		if (xmlConfig == null) {
 			return;
 		}
-		
+
 		/*
 		 * 扫描 XMl 并配置参数
 		 */
 		// 扫描 entity 节点
 		List<Object> entities = xmlConfig.getList("entity[@class]");
-		if(entities == null){
+		if (entities == null) {
 			return;
 		}
 		int entityNum = entities.size();
@@ -163,7 +166,7 @@ public class ExcelUtil {
 
 					// 获取单元格的值，并设置对象中对应的属性
 					Object value = getCellValue(fieldType, cell);
-					setField(elem, classType, methodName, fieldType, value);
+					setField(elem, methodName, value);
 				}
 				// 放入结果
 				content.add(elem);
@@ -191,7 +194,91 @@ public class ExcelUtil {
 
 		return content;
 	}
-	
+
+	/**
+	 * 将 List 中的元素对象写入到 Excel 中，其中每一个对象的一行，每一列的内容为对象的属性
+	 * @param classType 目标对象的类型
+	 * @param elems 数据来源的 List
+	 * @return
+	 */
+	public File excelWriter(Class<? extends Object> classType, List<?> elems) {
+
+		if (classType == null || elems == null)
+			return null;
+
+		// 获取类名和映射信息
+		String className = classType.getName();
+		MappingInfo mappingInfo = excelMappingInfo.get(className);
+		if (mappingInfo == null)
+			return null;
+
+		File excel = null;
+		try {
+			// 创建临时文件
+			excel = File.createTempFile("excel", ".xslx");
+
+			// 获取该 class 中定义的 field, 并将对应的信息保存到 List 中
+			List<String> fieldList = new ArrayList<>();
+			List<String> methodList = new ArrayList<>();
+			List<String> valuesList = new ArrayList<>();
+			Set<String> fields = mappingInfo.fieldsMap.keySet();
+			if (fields == null)
+				return null;
+			for (String field : fields) {
+				fieldList.add(field);
+				methodList.add(getGetterMethodName(field));
+				valuesList.add(mappingInfo.fieldsMap.get(field));
+			}
+
+			// 创建 workBook 对象
+			Workbook workbook = new XSSFWorkbook();
+			// 创建 sheet 对象
+			Sheet sheet = workbook.createSheet();
+
+			int rowCount = 0;
+			int cellCount;
+			Row row;
+			Cell cell;
+
+			// 写入第一行表头
+			row = sheet.createRow(rowCount++);
+			cellCount = 0;
+			for (String value : valuesList) {
+				cell = row.createCell(cellCount);
+				cell.setCellValue(value);
+				cellCount++;
+			}
+
+			// 写入内容数据
+			for (Object elem : elems) {
+				row = sheet.createRow(rowCount++);
+				cellCount = 0;
+				for (String methodName : methodList) {
+					Object value = getField(elem, methodName);
+					cell = row.createCell(cellCount++);
+					setCellValue(value, cell);
+				}
+			}
+
+			// 将 workBook 写入到 tempFile 中
+			FileOutputStream outputStream = new FileOutputStream(excel);
+			workbook.write(outputStream);
+
+			outputStream.flush();
+			outputStream.close();
+			workbook.close();
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return excel;
+	}
+
 	/**
 	 * 该方法用于获取单元格 cell 中的值
 	 * 
@@ -234,23 +321,48 @@ public class ExcelUtil {
 	}
 
 	/**
+	 * 设置 Excel 单元格的值
+	 * @param value 值
+	 * @param cell 单元格
+	 */
+	private void setCellValue(Object value, Cell cell) {
+		if (cell == null || value == null)
+			return;
+
+		Class<?> valueClassType = value.getClass();
+		if (valueClassType.equals(String.class)) {
+			String v = (String) value;
+			cell.setCellValue(v);
+		} else if (valueClassType.equals(Integer.class)) {
+			Integer v = (Integer) value;
+			cell.setCellValue(v);
+		} else if (valueClassType.equals(Double.class)) {
+			Double v = (Double) value;
+			cell.setCellValue(v);
+		} else if (valueClassType.equals(Boolean.class)) {
+			Boolean v = (Boolean) value;
+			cell.setCellValue(v);
+		} else if (valueClassType.equals(Date.class)) {
+			Date v = (Date) value;
+			cell.setCellValue(v);
+		}
+	}
+
+	/**
 	 * 该方法用于设置对象中属性的值 通过调用目标对象属性对应的 setter 方法，因而要求目标对象必须设置 setter对象，否则赋值不成功
 	 * 
 	 * @param targetObject
 	 *            目标对象
-	 * @param targetObjectType
-	 *            目标对象的类型
 	 * @param methodName
 	 *            setter 方法名
-	 * @param fieldType
-	 *            方法参数的类型
 	 * @param field
 	 *            方法参数的值
 	 * @throws Exception
 	 */
-	private void setField(Object targetObject, Class<?> targetObjectType, String methodName, Class<?> fieldType,
-			Object field) throws Exception {
+	private void setField(Object targetObject, String methodName, Object field) throws Exception {
 		// 获得 setter 方法实例
+		Class<?> targetObjectType = targetObject.getClass();
+		Class<?> fieldType = field.getClass();
 		Method setterMethod = targetObjectType.getMethod(methodName, fieldType);
 
 		// 调用方法
@@ -258,9 +370,26 @@ public class ExcelUtil {
 	}
 
 	/**
+	 * 获取目标对象中某个属性的值，通过调用目标对象属性对应的 getter 方法，因而要求目标对象必须设置 getter 对象，否则赋值不成功
+	 * @param targetObject 目标对象
+	 * @param methodName getter 方法名
+	 * @return 返回该属性的值
+	 * @throws Exception
+	 */
+	private Object getField(Object targetObject, String methodName) throws Exception {
+		// 获得 getter 方法实例
+		Class<?> targetObjectType = targetObject.getClass();
+		Method getterMethod = targetObjectType.getMethod(methodName);
+
+		// 调用方法
+		return getterMethod.invoke(targetObject);
+	}
+
+	/**
 	 * 构造 setter 方法的方法名
 	 * 
 	 * @param field
+	 *            字段名
 	 * @return
 	 */
 	private String getSetterMethodName(String field) {
@@ -268,6 +397,20 @@ public class ExcelUtil {
 		String name = field.replaceFirst(field.substring(0, 1), field.substring(0, 1).toUpperCase());
 		// 拼接 set 并返回
 		return "set" + name;
+	}
+
+	/**
+	 * 构造 getter 方法的方法名
+	 * 
+	 * @param field
+	 *            字段名
+	 * @return
+	 */
+	private String getGetterMethodName(String field) {
+		// 转换为首字母大写
+		String name = field.replaceFirst(field.substring(0, 1), field.substring(0, 1).toUpperCase());
+		// 拼接 get 并返回
+		return "get" + name;
 	}
 
 	/**

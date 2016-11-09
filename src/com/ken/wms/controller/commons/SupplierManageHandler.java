@@ -1,8 +1,15 @@
 package com.ken.wms.controller.commons;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -183,7 +190,7 @@ public class SupplierManageHandler {
 		// 读取文件内容
 		int total = 0;
 		int available = 0;
-		if(file == null)
+		if (file == null)
 			result = ResponseStatus.ERROR.toString();
 		Map<String, Object> importInfo = supplierManageService.importSupplier(file);
 		if (importInfo != null) {
@@ -195,5 +202,66 @@ public class SupplierManageHandler {
 		resultSet.put("total", total);
 		resultSet.put("available", available);
 		return resultSet;
+	}
+
+	/**
+	 * 导出供应商信息
+	 * @param searchType 查找类型
+	 * @param keyWord 查找关键字
+	 * @param response
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "exportSupplier", method = RequestMethod.GET)
+	public void exportSupplier(@RequestParam("searchType") String searchType, @RequestParam("keyWord") String keyWord,
+			HttpServletResponse response) {
+		
+		String fileName = "supplierInfo.xlsx";
+
+		// 根据查询类型进行查询
+		List<Supplier> suppliers = null;
+		Map<String, Object> queryResult = null;
+		if (searchType.equals("searchByID")) {
+			if (keyWord != null && keyWord != "") {
+				Integer id = Integer.valueOf(keyWord);
+				queryResult = supplierManageService.selectById(id);
+			}
+		} else if (searchType.equals("searchByName")) {
+			queryResult = supplierManageService.selectByName(keyWord);
+		} else if (searchType.equals("searchAll")) {
+			queryResult = supplierManageService.selectAll();
+		} else {
+			// do other things
+			suppliers = new ArrayList<>();
+		}
+
+		if (queryResult != null) {
+			suppliers = (List<Supplier>) queryResult.get("data");
+		}
+
+		// 获取生成的文件
+		File file = supplierManageService.exportSupplier(suppliers);
+
+		// 写出文件
+		if (file != null) {
+			// 设置响应头
+			response.addHeader("Content-Disposition", "attachment;filename=" + fileName);
+			try {
+				FileInputStream inputStream = new FileInputStream(file);
+				OutputStream outputStream = response.getOutputStream();
+				byte[] buffer = new byte[8192];
+				
+				int len;
+				while((len = inputStream.read(buffer, 0, buffer.length)) > 0){
+					outputStream.write(buffer,0,len);
+					outputStream.flush();
+				}
+				
+				inputStream.close();
+				outputStream.close();
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+			}
+		}
 	}
 }

@@ -426,6 +426,16 @@
 		$('#export_supplier').click(function() {
 			$('#export_modal').modal("show");
 		})
+
+		$('#export_supplier_download').click(function(){
+			var data = {
+				searchType : search_type_supplier,
+				keyWord : search_keyWord
+			}
+			var url = requestPrefix + "/supplierManage/exportSupplier?" + $.param(data)
+			window.open(url, '_blank');
+			$('#export_modal').modal("hide");
+		})
 	}
 
 	// 导入供应商模态框重置
@@ -754,12 +764,23 @@
 					aria-hidden="true">&times;</button>
 				<h4 class="modal-title" id="myModalLabel">导出供应商信息</h4>
 			</div>
-			<div class="modal-body"></div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-3" style="text-align: center;">
+						<img src="media/icons/warning-icon.png" alt=""
+							style="width: 70px; height: 70px; margin-top: 20px;">
+					</div>
+					<div class="col-md-8">
+						<h3>是否确认导出供应商信息</h3>
+						<p>(注意：请确定要导出的供应商信息，导出的内容为当前列表的搜索结果)</p>
+					</div>
+				</div>
+			</div>
 			<div class="modal-footer">
 				<button class="btn btn-default" type="button" data-dismiss="modal">
 					<span>取消</span>
 				</button>
-				<button class="btn btn-success" type="button">
+				<button class="btn btn-success" type="button" id="export_supplier_download">
 					<span>确认下载</span>
 				</button>
 			</div>

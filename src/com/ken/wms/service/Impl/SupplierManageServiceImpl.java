@@ -1,5 +1,6 @@
 package com.ken.wms.service.Impl;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -89,6 +90,31 @@ public class SupplierManageServiceImpl implements SupplierManageService {
 	}
 
 	/**
+	 * 返回指定 supplierName 的供应商记录 支持模糊查询
+	 * 
+	 * @param supplierName
+	 *            supplierName 供应商德名称
+	 * @return 结果的一个Map，其中： key为 data 的代表记录数据；key 为 total 代表结果记录的数量
+	 */
+	@Override
+	public Map<String, Object> selectByName(String supplierName) {
+		// 初始化结果集
+		Map<String, Object> resultSet = new HashMap<>();
+		List<Supplier> suppliers = new ArrayList<>();
+		long total = 0;
+
+		suppliers = supplierMapper.selectApproximateByName(supplierName);
+		if (suppliers != null) {
+			PageInfo<Supplier> pageInfo = new PageInfo<>(suppliers);
+			total = pageInfo.getTotal();
+		}
+
+		resultSet.put("data", suppliers);
+		resultSet.put("total", total);
+		return resultSet;
+	}
+
+	/**
 	 * 分页查询供应商记录
 	 * 
 	 * @param offset
@@ -106,6 +132,29 @@ public class SupplierManageServiceImpl implements SupplierManageService {
 
 		// 分页查询
 		PageHelper.offsetPage(offset, limit);
+		suppliers = supplierMapper.selectAll();
+		if (suppliers != null) {
+			PageInfo<Supplier> pageInfo = new PageInfo<>(suppliers);
+			total = pageInfo.getTotal();
+		}
+
+		resultSet.put("data", suppliers);
+		resultSet.put("total", total);
+		return resultSet;
+	}
+
+	/**
+	 * 查询所有的供应商记录
+	 * 
+	 * @return 结果的一个Map，其中： key为 data 的代表记录数据；key 为 total 代表结果记录的数量
+	 */
+	@Override
+	public Map<String, Object> selectAll() {
+		// 初始化结果集
+		Map<String, Object> resultSet = new HashMap<>();
+		List<Supplier> suppliers = new ArrayList<>();
+		long total = 0;
+
 		suppliers = supplierMapper.selectAll();
 		if (suppliers != null) {
 			PageInfo<Supplier> pageInfo = new PageInfo<>(suppliers);
@@ -216,7 +265,7 @@ public class SupplierManageServiceImpl implements SupplierManageService {
 
 			// 保存到数据库
 			available = availableList.size();
-			if(available > 0){
+			if (available > 0) {
 				// supplierMapper.insertBatch(availableList);
 			}
 		}
@@ -226,4 +275,18 @@ public class SupplierManageServiceImpl implements SupplierManageService {
 		return result;
 	}
 
+	/**
+	 * 导出供应商信息到文件中
+	 * 
+	 * @param suppliers
+	 *            包含若干条 Supplier 信息的 List
+	 * @return excel 文件
+	 */
+	@Override
+	public File exportSupplier(List<Supplier> suppliers) {
+		if (suppliers == null)
+			return null;
+
+		return excelUtil.excelWriter(Supplier.class, suppliers);
+	}
 }
