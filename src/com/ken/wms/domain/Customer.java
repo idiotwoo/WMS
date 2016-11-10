@@ -62,16 +62,6 @@ public class Customer {
 		this.address = address;
 	}
 
-	public Customer(Integer id, String name, String personInCharge, String tel, String email, String address) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.personInCharge = personInCharge;
-		this.tel = tel;
-		this.email = email;
-		this.address = address;
-	}
-
 	@Override
 	public String toString() {
 		return "Customer [id=" + id + ", name=" + name + ", personInCharge=" + personInCharge + ", tel=" + tel

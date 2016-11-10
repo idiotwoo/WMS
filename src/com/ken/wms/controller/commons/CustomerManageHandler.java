@@ -21,23 +21,25 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ken.wms.controller.Enum.ResponseStatus;
+import com.ken.wms.domain.Customer;
 import com.ken.wms.domain.Supplier;
-import com.ken.wms.service.Interface.SupplierManageService;
+import com.ken.wms.service.Interface.CustomerManageService;
 
 /**
- * 供应商信息管理请求 Handler
+ * 客户信息管理请求 Handler
+ * 
  * @author Ken
  *
  */
-@RequestMapping(value = "/**/supplierManage")
+@RequestMapping(value = "/**/customerManage")
 @Controller
-public class SupplierManageHandler {
+public class CustomerManageHandler {
 
 	@Autowired
-	private SupplierManageService supplierManageService;
+	private CustomerManageService customerManageService;
 
 	/**
-	 * 搜索供应商信息
+	 * 搜索客户信息
 	 * 
 	 * @param searchType
 	 *            搜索类型
@@ -49,9 +51,9 @@ public class SupplierManageHandler {
 	 *            搜索的关键字
 	 * @return
 	 */
-	@RequestMapping(value = "getSupplierList", method = RequestMethod.GET)
 	@SuppressWarnings("unchecked")
-	public @ResponseBody Map<String, Object> getSupplierList(@RequestParam("searchType") String searchType,
+	@RequestMapping(value = "getCustomerList", method = RequestMethod.GET)
+	public @ResponseBody Map<String, Object> getCustomerList(@RequestParam("searchType") String searchType,
 			@RequestParam("offset") int offset, @RequestParam("limit") int limit,
 			@RequestParam("keyWord") String keyWord) {
 		// 初始化结果集
@@ -62,19 +64,18 @@ public class SupplierManageHandler {
 		// 根据查询类型进行查询
 		Map<String, Object> queryResult = null;
 		if (searchType.equals("searchByID")) {
-			if (keyWord != null && keyWord != "") {
+			if (keyWord != null && !keyWord.equals("")) {
 				Integer id = Integer.valueOf(keyWord);
-				queryResult = supplierManageService.selectById(id);
+				queryResult = customerManageService.selectById(id);
 			}
 		} else if (searchType.equals("searchByName")) {
-			queryResult = supplierManageService.selectByName(offset, limit, keyWord);
+			queryResult = customerManageService.selectByName(offset, limit, keyWord);
 		} else if (searchType.equals("searchAll")) {
-			queryResult = supplierManageService.selectAll(offset, limit);
+			queryResult = customerManageService.selectAll(offset, limit);
 		} else {
-			// do other things
+			// do other thing
 		}
 
-		// 结果转换
 		if (queryResult != null) {
 			rows = (List<Supplier>) queryResult.get("data");
 			total = (long) queryResult.get("total");
@@ -86,19 +87,19 @@ public class SupplierManageHandler {
 	}
 
 	/**
-	 * 添加一条供应商信息
+	 * 添加一条客户信息
 	 * 
-	 * @param supplier
-	 *            供应商信息
+	 * @param customer
+	 *            客户信息
 	 * @return 返回一个map，其中：key 为 result表示操作的结果，包括：success 与 error
 	 */
-	@RequestMapping(value = "addSupplier", method = RequestMethod.POST)
-	public @ResponseBody Map<String, Object> addSupplier(@RequestBody Supplier supplier) {
+	@RequestMapping(value = "addCustomer", method = RequestMethod.POST)
+	public @ResponseBody Map<String, Object> addCustomer(@RequestBody Customer customer) {
 		// 初始化结果集
 		Map<String, Object> resultSet = new HashMap<>();
 
 		// 添加记录
-		String result = supplierManageService.addSupplier(supplier) ? ResponseStatus.SUCCESS.toString()
+		String result = customerManageService.addCustomer(customer) ? ResponseStatus.SUCCESS.toString()
 				: ResponseStatus.ERROR.toString();
 
 		resultSet.put("result", result);
@@ -106,47 +107,48 @@ public class SupplierManageHandler {
 	}
 
 	/**
-	 * 查询指定 supplierID 供应商的信息
+	 * 查询指定 customer ID 客户的信息
 	 * 
-	 * @param supplierID
-	 *            供应商ID
+	 * @param customerID
+	 *            客户ID
 	 * @return 返回一个map，其中：key 为 result 的值为操作的结果，包括：success 与 error；key 为 data
-	 *         的值为供应商信息
+	 *         的值为客户信息
 	 */
-	@RequestMapping(value = "getSupplierInfo", method = RequestMethod.GET)
-	public @ResponseBody Map<String, Object> getSupplierInfo(@RequestParam("supplierID") int supplierID) {
+	@RequestMapping(value = "getCustomerInfo", method = RequestMethod.GET)
+	public @ResponseBody Map<String, Object> getCustomerInfo(@RequestParam("customerID") int customerID) {
 		// 初始化结果集
 		Map<String, Object> resultSet = new HashMap<>();
 		String result = ResponseStatus.ERROR.toString();
 
-		// 获取供应点信息
-		Supplier supplier = null;
-		Map<String, Object> queryResult = supplierManageService.selectById(supplierID);
+		// 获取客户信息
+		Customer customer = null;
+		Map<String, Object> queryResult = customerManageService.selectById(customerID);
 		if (queryResult != null) {
-			supplier = (Supplier) queryResult.get("data");
-			if (supplier != null)
+			customer = (Customer) queryResult.get("data");
+			if (customer != null) {
 				result = ResponseStatus.SUCCESS.toString();
+			}
 		}
 
 		resultSet.put("result", result);
-		resultSet.put("data", supplier);
+		resultSet.put("data", customer);
 		return resultSet;
 	}
 
 	/**
-	 * 更新供应商信息
+	 * 更新客户信息
 	 * 
-	 * @param supplier
-	 *            供应商信息
+	 * @param customer
+	 *            客户信息
 	 * @return 返回一个map，其中：key 为 result表示操作的结果，包括：success 与 error
 	 */
-	@RequestMapping(value = "updateSupplier", method = RequestMethod.POST)
-	public @ResponseBody Map<String, Object> updateSupplier(@RequestBody Supplier supplier) {
+	@RequestMapping(value = "updateCustomer", method = RequestMethod.POST)
+	public @ResponseBody Map<String, Object> updateCustomer(@RequestBody Customer customer) {
 		// 初始化结果集
 		Map<String, Object> resultSet = new HashMap<>();
 
 		// 更新
-		String result = supplierManageService.updateSupplier(supplier) ? ResponseStatus.SUCCESS.toString()
+		String result = customerManageService.updateCustomer(customer) ? ResponseStatus.SUCCESS.toString()
 				: ResponseStatus.ERROR.toString();
 
 		resultSet.put("result", result);
@@ -154,19 +156,19 @@ public class SupplierManageHandler {
 	}
 
 	/**
-	 * 删除供应商记录
+	 * 删除客户记录
 	 * 
-	 * @param supplierID
-	 *            供应商ID
+	 * @param customerID
+	 *            客户ID
 	 * @return 返回一个map，其中：key 为 result表示操作的结果，包括：success 与 error
 	 */
-	@RequestMapping(value = "deleteSupplier", method = RequestMethod.GET)
-	public @ResponseBody Map<String, Object> deleteSupplier(@RequestParam("supplierID") Integer supplierID) {
+	@RequestMapping(value = "deleteCustomer", method = RequestMethod.GET)
+	public @ResponseBody Map<String, Object> deleteCustomer(@RequestParam("customerID") int customerID) {
 		// 初始化结果集
 		Map<String, Object> resultSet = new HashMap<>();
 
 		// 刪除
-		String result = supplierManageService.deleteSupplier(supplierID) ? ResponseStatus.SUCCESS.toString()
+		String result = customerManageService.deleteCustomer(customerID) ? ResponseStatus.SUCCESS.toString()
 				: ResponseStatus.ERROR.toString();
 
 		resultSet.put("result", result);
@@ -174,15 +176,15 @@ public class SupplierManageHandler {
 	}
 
 	/**
-	 * 导入供应商信息
+	 * 导入客户信息
 	 * 
 	 * @param file
-	 *            保存有供应商信息的文件
+	 *            保存有客户信息的文件
 	 * @return 返回一个map，其中：key 为 result表示操作的结果，包括：success 与
 	 *         error；key为total表示导入的总条数；key为available表示有效的条数
 	 */
-	@RequestMapping(value = "importSupplier", method = RequestMethod.POST)
-	public @ResponseBody Map<String, Object> importSupplier(@RequestParam("file") MultipartFile file) {
+	@RequestMapping(value = "importCustomer", method = RequestMethod.POST)
+	public @ResponseBody Map<String, Object> importCustomer(@RequestParam("file") MultipartFile file) {
 		// 初始化结果集
 		Map<String, Object> resultSet = new HashMap<>();
 		String result = ResponseStatus.SUCCESS.toString();
@@ -192,7 +194,7 @@ public class SupplierManageHandler {
 		int available = 0;
 		if (file == null)
 			result = ResponseStatus.ERROR.toString();
-		Map<String, Object> importInfo = supplierManageService.importSupplier(file);
+		Map<String, Object> importInfo = customerManageService.importCustomer(file);
 		if (importInfo != null) {
 			total = (int) importInfo.get("total");
 			available = (int) importInfo.get("available");
@@ -205,41 +207,41 @@ public class SupplierManageHandler {
 	}
 
 	/**
-	 * 导出供应商信息
+	 * 导出客户信息
 	 * @param searchType 查找类型
 	 * @param keyWord 查找关键字
 	 * @param response
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "exportSupplier", method = RequestMethod.GET)
-	public void exportSupplier(@RequestParam("searchType") String searchType, @RequestParam("keyWord") String keyWord,
+	@RequestMapping(value = "exportCustomer", method = RequestMethod.GET)
+	public void exportCustomer(@RequestParam("searchType") String searchType, @RequestParam("keyWord") String keyWord,
 			HttpServletResponse response) {
-		
-		String fileName = "supplierInfo.xlsx";
+
+		String fileName = "customerInfo.xlsx";
 
 		// 根据查询类型进行查询
-		List<Supplier> suppliers = null;
+		List<Customer> customers = null;
 		Map<String, Object> queryResult = null;
 		if (searchType.equals("searchByID")) {
-			if (keyWord != null && keyWord != "") {
+			if (keyWord != null && !keyWord.equals("")) {
 				Integer id = Integer.valueOf(keyWord);
-				queryResult = supplierManageService.selectById(id);
+				queryResult = customerManageService.selectById(id);
 			}
 		} else if (searchType.equals("searchByName")) {
-			queryResult = supplierManageService.selectByName(keyWord);
+			queryResult = customerManageService.selectByName(keyWord);
 		} else if (searchType.equals("searchAll")) {
-			queryResult = supplierManageService.selectAll();
+			queryResult = customerManageService.selectAll();
 		} else {
-			// do other things
-			suppliers = new ArrayList<>();
+			// do other thing
+			customers = new ArrayList<>();
 		}
 
 		if (queryResult != null) {
-			suppliers = (List<Supplier>) queryResult.get("data");
+			customers = (List<Customer>) queryResult.get("data");
 		}
 
 		// 获取生成的文件
-		File file = supplierManageService.exportSupplier(suppliers);
+		File file = customerManageService.exportCustomer(customers);
 
 		// 写出文件
 		if (file != null) {
@@ -249,16 +251,16 @@ public class SupplierManageHandler {
 				FileInputStream inputStream = new FileInputStream(file);
 				OutputStream outputStream = response.getOutputStream();
 				byte[] buffer = new byte[8192];
-				
+
 				int len;
-				while((len = inputStream.read(buffer, 0, buffer.length)) > 0){
-					outputStream.write(buffer,0,len);
+				while ((len = inputStream.read(buffer, 0, buffer.length)) > 0) {
+					outputStream.write(buffer, 0, len);
 					outputStream.flush();
 				}
-				
+
 				inputStream.close();
 				outputStream.close();
-				
+
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 			}

@@ -11,12 +11,15 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.ken.wms.controller.Enum.ResponseStatus;
 import com.ken.wms.dao.ActionPermissionMapper;
+import com.ken.wms.dao.CustomerMapper;
 import com.ken.wms.dao.MenuMapper;
 import com.ken.wms.dao.RoleMapper;
 import com.ken.wms.dao.StockInMapper;
+import com.ken.wms.dao.StockOutMapper;
 import com.ken.wms.dao.SupplierMapper;
 import com.ken.wms.dao.UserMapper;
 import com.ken.wms.domain.ActionPermission;
+import com.ken.wms.domain.Customer;
 import com.ken.wms.domain.Menu;
 import com.ken.wms.domain.Role;
 import com.ken.wms.domain.Supplier;
@@ -39,6 +42,10 @@ public class MapperTest {
 	private MenuMapper menuMapper;
 	@Autowired
 	private StockInMapper stockInMapper;
+	@Autowired
+	private StockOutMapper stockOutMapper;
+	@Autowired
+	private CustomerMapper customerMapper;
 	
 	@Test
 	public void test() {
@@ -242,5 +249,90 @@ public class MapperTest {
 		
 		// delete operation test
 //		stockInMapper.deleteByID(12);
+	}
+	
+	@Test
+	public void stockOutTest(){
+		// insert operation test
+//		StockOut stockOut = new StockOut();
+//		stockOut.setCustomerID(4);
+//		stockOut.setGoodID(1);
+//		stockOut.setNumber(100);
+//		stockOut.setPersonInCharge("person1");
+//		stockOut.setTime(new Date(new java.util.Date().getTime()));
+//		stockOutMapper.insert(stockOut);
+		
+		// select operation test
+//		List<StockOut> stockOuts = stockOutMapper.selectAll();
+//		for (StockOut stockOut : stockOuts) {
+//			System.out.println(stockOut);
+//		}
+//		List<StockOut> stockOuts = stockOutMapper.selectByCustomerId(4);
+//		for (StockOut stockOut : stockOuts) {
+//			System.out.println(stockOut);
+//		}
+//		List<StockOut> stockOuts = stockOutMapper.selectByGoodId(1);
+//		for (StockOut stockOut : stockOuts) {
+//			System.out.println(stockOut);
+//		}
+		
+//		// update operation test
+//		StockOut stockOut = stockOutMapper.selectById(2);
+//		stockOut.setPersonInCharge("person3");
+//		stockOutMapper.update(stockOut);
+		
+		// delete operation test
+		stockOutMapper.deleteById(3);
+	}
+	
+	@Test
+	public void customerTest(){
+		// insert operation test
+//		Customer customer = new Customer();
+//		customer.setName("AA");
+//		customer.setPersonInCharge("person1");
+//		customer.setTel("123456");
+//		customer.setEmail("123@outlook.com");
+//		customer.setAddress("GuanZhou");
+//		customerMapper.insert(customer);
+		Customer customer1 = new Customer();
+		Customer customer2 = new Customer();
+		customer1.setName("BB");
+		customer1.setPersonInCharge("person2");
+		customer1.setTel("789123");
+		customer1.setEmail("6987@outlook.com");
+		customer1.setAddress("ShenZhen");
+		customer2.setName("CC");
+		customer2.setPersonInCharge("person3");
+		customer2.setTel("987654");
+		customer2.setEmail("1456@outlook.com");
+		customer2.setAddress("FoShan");
+		List<Customer> customers = new ArrayList<>();
+		customers.add(customer2);
+		customers.add(customer1);
+		customerMapper.insertBatch(customers);
+		
+		// select operation test
+//		List<Customer> customers = customerMapper.selectAll();
+//		for (Customer customer : customers) {
+//			System.out.println(customer);
+//		}
+//		Customer customer = customerMapper.selectById(2);
+//		System.out.println(customer);
+//		Customer customer = customerMapper.selectByName("BB");
+//		System.out.println(customer);
+//		List<Customer> customers = customerMapper.selectApproximateByName("A");
+//		for (Customer customer : customers) {
+//			System.out.println(customer);
+//		}
+		
+		// update operation test
+//		Customer customer = customerMapper.selectById(2);
+//		customer.setName("CC");
+//		customerMapper.update(customer);
+		
+		// delete operation test
+//		customerMapper.deleteById(2);
+//		customerMapper.deleteByName("BB");
 	}
 }

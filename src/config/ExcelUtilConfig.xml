@@ -23,4 +23,27 @@
 			<value>供应商地址</value>
 		</property>
 	</entity>
+	
+	<entity class="com.ken.wms.domain.Customer">
+		<property>
+			<field>name</field>
+			<value>客户名称</value>
+		</property>
+		<property>
+			<field>personInCharge</field>
+			<value>负责人</value>
+		</property>
+		<property>
+			<field>tel</field>
+			<value>联系电话</value>
+		</property>
+		<property>
+			<field>email</field>
+			<value>电子邮件</value>
+		</property>
+		<property>
+			<field>address</field>
+			<value>地址</value>
+		</property>
+	</entity>
 </configuration>

@@ -20,6 +20,11 @@ import com.ken.wms.domain.Supplier;
 import com.ken.wms.service.Interface.SupplierManageService;
 import com.ken.wms.service.util.ExcelUtil;
 
+/**
+ * 供应商信息管理 Service 实现类
+ * @author Ken
+ *
+ */
 @Service
 public class SupplierManageServiceImpl implements SupplierManageService {
 
@@ -266,7 +271,7 @@ public class SupplierManageServiceImpl implements SupplierManageService {
 			// 保存到数据库
 			available = availableList.size();
 			if (available > 0) {
-				// supplierMapper.insertBatch(availableList);
+				 supplierMapper.insertBatch(availableList);
 			}
 		}
 
