@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ken.wms.dao.GoodsMapper">
+
+	<resultMap type="com.ken.wms.domain.Goods" id="goods">
+		<id property="id" column="GOOD_ID"/>
+		<result property="name" column="GOOD_NAME"/>
+		<result property="type" column="GOOD_RYPE"/>
+		<result property="size" column="GOOD_SIZE"/>
+		<result property="value" column="GOOD_VALUE"/>
+	</resultMap>
+	
+	<select id="selectAll" resultMap="goods">
+		select
+			g.GOOD_ID,
+			g.GOOD_NAME,
+			g.GOOD_RYPE,
+			g.GOOD_SIZE,
+			g.GOOD_VALUE
+		from 
+			wms_goods g
+	</select>
+	
+	<select id="selectById" resultMap="goods">
+		select
+			g.GOOD_ID,
+			g.GOOD_NAME,
+			g.GOOD_RYPE,
+			g.GOOD_SIZE,
+			g.GOOD_VALUE
+		from 
+			wms_goods g
+		where
+			g.GOOD_ID = #{id}
+	</select>
+	
+	<select id="selectByName" resultMap="goods">
+		select
+			g.GOOD_ID,
+			g.GOOD_NAME,
+			g.GOOD_RYPE,
+			g.GOOD_SIZE,
+			g.GOOD_VALUE
+		from 
+			wms_goods g
+		where
+			g.GOOD_NAME = #{goodsName}
+	</select>
+	
+	<select id="selectApproximateByName" resultMap="goods">
+		select
+			g.GOOD_ID,
+			g.GOOD_NAME,
+			g.GOOD_RYPE,
+			g.GOOD_SIZE,
+			g.GOOD_VALUE
+		from 
+			wms_goods g
+		where
+			g.GOOD_NAME like concat(concat('%',#{goodsName}),'%')
+	</select>
+
+	<insert id="insert">
+		insert into wms_goods(GOOD_NAME,GOOD_RYPE,GOOD_SIZE,GOOD_VALUE)
+		values (#{name},#{type},#{size},#{value})
+	</insert>
+	
+	<insert id="insertBatch">
+		insert into wms_goods(GOOD_NAME,GOOD_RYPE,GOOD_SIZE,GOOD_VALUE)
+		values
+		<foreach collection="list" item="goods" separator=",">
+			(#{goods.name},#{goods.type},#{goods.size},#{goods.value})
+		</foreach>
+	</insert>
+	
+	<update id="update">
+		update
+			wms_goods
+		set
+			GOOD_NAME = #{name},
+			GOOD_RYPE = #{type},
+			GOOD_SIZE = #{size},
+			GOOD_VALUE = #{value}
+		where
+			GOOD_ID = #{id}
+	</update>
+	
+	<delete id="deleteById">
+		delete from wms_goods
+		where GOOD_ID = #{id}
+	</delete>
+	
+	<delete id="deleteByName">
+		delete from wms_goods
+		where GOOD_NAME = #{goodsName}
+	</delete>
+</mapper>

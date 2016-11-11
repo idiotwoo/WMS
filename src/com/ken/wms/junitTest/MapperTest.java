@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.ken.wms.controller.Enum.ResponseStatus;
 import com.ken.wms.dao.ActionPermissionMapper;
 import com.ken.wms.dao.CustomerMapper;
+import com.ken.wms.dao.GoodsMapper;
 import com.ken.wms.dao.MenuMapper;
 import com.ken.wms.dao.RoleMapper;
 import com.ken.wms.dao.StockInMapper;
@@ -20,6 +21,7 @@ import com.ken.wms.dao.SupplierMapper;
 import com.ken.wms.dao.UserMapper;
 import com.ken.wms.domain.ActionPermission;
 import com.ken.wms.domain.Customer;
+import com.ken.wms.domain.Goods;
 import com.ken.wms.domain.Menu;
 import com.ken.wms.domain.Role;
 import com.ken.wms.domain.Supplier;
@@ -46,6 +48,8 @@ public class MapperTest {
 	private StockOutMapper stockOutMapper;
 	@Autowired
 	private CustomerMapper customerMapper;
+	@Autowired
+	private GoodsMapper goodsMapper;
 	
 	@Test
 	public void test() {
@@ -334,5 +338,43 @@ public class MapperTest {
 		// delete operation test
 //		customerMapper.deleteById(2);
 //		customerMapper.deleteByName("BB");
+	}
+	
+	@Test
+	public void goodsMapper(){
+		// insert operation test
+//		Goods goods = new Goods();
+//		goods.setName("Banana");
+//		goods.setType("fruit");
+//		goods.setValue(1);
+//		goodsMapper.insert(goods);
+//		Goods goods1 = new Goods();
+//		goods1.setName("Cup");
+//		goods1.setType("pottery");
+//		goods1.setValue(10);
+//		Goods goods2 = new Goods();
+//		goods2.setName("Phone");
+//		goods2.setType("Electricity Product");
+//		goods2.setValue(1000);
+//		List<Goods> goods = new ArrayList<>();
+//		goods.add(goods2);
+//		goods.add(goods1);
+//		goodsMapper.insertBatch(goods);
+		
+		// select operation test
+//		List<Goods> result = goodsMapper.selectAll();
+//		for (Goods goods : result) {
+//			System.out.println(goods);
+//		}
+//		Goods goods = goodsMapper.selectById(1);
+//		System.out.println(goods);
+//		Goods goods = goodsMapper.selectByName("phone");
+//		System.out.println(goods);
+//		List<Goods> goods = goodsMapper.selectApproximateByName("a");
+//		for (Goods good1 : goods) {
+//			System.out.println(good1);
+//		}
+//		goodsMapper.deleteById(4);
+		goodsMapper.deleteByName("phone");
 	}
 }

@@ -46,4 +46,27 @@
 			<value>地址</value>
 		</property>
 	</entity>
+	
+	<entity class="com.ken.wms.domain.Goods">
+		<property>
+			<field>id</field>
+			<value>货物ID</value>
+		</property>
+		<property>
+			<field>name</field>
+			<value>货物名称</value>
+		</property>
+		<property>
+			<field>type</field>
+			<value>货物类型</value>
+		</property>
+		<property>
+			<field>size</field>
+			<value>货物规格</value>
+		</property>
+		<property>
+			<field>value</field>
+			<value>货物价值</value>
+		</property>
+	</entity>
 </configuration>

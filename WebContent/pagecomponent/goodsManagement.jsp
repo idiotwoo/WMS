@@ -2,21 +2,21 @@
 	pageEncoding="UTF-8"%>
 
 <script>
-	var search_type_customer = "none";
+	var search_type_goods = "none";
 	var search_keyWord = "";
 	var selectID;
 
 	$(function() {
 		optionAction();
 		searchAction();
-		customerListInit();
+		goodsListInit();
 		bootstrapValidatorInit();
 
-		addCustomerAction();
-		editCustomerAction();
-		deleteCustomerAction();
-		importCustomerAction();
-		exportCustomerAction()
+		addGoodsAction();
+		editGoodsAction();
+		deleteGoodsAction();
+		importGoodsAction();
+		exportGoodsAction()
 	})
 
 	// 下拉框選擇動作
@@ -26,13 +26,13 @@
 			$("#search_input").val("");
 			if (type == "所有") {
 				$("#search_input").attr("readOnly", "true");
-				search_type_customer = "searchAll";
-			} else if (type == "客户ID") {
+				search_type_goods = "searchAll";
+			} else if (type == "货物ID") {
 				$("#search_input").removeAttr("readOnly");
-				search_type_customer = "searchByID";
-			} else if (type == "客户名称") {
+				search_type_goods = "searchByID";
+			} else if (type == "货物名称") {
 				$("#search_input").removeAttr("readOnly");
-				search_type_customer = "searchByName";
+				search_type_goods = "searchByName";
 			} else {
 				$("#search_input").removeAttr("readOnly");
 			}
@@ -55,44 +55,38 @@
 		var temp = {
 			limit : params.limit,
 			offset : params.offset,
-			searchType : search_type_customer,
+			searchType : search_type_goods,
 			keyWord : search_keyWord
 		}
 		return temp;
 	}
 
 	// 表格初始化
-	function customerListInit() {
-		$('#customerList')
+	function goodsListInit() {
+		$('#goodsList')
 				.bootstrapTable(
 						{
 							columns : [
 									{
 										field : 'id',
-										title : '客户ID'
+										title : '货物ID'
 									//sortable: true
 									},
 									{
 										field : 'name',
-										title : '客户名称'
+										title : '货物名称'
 									},
 									{
-										field : 'personInCharge',
-										title : '负责人'
+										field : 'type',
+										title : '货物类型'
 									},
 									{
-										field : 'tel',
-										title : '联系电话'
+										field : 'size',
+										title : '货物尺寸'
 									},
 									{
-										field : 'address',
-										title : '地址',
-										visible : false
-									},
-									{
-										field : 'email',
-										title : '电子邮件',
-										visible : false
+										field : 'value',
+										title : '货物价值',
 									},
 									{
 										field : 'operation',
@@ -119,7 +113,7 @@
 										}
 									} ],
 							url : requestPrefix
-									+ '/customerManage/getCustomerList',
+									+ '/goodsManage/getGoodsList',
 							method : 'GET',
 							queryParams : queryParams,
 							sidePagination : "server",
@@ -134,7 +128,7 @@
 
 	// 表格刷新
 	function tableRefresh() {
-		$('#customerList').bootstrapTable('refresh', {
+		$('#goodsList').bootstrapTable('refresh', {
 			query : {}
 		});
 	}
@@ -144,17 +138,16 @@
 		$('#edit_modal').modal("show");
 
 		// load info
-		$('#customer_form_edit').bootstrapValidator("resetForm", true);
-		$('#customer_name_edit').val(row.name);
-		$('#customer_person_edit').val(row.personInCharge);
-		$('#customer_tel_edit').val(row.tel);
-		$('#customer_email_edit').val(row.email);
-		$('#customer_address_edit').val(row.address);
+		$('#goods_form_edit').bootstrapValidator("resetForm", true);
+		$('#goods_name_edit').val(row.name);
+		$('#goods_type_edit').val(row.type);
+		$('#goods_size_edit').val(row.size);
+		$('#goods_value_edit').val(row.value);
 	}
 
 	// 添加供应商模态框数据校验
 	function bootstrapValidatorInit() {
-		$("#customer_form,#customer_form_edit").bootstrapValidator({
+		$("#goods_form,#goods_form_edit").bootstrapValidator({
 			message : 'This is not valid',
 			feedbackIcons : {
 				valid : 'glyphicon glyphicon-ok',
@@ -163,42 +156,17 @@
 			},
 			excluded : [ ':disabled' ],
 			fields : {
-				customer_name : {
+				goods_name : {
 					validators : {
 						notEmpty : {
-							message : '客户名称不能为空'
+							message : '货物名称不能为空'
 						}
 					}
 				},
-				customer_tel : {
+				goods_value : {
 					validators : {
 						notEmpty : {
-							message : '客户电话不能为空'
-						}
-					}
-				},
-				customer_email : {
-					validators : {
-						notEmpty : {
-							message : '客户E-mail不能为空'
-						},
-						regexp : {
-							regexp : '^[^@\\s]+@([^@\\s]+\\.)+[^@\\s]+$',
-							message : 'E-mail的格式不正确'
-						}
-					}
-				},
-				customer_address : {
-					validators : {
-						notEmpty : {
-							message : '客户地址不能为空'
-						}
-					}
-				},
-				customer_person : {
-					validators : {
-						notEmpty : {
-							message : '客户负责人不能为空'
+							message : '货物价值不能为空'
 						}
 					}
 				}
@@ -206,30 +174,29 @@
 		})
 	}
 
-	// 编辑客户信息
-	function editCustomerAction() {
+	// 编辑货物信息
+	function editGoodsAction() {
 		$('#edit_modal_submit').click(
 				function() {
-					$('#customer_form_edit').data('bootstrapValidator')
+					$('#goods_form_edit').data('bootstrapValidator')
 							.validate();
-					if (!$('#customer_form_edit').data('bootstrapValidator')
+					if (!$('#goods_form_edit').data('bootstrapValidator')
 							.isValid()) {
 						return;
 					}
 
 					var data = {
 						id : selectID,
-						name : $('#customer_name_edit').val(),
-						personInCharge : $('#customer_person_edit').val(),
-						tel : $('#customer_tel_edit').val(),
-						email : $('#customer_email_edit').val(),
-						address : $('#customer_address_edit').val()
+						name : $('#goods_name_edit').val(),
+						type : $('#goods_type_edit').val(),
+						size : $('#goods_size_edit').val(),
+						value : $('#goods_value_edit').val(),
 					}
 
 					// ajax
 					$.ajax({
 						type : "POST",
-						url : requestPrefix + '/customerManage/updateCustomer',
+						url : requestPrefix + '/goodsManage/updateGoods',
 						dataType : "json",
 						contentType : "application/json",
 						data : JSON.stringify(data),
@@ -239,10 +206,10 @@
 							var msg;
 							if (response.result == "success") {
 								type = "success";
-								msg = "客户信息更新成功";
+								msg = "货物信息更新成功";
 							} else if (resposne == "error") {
 								type = "error";
-								msg = "客户信息更新失败"
+								msg = "货物信息更新失败"
 							}
 							infoModal(type, msg);
 							tableRefresh();
@@ -253,17 +220,17 @@
 				});
 	}
 
-	// 刪除客户信息
-	function deleteCustomerAction(){
+	// 刪除货物信息
+	function deleteGoodsAction(){
 		$('#delete_confirm').click(function(){
 			var data = {
-				"customerID" : selectID
+				"goodsID" : selectID
 			}
 			
 			// ajax
 			$.ajax({
 				type : "GET",
-				url : requestPrefix + "/customerManage/deleteCustomer",
+				url : requestPrefix + "/goodsManage/deleteGoods",
 				dataType : "json",
 				contentType : "application/json",
 				data : data,
@@ -273,10 +240,10 @@
 					var msg;
 					if(response.result == "success"){
 						type = "success";
-						msg = "客户信息删除成功";
+						msg = "货物信息删除成功";
 					}else{
 						type = "error";
-						msg = "客户信息删除失败";
+						msg = "货物信息删除失败";
 					}
 					infoModal(type, msg);
 					tableRefresh();
@@ -288,24 +255,23 @@
 		})
 	}
 
-	// 添加客户信息
-	function addCustomerAction() {
-		$('#add_customer').click(function() {
+	// 添加货物信息
+	function addGoodsAction() {
+		$('#add_goods').click(function() {
 			$('#add_modal').modal("show");
 		});
 
 		$('#add_modal_submit').click(function() {
 			var data = {
-				name : $('#customer_name').val(),
-				personInCharge : $('#customer_person').val(),
-				tel : $('#customer_tel').val(),
-				email : $('#customer_email').val(),
-				address : $('#customer_address').val()
+				name : $('#goods_name').val(),
+				type : $('#goods_type').val(),
+				size : $('#goods_size').val(),
+				value : $('#goods_value').val(),
 			}
 			// ajax
 			$.ajax({
 				type : "POST",
-				url : requestPrefix + "/customerManage/addCustomer",
+				url : requestPrefix + "/goodsManage/addGoods",
 				dataType : "json",
 				contentType : "application/json",
 				data : JSON.stringify(data),
@@ -315,21 +281,20 @@
 					var type;
 					if (response.result == "success") {
 						type = "success";
-						msg = "客户添加成功";
+						msg = "货物添加成功";
 					} else if (response.result == "error") {
 						type = "error";
-						msg = "客户添加失败";
+						msg = "货物添加失败";
 					}
 					infoModal(type, msg);
 					tableRefresh();
 
 					// reset
-					$('#customer_name').val("");
-					$('#customer_person').val("");
-					$('#customer_tel').val("");
-					$('#customer_email').val("");
-					$('#customer_address').val("");
-					$('#customer_form').bootstrapValidator("resetForm", true);
+					$('#goods_name').val("");
+					$('#goods_type').val("");
+					$('#goods_size').val("");
+					$('#goods_value').val("");
+					$('#goods_form').bootstrapValidator("resetForm", true);
 				},
 				error : function(response) {
 				}
@@ -340,9 +305,9 @@
 	var import_step = 1;
 	var import_start = 1;
 	var import_end = 3;
-	// 导入客户信息
-	function importCustomerAction() {
-		$('#import_customer').click(function() {
+	// 导入货物信息
+	function importGoodsAction() {
+		$('#import_goods').click(function() {
 			$('#import_modal').modal("show");
 		});
 
@@ -385,15 +350,15 @@
 
 			// ajax
 			$.ajaxFileUpload({
-				url : requestPrefix + "/customerManage/importCustomer",
+				url : requestPrefix + "/goodsManage/importGoods",
 				secureuri: false,
 				dataType: 'json',
 				fileElementId:"file",
 				success : function(data, status){
 					var total = 0;
 					var available = 0;
-					var msg1 = "客户信息导入成功";
-					var msg2 = "客户信息导入失败";
+					var msg1 = "货物信息导入成功";
+					var msg2 = "货物信息导入失败";
 					var info;
 
 					$('#import_progress_bar').addClass("hide");
@@ -421,24 +386,24 @@
 		})
 	}
 
-	// 导出客户信息
-	function exportCustomerAction() {
-		$('#export_customer').click(function() {
+	// 导出货物信息
+	function exportGoodsAction() {
+		$('#export_goods').click(function() {
 			$('#export_modal').modal("show");
 		})
 
-		$('#export_customer_download').click(function(){
+		$('#export_goods_download').click(function(){
 			var data = {
-				searchType : search_type_customer,
+				searchType : search_type_goods,
 				keyWord : search_keyWord
 			}
-			var url = requestPrefix + "/customerManage/exportCustomer?" + $.param(data)
+			var url = requestPrefix + "/goodsManage/exportGoods?" + $.param(data)
 			window.open(url, '_blank');
 			$('#export_modal').modal("hide");
 		})
 	}
 
-	// 导入客户模态框重置
+	// 导入货物模态框重置
 	function importModalReset(){
 		var i;
 		for(i = import_start; i <= import_end; i++){
@@ -497,7 +462,7 @@
 </script>
 <div class="panel panel-default">
 	<ol class="breadcrumb">
-		<li>客户信息管理</li>
+		<li>货物信息管理</li>
 	</ol>
 	<div class="panel-body">
 		<div class="row">
@@ -508,8 +473,8 @@
 						<span id="search_type">查询方式</span> <span class="caret"></span>
 					</button>
 					<ul class="dropdown-menu" role="menu">
-						<li><a href="javascript:void(0)" class="dropOption">客户ID</a></li>
-						<li><a href="javascript:void(0)" class="dropOption">客户名称</a></li>
+						<li><a href="javascript:void(0)" class="dropOption">货物ID</a></li>
+						<li><a href="javascript:void(0)" class="dropOption">货物名称</a></li>
 						<li><a href="javascript:void(0)" class="dropOption">所有</a></li>
 					</ul>
 				</div>
@@ -518,7 +483,7 @@
 				<div>
 					<div class="col-md-3">
 						<input id="search_input" type="text" class="form-control"
-							placeholder="客户ID">
+							placeholder="货物ID">
 					</div>
 					<div class="col-md-2">
 						<button id="search_button" class="btn btn-success">
@@ -531,13 +496,13 @@
 
 		<div class="row" style="margin-top: 25px">
 			<div class="col-md-5">
-				<button class="btn btn-sm btn-default" id="add_customer">
-					<span class="glyphicon glyphicon-plus"></span> <span>添加客户</span>
+				<button class="btn btn-sm btn-default" id="add_goods">
+					<span class="glyphicon glyphicon-plus"></span> <span>添加货物信息</span>
 				</button>
-				<button class="btn btn-sm btn-default" id="import_customer">
+				<button class="btn btn-sm btn-default" id="import_goods">
 					<span class="glyphicon glyphicon-import"></span> <span>导入</span>
 				</button>
-				<button class="btn btn-sm btn-default" id="export_customer">
+				<button class="btn btn-sm btn-default" id="export_goods">
 					<span class="glyphicon glyphicon-export"></span> <span>导出</span>
 				</button>
 			</div>
@@ -546,13 +511,13 @@
 
 		<div class="row" style="margin-top: 15px">
 			<div class="col-md-12">
-				<table id="customerList" class="table table-striped"></table>
+				<table id="goodsList" class="table table-striped"></table>
 			</div>
 		</div>
 	</div>
 </div>
 
-<!-- 添加客户信息模态框 -->
+<!-- 添加货物信息模态框 -->
 <div id="add_modal" class="modal fade" table-index="-1" role="dialog"
 	aria-labelledby="myModalLabel" aria-hidden="true"
 	data-backdrop="static">
@@ -561,53 +526,45 @@
 			<div class="modal-header">
 				<button class="close" type="button" data-dismiss="modal"
 					aria-hidden="true">&times;</button>
-				<h4 class="modal-title" id="myModalLabel">添加客户信息</h4>
+				<h4 class="modal-title" id="myModalLabel">添加货物信息</h4>
 			</div>
 			<div class="modal-body">
 				<!-- 模态框的内容 -->
 				<div class="row">
 					<div class="col-md-1"></div>
 					<div class="col-md-8">
-						<form class="form-horizontal" role="form" id="customer_form"
+						<form class="form-horizontal" role="form" id="goods_form"
 							style="margin-top: 25px">
 							<div class="form-group">
-								<label for="" class="control-label col-md-4"> <span>客户名称：</span>
+								<label for="" class="control-label col-md-4"> <span>货物名称：</span>
 								</label>
 								<div class="col-md-8">
-									<input type="text" class="form-control" id="customer_name"
-										name="customer_name" placeholder="客户名称">
+									<input type="text" class="form-control" id="goods_name"
+										name="goods_name" placeholder="货物名称">
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="" class="control-label col-md-4"> <span>负责人姓名：</span>
+								<label for="" class="control-label col-md-4"> <span>货物类型：</span>
 								</label>
 								<div class="col-md-8">
-									<input type="text" class="form-control" id="customer_person"
-										name="customer_person" placeholder="负责人姓名">
+									<input type="text" class="form-control" id="goods_type"
+										name="goods_type" placeholder="货物类型">
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="" class="control-label col-md-4"> <span>联系电话：</span>
+								<label for="" class="control-label col-md-4"> <span>货物尺寸：</span>
 								</label>
 								<div class="col-md-8">
-									<input type="text" class="form-control" id="customer_tel"
-										name="customer_tel" placeholder="联系电话">
+									<input type="text" class="form-control" id="goods_size"
+										name="goods_size" placeholder="货物尺寸">
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="" class="control-label col-md-4"> <span>电子邮件：</span>
+								<label for="" class="control-label col-md-4"> <span>货物价值：</span>
 								</label>
 								<div class="col-md-8">
-									<input type="text" class="form-control" id="customer_email"
-										name="customer_email" placeholder="电子邮件">
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="" class="control-label col-md-4"> <span>联系地址：</span>
-								</label>
-								<div class="col-md-8">
-									<input type="text" class="form-control" id="customer_address"
-										name="customer_address" placeholder="联系地址">
+									<input type="text" class="form-control" id="goods_value"
+										name="goods_value" placeholder="货物价值">
 								</div>
 							</div>
 						</form>
@@ -627,7 +584,7 @@
 	</div>
 </div>
 
-<!-- 导入客户信息模态框 -->
+<!-- 导入货物信息模态框 -->
 <div class="modal fade" id="import_modal" table-index="-1" role="dialog"
 	aria-labelledby="myModalLabel" aria-hidden="true"
 	data-backdrop="static">
@@ -636,7 +593,7 @@
 			<div class="modal-header">
 				<button class="close" type="button" data-dismiss="modal"
 					aria-hidden="true">&times;</button>
-				<h4 class="modal-title" id="myModalLabel">导入客户信息</h4>
+				<h4 class="modal-title" id="myModalLabel">导入货物信息</h4>
 			</div>
 			<div class="modal-body">
 				<div id="step1">
@@ -644,11 +601,11 @@
 						<div class="col-md-1"></div>
 						<div class="col-md-10 col-sm-10">
 							<div>
-								<h4>点击下面的下载按钮，下载客户信息电子表格</h4>
+								<h4>点击下面的下载按钮，下载货物信息电子表格</h4>
 							</div>
 							<div style="margin-top: 30px; margin-buttom: 15px">
 								<a class="btn btn-info"
-									href="commons/fileSource/download/customerInfo.xlsx"
+									href="commons/fileSource/download/goodsInfo.xlsx"
 									target="_blank"> <span class="glyphicon glyphicon-download"></span>
 									<span>下载</span>
 								</a>
@@ -661,7 +618,7 @@
 						<div class="col-md-1"></div>
 						<div class="col-md-10 col-sm-10">
 							<div>
-								<h4>请按照客户信息电子表格中指定的格式填写需要添加的一个或多个客户信息</h4>
+								<h4>请按照货物信息电子表格中指定的格式填写需要添加的一个或多个货物信息</h4>
 							</div>
 							<div class="alert alert-info"
 								style="margin-top: 10px; margin-buttom: 30px">
@@ -676,7 +633,7 @@
 						<div class="col-md-8 col-sm-10">
 							<div>
 								<div>
-									<h4>请点击下面上传文件按钮，上传填写好的客户信息电子表格</h4>
+									<h4>请点击下面上传文件按钮，上传填写好的货物信息电子表格</h4>
 								</div>
 								<div style="margin-top: 30px; margin-buttom: 15px">
 									<span class="btn btn-info btn-file"> <span> <span
@@ -753,7 +710,7 @@
 	</div>
 </div>
 
-<!-- 导出客户信息模态框 -->
+<!-- 导出货物信息模态框 -->
 <div class="modal fade" id="export_modal" table-index="-1" role="dialog"
 	aria-labelledby="myModalLabel" aria-hidden="true"
 	data-backdrop="static">
@@ -762,7 +719,7 @@
 			<div class="modal-header">
 				<button class="close" type="button" data-dismiss="modal"
 					aria-hidden="true">&times;</button>
-				<h4 class="modal-title" id="myModalLabel">导出客户信息</h4>
+				<h4 class="modal-title" id="myModalLabel">导出货物信息</h4>
 			</div>
 			<div class="modal-body">
 				<div class="row">
@@ -771,8 +728,8 @@
 							style="width: 70px; height: 70px; margin-top: 20px;">
 					</div>
 					<div class="col-md-8">
-						<h3>是否确认导出客户信息</h3>
-						<p>(注意：请确定要导出的客户信息，导出的内容为当前列表的搜索结果)</p>
+						<h3>是否确认导出货物信息</h3>
+						<p>(注意：请确定要导出的货物信息，导出的内容为当前列表的搜索结果)</p>
 					</div>
 				</div>
 			</div>
@@ -780,7 +737,7 @@
 				<button class="btn btn-default" type="button" data-dismiss="modal">
 					<span>取消</span>
 				</button>
-				<button class="btn btn-success" type="button" id="export_customer_download">
+				<button class="btn btn-success" type="button" id="export_goods_download">
 					<span>确认下载</span>
 				</button>
 			</div>
@@ -847,8 +804,8 @@
 							style="width: 70px; height: 70px; margin-top: 20px;">
 					</div>
 					<div class="col-md-8">
-						<h3>是否确认删除该条客户信息</h3>
-						<p>(注意：若该客户已经有仓库出库记录，则该客户信息将不能删除成功。如需删除该客户的信息，请先删除该客户的入库记录)</p>
+						<h3>是否确认删除该条货物信息</h3>
+						<p>(注意：若该货物已经有仓库进出库记录或有仓存记录，则该货物信息将不能删除成功。如需删除该货物的信息，请先确保该货物没有关联的仓库进出库记录或有仓存记录)</p>
 					</div>
 				</div>
 			</div>
@@ -864,7 +821,7 @@
 	</div>
 </div>
 
-<!-- 编辑客户信息模态框 -->
+<!-- 编辑货物信息模态框 -->
 <div id="edit_modal" class="modal fade" table-index="-1" role="dialog"
 	aria-labelledby="myModalLabel" aria-hidden="true"
 	data-backdrop="static">
@@ -873,56 +830,47 @@
 			<div class="modal-header">
 				<button class="close" type="button" data-dismiss="modal"
 					aria-hidden="true">&times;</button>
-				<h4 class="modal-title" id="myModalLabel">编辑客户信息</h4>
+				<h4 class="modal-title" id="myModalLabel">编辑货物信息</h4>
 			</div>
 			<div class="modal-body">
 				<!-- 模态框的内容 -->
 				<div class="row">
 					<div class="col-md-1"></div>
 					<div class="col-md-8">
-						<form class="form-horizontal" role="form" id="customer_form_edit"
+						<form class="form-horizontal" role="form" id="goods_form_edit"
 							style="margin-top: 25px">
 							<div class="form-group">
-								<label for="" class="control-label col-md-4"> <span>客户名称：</span>
+								<label for="" class="control-label col-md-4"> <span>货物名称：</span>
 								</label>
 								<div class="col-md-8">
-									<input type="text" class="form-control" id="customer_name_edit"
-										name="customer_name" placeholder="客户名称">
+									<input type="text" class="form-control" id="goods_name_edit"
+										name="goods_name" placeholder="货物名称">
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="" class="control-label col-md-4"> <span>负责人姓名：</span>
+								<label for="" class="control-label col-md-4"> <span>货物类型：</span>
 								</label>
 								<div class="col-md-8">
 									<input type="text" class="form-control"
-										id="customer_person_edit" name="customer_person"
-										placeholder="负责人姓名">
+										id="goods_type_edit" name="goods_type"
+										placeholder="货物类型">
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="" class="control-label col-md-4"> <span>联系电话：</span>
+								<label for="" class="control-label col-md-4"> <span>货物尺寸：</span>
 								</label>
 								<div class="col-md-8">
-									<input type="text" class="form-control" id="customer_tel_edit"
-										name="customer_tel" placeholder="联系电话">
+									<input type="text" class="form-control" id="goods_size_edit"
+										name="goods_size" placeholder="货物尺寸">
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="" class="control-label col-md-4"> <span>电子邮件：</span>
-								</label>
-								<div class="col-md-8">
-									<input type="text" class="form-control"
-										id="customer_email_edit" name="customer_email"
-										placeholder="电子邮件">
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="" class="control-label col-md-4"> <span>联系地址：</span>
+								<label for="" class="control-label col-md-4"> <span>货物价值：</span>
 								</label>
 								<div class="col-md-8">
 									<input type="text" class="form-control"
-										id="customer_address_edit" name="customer_address"
-										placeholder="联系地址">
+										id="goods_value_edit" name="goods_value"
+										placeholder="货物价值">
 								</div>
 							</div>
 						</form>

@@ -11,7 +11,7 @@ public class Goods {
 	private String name;// 货物名
 	private String type;// 货物类型
 	private String size;// 货物规格
-	private double value;// 货物价值
+	private Double value;// 货物价值
 
 	public Integer getId() {
 		return id;
@@ -49,16 +49,7 @@ public class Goods {
 		return value;
 	}
 
-	public void setValue(double value) {
-		this.value = value;
-	}
-
-	public Goods(Integer id, String name, String type, String size, double value) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.type = type;
-		this.size = size;
+	public void setValue(Double value) {
 		this.value = value;
 	}
 
