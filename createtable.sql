@@ -35,6 +35,8 @@ create table wms_customer
 	REPO_ID int not null auto_increment,
     REPO_ADDRESS varchar(30) not null,
     REPO_STATUS varchar(20) not null,
+    REPO_AREA varchar(20) not null,
+    REPO_DESC varchar(50),
     primary key(REPO_ID)
  )engine=innodb;
  
@@ -68,9 +70,11 @@ create table wms_record_in
     RECORD_NUMBER int not null,
     RECORD_TIME datetime not null,
     RECORD_PERSON varchar(10) not null,
+    RECORD_REPOSITORYID int not null,
     primary key(RECORD_ID),
     foreign key(RECORD_SUPPLIERID) references wms_supplier(SUPPLIER_ID),
-    foreign key(RECORD_GOODID) references wms_goods(GOOD_ID)
+    foreign key(RECORD_GOODID) references wms_goods(GOOD_ID),
+    foreign key(RECORD_REPOSITORYID) references wms_respository(REPO_ID)
 )engine=innodb;
 
 create table wms_record_out
@@ -81,19 +85,21 @@ create table wms_record_out
     RECORD_NUMBER int not null,
     RECORD_TIME datetime not null,
     RECORD_PERSON varchar(10) not null,
+     RECORD_REPOSITORYID int not null,
     primary key(RECORD_ID),
     foreign key(RECORD_CUSTOMERID) references wms_customer(CUSTOMER_ID),
-    foreign key(RECORD_GOODID) references wms_goods(GOOD_ID)
+    foreign key(RECORD_GOODID) references wms_goods(GOOD_ID),
+    foreign key(RECORD_REPOSITORYID) references wms_respository(REPO_ID)
 )engine=innodb;
 
 create table wms_record_storage
 (
 	RECORD_GOODID int not null auto_increment,
-    RECORD_AREAID int not null,
+    RECORD_REPOSITORY int not null,
     RECORD_NUMBER int not null,
     primary key(RECORD_GOODID,RECORD_AREAID),
     foreign key (RECORD_GOODID) references wms_goods(GOOD_ID),
-    foreign key (RECORD_AREAID) references wms_area(AREA_ID)
+    foreign key (RECORD_REPOSITORY) references wms_respository(REPO_ID)
 )engine=innodb;
 
 
@@ -131,7 +137,7 @@ create table wms_action
 	ACTION_ID int not null auto_increment,
     ACTION_NAME varchar(30) not null,
     ACTION_DESC varchar(30),
-    ACTION_PARAM varchar(30) not null,
+    ACTION_PARAM varchar(50) not null,
     primary key(ACTION_ID)
 )engine=innodb;
 

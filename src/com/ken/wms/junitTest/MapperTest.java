@@ -14,6 +14,7 @@ import com.ken.wms.dao.ActionPermissionMapper;
 import com.ken.wms.dao.CustomerMapper;
 import com.ken.wms.dao.GoodsMapper;
 import com.ken.wms.dao.MenuMapper;
+import com.ken.wms.dao.RepositoryMapper;
 import com.ken.wms.dao.RoleMapper;
 import com.ken.wms.dao.StockInMapper;
 import com.ken.wms.dao.StockOutMapper;
@@ -21,7 +22,6 @@ import com.ken.wms.dao.SupplierMapper;
 import com.ken.wms.dao.UserMapper;
 import com.ken.wms.domain.ActionPermission;
 import com.ken.wms.domain.Customer;
-import com.ken.wms.domain.Goods;
 import com.ken.wms.domain.Menu;
 import com.ken.wms.domain.Role;
 import com.ken.wms.domain.Supplier;
@@ -50,6 +50,8 @@ public class MapperTest {
 	private CustomerMapper customerMapper;
 	@Autowired
 	private GoodsMapper goodsMapper;
+	@Autowired
+	private RepositoryMapper repositoryMapper;
 	
 	@Test
 	public void test() {
@@ -376,5 +378,40 @@ public class MapperTest {
 //		}
 //		goodsMapper.deleteById(4);
 		goodsMapper.deleteByName("phone");
+	}
+	
+	@Test
+	public void repositoryTest(){
+		// insert operation test
+//		Repository repository = new Repository();
+//		repository.setAddress("Beijing");
+//		repository.setStatus("Unavailable");
+//		repositoryMapper.insert(repository);
+//		Repository repository1 = new Repository();
+//		repository1.setAddress("Tianjing");
+//		repository1.setStatus("availbale");
+//		Repository repository2 = new Repository();
+//		repository2.setAddress("FoShan");
+//		repository2.setStatus("availbale");
+//		List<Repository> repositories = new ArrayList<>();
+//		repositories.add(repository1);
+//		repositories.add(repository2);
+//		repositoryMapper.insertbatch(repositories);
+		
+		// select operation test
+//		List<Repository> repositories = repositoryMapper.selectAll();
+//		for (Repository repository : repositories) {
+//			System.out.println(repository);
+//		}
+//		Repository repository = repositoryMapper.selectByID(100);
+//		System.out.println(repository);
+		
+		// update operation test
+//		Repository repository = repositoryMapper.selectByID(101);
+//		repository.setStatus("available");
+//		repositoryMapper.update(repository);
+		
+		// delete operation test
+		repositoryMapper.deleteByID(103);
 	}
 }
