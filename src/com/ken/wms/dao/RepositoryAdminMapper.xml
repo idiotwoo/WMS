@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ken.wms.dao.RepositoryAdminMapper">
+
+	<resultMap type="com.ken.wms.domain.RepositoryAdmin" id="repositoryAdmin">
+		<id property="id" column="REPO_ADMIN_ID"/>
+		<result property="name" column="REPO_ADMIN_NAME"/>
+		<result property="sex" column="REPO_ADMIN_SEX"/>
+		<result property="tel" column="REPO_ADMIN_TEL"/>
+		<result property="address" column="REPO_ADMIN_ADDRESS"/>
+		<result property="birth" column="REPO_ADMIN_BIRTH"/>
+		<result property="repositoryBelongID" column="REPO_ADMIN_REPOID"/>
+	</resultMap>
+	
+	<select id="selectAll" resultMap="repositoryAdmin">
+		select
+			REPO_ADMIN_ID,
+			REPO_ADMIN_NAME,
+			REPO_ADMIN_SEX,
+			REPO_ADMIN_TEL,
+			REPO_ADMIN_ADDRESS,
+			REPO_ADMIN_BIRTH,
+			REPO_ADMIN_REPOID
+		from
+			wms_repo_admin
+	</select>
+	
+	<select id="selectByID" resultMap="repositoryAdmin">
+		select
+			REPO_ADMIN_ID,
+			REPO_ADMIN_NAME,
+			REPO_ADMIN_SEX,
+			REPO_ADMIN_TEL,
+			REPO_ADMIN_ADDRESS,
+			REPO_ADMIN_BIRTH,
+			REPO_ADMIN_REPOID
+		from
+			wms_repo_admin
+		where
+			REPO_ADMIN_ID = #{id}
+	</select>
+	
+	<select id="selectByName" resultMap="repositoryAdmin">
+		select
+			REPO_ADMIN_ID,
+			REPO_ADMIN_NAME,
+			REPO_ADMIN_SEX,
+			REPO_ADMIN_TEL,
+			REPO_ADMIN_ADDRESS,
+			REPO_ADMIN_BIRTH,
+			REPO_ADMIN_REPOID
+		from
+			wms_repo_admin
+		where
+			REPO_ADMIN_NAME like concat(concat("%",#{name}),"%")
+	</select>
+	
+	<select id="selectByRepositoryID" resultMap="repositoryAdmin">
+		select
+			REPO_ADMIN_ID,
+			REPO_ADMIN_NAME,
+			REPO_ADMIN_SEX,
+			REPO_ADMIN_TEL,
+			REPO_ADMIN_ADDRESS,
+			REPO_ADMIN_BIRTH,
+			REPO_ADMIN_REPOID
+		from
+			wms_repo_admin
+		where
+			REPO_ADMIN_REPOID = #{repositoryID}
+	</select>
+	
+	<insert id="insert" keyProperty="id" useGeneratedKeys="true">
+		insert into wms_repo_admin(REPO_ADMIN_NAME,REPO_ADMIN_SEX,REPO_ADMIN_TEL,REPO_ADMIN_ADDRESS,REPO_ADMIN_BIRTH,REPO_ADMIN_REPOID)
+		values(#{name},#{sex},#{tel},#{address},#{birth},#{repositoryBelongID})
+	</insert>
+	
+	<insert id="insertBatch">
+		insert into wms_repo_admin(REPO_ADMIN_NAME,REPO_ADMIN_SEX,REPO_ADMIN_TEL,REPO_ADMIN_ADDRESS,REPO_ADMIN_BIRTH,REPO_ADMIN_REPOID)
+		values
+		<foreach collection="list" item="repositoryAdmin" separator=",">
+			(#{repositoryAdmin.name},#{repositoryAdmin.sex},#{repositoryAdmin.tel},#{repositoryAdmin.address},#{repositoryAdmin.birth},#{repositoryAdmin.repositoryBelongID})
+		</foreach>
+	</insert>
+	
+	<update id="update">
+		update
+			wms_repo_admin
+		set
+			REPO_ADMIN_NAME = #{name},
+			REPO_ADMIN_SEX = #{sex},
+			REPO_ADMIN_TEL = #{tel},
+			REPO_ADMIN_ADDRESS = #{address},
+			REPO_ADMIN_BIRTH = #{birth},
+			REPO_ADMIN_REPOID = #{repositoryBelongID}
+		where
+			REPO_ADMIN_ID = #{id}
+	</update>
+	
+	<delete id="deleteByID">
+		delete from wms_repo_admin
+		where REPO_ADMIN_ID = #{id}
+	</delete>
+</mapper>

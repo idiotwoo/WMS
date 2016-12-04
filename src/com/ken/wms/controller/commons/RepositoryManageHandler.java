@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -63,7 +64,7 @@ public class RepositoryManageHandler {
 		// 根据查询类型进行查询
 		Map<String, Object> queryResult = null;
 		if (searchType.equals("searchByID")) {
-			if (keyWord != null && !keyWord.equals("")) {
+			if (keyWord != null && !keyWord.equals("") && StringUtils.isNumeric(keyWord)) {
 				Integer id = Integer.valueOf(keyWord);
 				queryResult = repositoryService.selectById(id);
 			}
@@ -81,6 +82,31 @@ public class RepositoryManageHandler {
 		}
 
 		resultSet.put("rows", row);
+		resultSet.put("total", total);
+		return resultSet;
+	}
+	
+	/**
+	 * 查询所有未指派管理员的仓库
+	 * @return 返回一个 map，其中key=data表示查询的记录，key=total表示记录的条数
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="getUnassignRepository",method=RequestMethod.GET)
+	public @ResponseBody Map<String, Object> getUnassignRepository(){
+		// 初始化结果集
+		Map<String, Object> resultSet = new HashMap<>();
+		List<Repository> data;
+		long total = 0;
+		
+		// 查询
+		Map<String, Object> queryResult = repositoryService.selectUnassign();
+		if(queryResult != null){
+			data = (List<Repository>) queryResult.get("data");
+			total = (long) queryResult.get("total");
+		}else
+			data = new ArrayList<>();
+		
+		resultSet.put("data", data);
 		resultSet.put("total", total);
 		return resultSet;
 	}
@@ -219,7 +245,7 @@ public class RepositoryManageHandler {
 			HttpServletResponse response) {
 
 		// 导出文件名
-		String fileName = "repositoryInfo";
+		String fileName = "repositoryInfo.xlsx";
 
 		// 查询
 		List<Repository> repositories = null;

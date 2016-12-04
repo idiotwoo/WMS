@@ -15,7 +15,16 @@ public class RepositoryAdmin {
 	private String tel;// 联系电话
 	private String address;// 地址
 	private Date birth;// 出生日期
-	private String repositoryBelong;// 所属仓库
+	private Integer repositoryBelongID;// 所属仓库ID
+
+	
+	public Integer getRepositoryBelongID() {
+		return repositoryBelongID;
+	}
+
+	public void setRepositoryBelongID(Integer repositoryBelongID) {
+		this.repositoryBelongID = repositoryBelongID;
+	}
 
 	public Integer getId() {
 		return id;
@@ -65,30 +74,10 @@ public class RepositoryAdmin {
 		this.birth = birth;
 	}
 
-	public String getRepositoryBelong() {
-		return repositoryBelong;
-	}
-
-	public void setRepositoryBelong(String repositoryBelong) {
-		this.repositoryBelong = repositoryBelong;
-	}
-
-	public RepositoryAdmin(Integer id, String name, String sex, String tel, String address, Date birth,
-			String repositoryBelong) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.sex = sex;
-		this.tel = tel;
-		this.address = address;
-		this.birth = birth;
-		this.repositoryBelong = repositoryBelong;
-	}
-
 	@Override
 	public String toString() {
 		return "RepositoryAdmin [id=" + id + ", name=" + name + ", sex=" + sex + ", tel=" + tel + ", address=" + address
-				+ ", birth=" + birth + ", repositoryBelong=" + repositoryBelong + "]";
+				+ ", birth=" + birth + ", repositoryBelongID=" + repositoryBelongID + "]";
 	}
 
 }

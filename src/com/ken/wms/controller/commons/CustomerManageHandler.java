@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -64,7 +65,7 @@ public class CustomerManageHandler {
 		// 根据查询类型进行查询
 		Map<String, Object> queryResult = null;
 		if (searchType.equals("searchByID")) {
-			if (keyWord != null && !keyWord.equals("")) {
+			if (keyWord != null && !keyWord.equals("") && StringUtils.isNumeric(keyWord)) {
 				Integer id = Integer.valueOf(keyWord);
 				queryResult = customerManageService.selectById(id);
 			}

@@ -54,6 +54,12 @@ public interface RepositoryService {
 	 * @return 结果的一个Map，其中： key为 data 的代表记录数据；key 为 total 代表结果记录的数量
 	 */
 	public Map<String, Object> selectAll();
+	
+	/**
+	 * 查询所有未指派仓库管理员的仓库记录
+	 * @return 结果的一个Map，其中： key为 data 的代表记录数据；key 为 total 代表结果记录的数量
+	 */
+	public Map<String, Object> selectUnassign();
 
 	/**
 	 * 添加仓库记录

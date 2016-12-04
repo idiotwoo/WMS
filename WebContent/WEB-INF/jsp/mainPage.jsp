@@ -10,6 +10,8 @@
 <link rel="stylesheet" type="text/css"
 	href="${pageContext.request.contextPath}/css/bootstrap-table.css">
 <link rel="stylesheet" type="text/css"
+	href="${pageContext.request.contextPath}/css/bootstrap-datetimepicker.min.css">
+<link rel="stylesheet" type="text/css"
 	href="${pageContext.request.contextPath}/css/mainPage.css">
 </head>
 <body>
@@ -127,5 +129,9 @@
 		src="${pageContext.request.contextPath}/js/mainPage.js"></script>
 	<script type="text/javascript"
 		src="${pageContext.request.contextPath}/js/ajaxfileupload.js"></script>
+	<script type="text/javascript"
+		src="${pageContext.request.contextPath}/js/bootstrap-datetimepicker.min.js"></script>
+	<script type="text/javascript"
+		src="${pageContext.request.contextPath}/js/bootstrap-datetimepicker.zh-CN.js"></script>
 </body>
 </html>

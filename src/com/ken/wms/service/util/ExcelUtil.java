@@ -18,8 +18,9 @@ import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.tree.ImmutableNode;
-import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -256,7 +257,7 @@ public class ExcelUtil {
 				for (String methodName : methodList) {
 					Object value = getField(elem, methodName);
 					cell = row.createCell(cellCount++);
-					setCellValue(value, cell);
+					setCellValue(value, workbook, cell);
 				}
 			}
 
@@ -301,7 +302,7 @@ public class ExcelUtil {
 		} else if (cellType == Cell.CELL_TYPE_NUMERIC) {
 			if (fieldType.equals(String.class)) {
 				value = new DecimalFormat("0").format(cell.getNumericCellValue());
-			} else if (fieldType.equals(Date.class) && HSSFDateUtil.isCellDateFormatted(cell)) {
+			} else if (fieldType.equals(Date.class)) {// && HSSFDateUtil.isCellDateFormatted(cell)
 				value = new java.sql.Date(cell.getDateCellValue().getTime());
 			} else {
 				value = cell.getNumericCellValue();
@@ -325,7 +326,7 @@ public class ExcelUtil {
 	 * @param value 值
 	 * @param cell 单元格
 	 */
-	private void setCellValue(Object value, Cell cell) {
+	private void setCellValue(Object value, Workbook workbook, Cell cell) {
 		if (cell == null || value == null)
 			return;
 
@@ -344,7 +345,11 @@ public class ExcelUtil {
 			cell.setCellValue(v);
 		} else if (valueClassType.equals(Date.class)) {
 			Date v = (Date) value;
+			CellStyle cellStyle = workbook.createCellStyle();
+			CreationHelper creationHelper = workbook.getCreationHelper();
+			cellStyle.setDataFormat(creationHelper.createDataFormat().getFormat("yyyy/mm/dd"));
 			cell.setCellValue(v);
+			cell.setCellStyle(cellStyle);
 		}
 	}
 

@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,7 +25,7 @@ import com.ken.wms.service.util.ExcelUtil;
 @Service
 public class RepositoryServiceImpl implements RepositoryService {
 
-	private Logger log = Logger.getLogger("application");
+	//private Logger log = Logger.getLogger("application");
 	
 	@Autowired
 	private RepositoryMapper repositoryMapper;
@@ -290,6 +289,29 @@ public class RepositoryServiceImpl implements RepositoryService {
 		File file = excelUtil.excelWriter(Repository.class, repositories);
 		
 		return file;
+	}
+
+	/**
+	 * 查询所有未指派仓库管理员的仓库记录
+	 * @return 结果的一个Map，其中： key为 data 的代表记录数据；key 为 total 代表结果记录的数量
+	 */
+	@Override
+	public Map<String, Object> selectUnassign() {
+		// 初始化结果集
+		Map<String, Object> resultSet = new HashMap<>();
+		List<Repository> repositories;
+		long total = 0;
+		
+		// 查询
+		repositories = repositoryMapper.selectUnassign();
+		if(repositories != null)
+			total = repositories.size();
+		else
+			repositories = new ArrayList<>();
+		
+		resultSet.put("data", repositories);
+		resultSet.put("total", total);
+		return resultSet;
 	}
 
 }

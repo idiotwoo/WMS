@@ -24,7 +24,26 @@
 			ra.REPO_ADMIN_NAME
 		from
 			wms_respository r left join wms_repo_admin ra on(r.REPO_ID = ra.REPO_ADMIN_REPOID)
-	</select>	
+	</select>
+	
+	<select id="selectUnassign" resultMap="repository">
+		select
+			r.REPO_ID,
+			r.REPO_ADDRESS,
+			r.REPO_STATUS,
+			r.REPO_AREA,
+			r.REPO_DESC
+		from
+			wms_respository r
+		where not exists
+		(
+			select *
+			from
+				wms_repo_admin ra
+			where
+				ra.REPO_ADMIN_REPOID = r.REPO_ID
+		)
+	</select>
 	
 	<select id="selectByID" resultMap="repository">
 		select

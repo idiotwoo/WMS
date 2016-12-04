@@ -69,4 +69,66 @@
 			<value>货物价值</value>
 		</property>
 	</entity>
+	
+	<entity class="com.ken.wms.domain.Repository">
+		<property>
+			<field>id</field>
+			<value>仓库ID</value>
+		</property>
+		<property>
+			<field>address</field>
+			<value>仓库地址</value>
+		</property>
+		<property>
+			<field>status</field>
+			<value>仓库状态</value>
+		</property>
+		<property>
+			<field>area</field>
+			<value>仓库面积</value>
+		</property>
+		<property>
+			<field>desc</field>
+			<value>仓库描述</value>
+		</property>
+		<property>
+			<field>adminID</field>
+			<value>仓库管理员ID</value>
+		</property>
+		<property>
+			<field>adminName</field>
+			<value>仓库管理员名字</value>
+		</property>
+	</entity>
+	
+	<entity class="com.ken.wms.domain.RepositoryAdmin">
+		<property>
+			<field>id</field>
+			<value>ID</value>
+		</property>
+		<property>
+			<field>name</field>
+			<value>姓名</value>
+		</property>
+		<property>
+			<field>sex</field>
+			<value>性别</value>
+		</property>
+		<property>
+			<field>tel</field>
+			<value>联系电话</value>
+		</property>
+		<property>
+			<field>address</field>
+			<value>联系地址</value>
+		</property>
+		<property>
+			<field>birth</field>
+			<value>出生日期</value>
+		</property>
+		<property>
+			<field>repositoryBelongID</field>
+			<value>所属仓库ID</value>
+		</property>
+	</entity>
 </configuration>

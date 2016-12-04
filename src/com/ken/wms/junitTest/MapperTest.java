@@ -14,6 +14,7 @@ import com.ken.wms.dao.ActionPermissionMapper;
 import com.ken.wms.dao.CustomerMapper;
 import com.ken.wms.dao.GoodsMapper;
 import com.ken.wms.dao.MenuMapper;
+import com.ken.wms.dao.RepositoryAdminMapper;
 import com.ken.wms.dao.RepositoryMapper;
 import com.ken.wms.dao.RoleMapper;
 import com.ken.wms.dao.StockInMapper;
@@ -23,6 +24,7 @@ import com.ken.wms.dao.UserMapper;
 import com.ken.wms.domain.ActionPermission;
 import com.ken.wms.domain.Customer;
 import com.ken.wms.domain.Menu;
+import com.ken.wms.domain.Repository;
 import com.ken.wms.domain.Role;
 import com.ken.wms.domain.Supplier;
 import com.ken.wms.domain.User;
@@ -52,6 +54,8 @@ public class MapperTest {
 	private GoodsMapper goodsMapper;
 	@Autowired
 	private RepositoryMapper repositoryMapper;
+	@Autowired
+	private RepositoryAdminMapper repositoryAdminMapper;
 	
 	@Test
 	public void test() {
@@ -397,6 +401,10 @@ public class MapperTest {
 //		repositories.add(repository1);
 //		repositories.add(repository2);
 //		repositoryMapper.insertbatch(repositories);
+		List<Repository> repositories = repositoryMapper.selectUnassign();
+		for (Repository repository : repositories) {
+			System.out.println(repository);
+		}
 		
 		// select operation test
 //		List<Repository> repositories = repositoryMapper.selectAll();
@@ -413,5 +421,58 @@ public class MapperTest {
 		
 		// delete operation test
 		repositoryMapper.deleteByID(103);
+	}
+	
+	@Test
+	public void repositoryAdminMapperTest(){
+		// insert operation test
+//		RepositoryAdmin repositoryAdmin = new RepositoryAdmin();
+//		repositoryAdmin.setName("Kiven");
+//		repositoryAdmin.setSex("male");
+//		repositoryAdmin.setTel("123");
+//		repositoryAdmin.setAddress("GuangZhou");
+//		repositoryAdmin.setRepositoryBelongID(100);
+//		repositoryAdmin.setBirth(new java.sql.Date(new Date().getTime()));
+//		repositoryAdminMapper.insert(repositoryAdmin);
+//		RepositoryAdmin repositoryAdmin1 = new RepositoryAdmin();
+//		repositoryAdmin1.setName("person1");
+//		repositoryAdmin1.setSex("male");
+//		repositoryAdmin1.setTel("123");
+//		repositoryAdmin1.setAddress("GuangZhou");
+//		repositoryAdmin1.setRepositoryBelongID(100);
+//		repositoryAdmin1.setBirth(new java.sql.Date(new Date().getTime()));
+//		RepositoryAdmin repositoryAdmin2 = new RepositoryAdmin();
+//		repositoryAdmin2.setName("person2");
+//		repositoryAdmin2.setSex("female");
+//		repositoryAdmin2.setTel("456");
+//		repositoryAdmin2.setAddress("Shenzhen");
+////		repositoryAdmin2.setRepositoryBelongID(101);
+//		repositoryAdmin2.setBirth(new java.sql.Date(new Date().getTime()));
+//		List<RepositoryAdmin> repositoryAdmins = new ArrayList<>();
+//		repositoryAdmins.add(repositoryAdmin1);
+//		repositoryAdmins.add(repositoryAdmin2);
+//		repositoryAdminMapper.insertBatch(repositoryAdmins);
+		
+		// select operation test
+//		RepositoryAdmin repositoryAdmin = repositoryAdminMapper.selectByID(1002);
+//		System.out.println(repositoryAdmin);
+//		List<RepositoryAdmin> repositoryAdmins = repositoryAdminMapper.selectByName("ken");
+//		for (RepositoryAdmin repositoryAdmin : repositoryAdmins) {
+//			System.out.println(repositoryAdmin);
+//		}
+//		List<RepositoryAdmin> repositoryAdmins = repositoryAdminMapper.selectAll();
+//		for (RepositoryAdmin repositoryAdmin : repositoryAdmins) {
+//			System.out.println(repositoryAdmin);
+//		}
+//		RepositoryAdmin repositoryAdmin = repositoryAdminMapper.selectByRepositoryID(100);
+//		System.out.println(repositoryAdmin);
+		
+		// update operation test
+//		RepositoryAdmin repositoryAdmin = repositoryAdminMapper.selectByID(1007);
+//		repositoryAdmin.setRepositoryBelongID(null);
+//		repositoryAdminMapper.update(repositoryAdmin);
+		
+		// delete operation test
+		repositoryAdminMapper.deleteByID(1007);
 	}
 }
