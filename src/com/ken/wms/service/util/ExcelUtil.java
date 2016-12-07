@@ -304,7 +304,13 @@ public class ExcelUtil {
 				value = new DecimalFormat("0").format(cell.getNumericCellValue());
 			} else if (fieldType.equals(Date.class)) {// && HSSFDateUtil.isCellDateFormatted(cell)
 				value = new java.sql.Date(cell.getDateCellValue().getTime());
-			} else {
+			} else if(fieldType.equals(Long.class)){
+				Double v = cell.getNumericCellValue();
+				value = v.longValue();
+			}else if(fieldType.equals(Integer.class)){
+				Double v = cell.getNumericCellValue();
+				value = v.intValue();
+			}else{
 				value = cell.getNumericCellValue();
 			}
 		} else if (cellType == Cell.CELL_TYPE_BOOLEAN) {
@@ -337,7 +343,10 @@ public class ExcelUtil {
 		} else if (valueClassType.equals(Integer.class)) {
 			Integer v = (Integer) value;
 			cell.setCellValue(v);
-		} else if (valueClassType.equals(Double.class)) {
+		}else if(valueClassType.equals(Long.class)){
+			Long v = (Long) value;
+			cell.setCellValue(v);
+		}else if (valueClassType.equals(Double.class)) {
 			Double v = (Double) value;
 			cell.setCellValue(v);
 		} else if (valueClassType.equals(Boolean.class)) {

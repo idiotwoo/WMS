@@ -37,7 +37,29 @@ public class RepositoryManageHandler {
 
 	@Autowired
 	private RepositoryService repositoryService;
+	
+	private static final String SEARCH_BY_ID = "searchByID";
+	private static final String SEARCH_BY_ADDRESS = "searchByAddress";
+	private static final String SEARCH_ALL = "searchAll";
 
+	private Map<String, Object> query(String searchType, String keyword, int offset, int limit){
+		Map<String, Object> queryResult = null;
+		
+		if(searchType.equals(SEARCH_BY_ID)){
+			if(StringUtils.isNumeric(keyword)){
+				queryResult = repositoryService.selectById(Integer.valueOf(keyword));
+			}
+		}else if(searchType.equals(SEARCH_BY_ADDRESS)){
+			queryResult = repositoryService.selectByAddress(offset, limit, keyword);
+		}else if(searchType.equals(SEARCH_ALL)){
+			queryResult = repositoryService.selectAll(offset, limit);
+		}else{
+			// do other thing
+		}
+		
+		return queryResult;
+	}
+	
 	/**
 	 * 查询仓库信息
 	 * 
@@ -62,19 +84,20 @@ public class RepositoryManageHandler {
 		long total = 0;
 
 		// 根据查询类型进行查询
-		Map<String, Object> queryResult = null;
-		if (searchType.equals("searchByID")) {
-			if (keyWord != null && !keyWord.equals("") && StringUtils.isNumeric(keyWord)) {
-				Integer id = Integer.valueOf(keyWord);
-				queryResult = repositoryService.selectById(id);
-			}
-		} else if (searchType.equals("searchByAddress")) {
-			queryResult = repositoryService.selectByAddress(offset, limit, keyWord);
-		} else if (searchType.equals("searchAll")) {
-			queryResult = repositoryService.selectAll(offset, limit);
-		} else {
-			// do other thing
-		}
+//		Map<String, Object> queryResult = null;
+//		if (searchType.equals("searchByID")) {
+//			if (keyWord != null && !keyWord.equals("") && StringUtils.isNumeric(keyWord)) {
+//				Integer id = Integer.valueOf(keyWord);
+//				queryResult = repositoryService.selectById(id);
+//			}
+//		} else if (searchType.equals("searchByAddress")) {
+//			queryResult = repositoryService.selectByAddress(offset, limit, keyWord);
+//		} else if (searchType.equals("searchAll")) {
+//			queryResult = repositoryService.selectAll(offset, limit);
+//		} else {
+//			// do other thing
+//		}
+		Map<String, Object> queryResult = query(searchType, keyWord, offset, limit);
 
 		if (queryResult != null) {
 			row = (List<Repository>) queryResult.get("data");
@@ -249,19 +272,20 @@ public class RepositoryManageHandler {
 
 		// 查询
 		List<Repository> repositories = null;
-		Map<String, Object> queryResult = null;
-		if (searchType.equals("searchByID")) {
-			if (keyWord != null && !keyWord.equals("")) {
-				Integer id = Integer.valueOf(keyWord);
-				queryResult = repositoryService.selectById(id);
-			}
-		} else if (searchType.equals("searchAddress")) {
-			queryResult = repositoryService.selectByAddress(keyWord);
-		} else if (searchType.equals("searchAll")) {
-			queryResult = repositoryService.selectAll();
-		} else {
-			// do other thing
-		}
+//		Map<String, Object> queryResult = null;
+//		if (searchType.equals("searchByID")) {
+//			if (keyWord != null && !keyWord.equals("")) {
+//				Integer id = Integer.valueOf(keyWord);
+//				queryResult = repositoryService.selectById(id);
+//			}
+//		} else if (searchType.equals("searchAddress")) {
+//			queryResult = repositoryService.selectByAddress(keyWord);
+//		} else if (searchType.equals("searchAll")) {
+//			queryResult = repositoryService.selectAll();
+//		} else {
+//			// do other thing
+//		}
+		Map<String, Object> queryResult = query(searchType, keyWord, -1, -1);
 
 		if (queryResult != null)
 			repositories = (List<Repository>) queryResult.get("data");

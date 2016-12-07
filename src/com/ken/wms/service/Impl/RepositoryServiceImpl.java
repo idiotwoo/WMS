@@ -75,15 +75,28 @@ public class RepositoryServiceImpl implements RepositoryService {
 		Map<String, Object> resultSet = new HashMap<>();
 		List<Repository> repositories = null;
 		long total = 0;
-
-		// 分页查询
-		PageHelper.offsetPage(offset, limit);
-		repositories = repositoryMapper.selectByAddress(address);
-		if (repositories != null) {
-			PageInfo<Repository> pageInfo = new PageInfo<>(repositories);
-			total = pageInfo.getTotal();
-		} else
-			repositories = new ArrayList<>();
+		boolean isPagination = true;
+		
+		// validate
+		if(offset < 0 || limit < 0)
+			isPagination = false;
+		
+		// query
+		if(isPagination){
+			PageHelper.offsetPage(offset, limit);
+			repositories = repositoryMapper.selectByAddress(address);
+			if (repositories != null) {
+				PageInfo<Repository> pageInfo = new PageInfo<>(repositories);
+				total = pageInfo.getTotal();
+			} else
+				repositories = new ArrayList<>();
+		}else{
+			repositories = repositoryMapper.selectByAddress(address);
+			if(repositories != null)
+				total = repositories.size();
+			else
+				repositories = new ArrayList<>();
+		}
 
 		resultSet.put("data", repositories);
 		resultSet.put("total", total);
@@ -99,21 +112,7 @@ public class RepositoryServiceImpl implements RepositoryService {
 	 */
 	@Override
 	public Map<String, Object> selectByAddress(String address) {
-		// 初始化結果集
-		Map<String, Object> resultSet = new HashMap<>();
-		List<Repository> repositories = null;
-		long total = 0;
-
-		// 查询
-		repositories = repositoryMapper.selectByAddress(address);
-		if (repositories != null) {
-			total = repositories.size();
-		} else
-			repositories = new ArrayList<>();
-
-		resultSet.put("data", repositories);
-		resultSet.put("total", total);
-		return resultSet;
+		return selectByAddress(-1, -1, address);
 	}
 
 	/**
@@ -131,15 +130,27 @@ public class RepositoryServiceImpl implements RepositoryService {
 		Map<String, Object> resultSet = new HashMap<>();
 		List<Repository> repositories = null;
 		long total = 0;
-
-		// 分页查询
-		PageHelper.offsetPage(offset, limit);
-		repositories = repositoryMapper.selectAll();
-		if (repositories != null) {
-			PageInfo<Repository> pageInfo = new PageInfo<>(repositories);
-			total = pageInfo.getTotal();
-		} else
-			repositories = new ArrayList<>();
+		boolean isPagination = true;
+		
+		// validate
+		if(offset < 0 || limit < 0)
+			isPagination = false;
+		
+		if(isPagination){
+			PageHelper.offsetPage(offset, limit);
+			repositories = repositoryMapper.selectAll();
+			if (repositories != null) {
+				PageInfo<Repository> pageInfo = new PageInfo<>(repositories);
+				total = pageInfo.getTotal();
+			} else
+				repositories = new ArrayList<>();
+		}else{
+			repositories = repositoryMapper.selectAll();
+			if(repositories != null)
+				total = repositories.size();
+			else
+				repositories = new ArrayList<>();
+		}
 
 		resultSet.put("data", repositories);
 		resultSet.put("total", total);
@@ -153,21 +164,7 @@ public class RepositoryServiceImpl implements RepositoryService {
 	 */
 	@Override
 	public Map<String, Object> selectAll() {
-		// 初始化结果集
-		Map<String, Object> resultSet = new HashMap<>();
-		List<Repository> repositories = null;
-		long total = 0;
-
-		// 查询
-		repositories = repositoryMapper.selectAll();
-		if (repositories != null) {
-			total = repositories.size();
-		} else
-			repositories = new ArrayList<>();
-
-		resultSet.put("data", repositories);
-		resultSet.put("total", total);
-		return resultSet;
+		return selectAll(-1, -1);
 	}
 
 	/**

@@ -1,6 +1,7 @@
 package com.ken.wms.service.Impl;
 
 import java.io.File;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,8 +14,12 @@ import org.springframework.web.multipart.MultipartFile;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ken.wms.dao.RepositoryAdminMapper;
+import com.ken.wms.dao.UserMapper;
+import com.ken.wms.dao.UserPermissionMapper;
 import com.ken.wms.domain.RepositoryAdmin;
+import com.ken.wms.domain.User;
 import com.ken.wms.service.Interface.RepositoryAdminManageService;
+import com.ken.wms.service.util.EncryptingModel;
 import com.ken.wms.service.util.ExcelUtil;
 
 /**
@@ -29,7 +34,13 @@ public class RepositoryAdminManageServiceImpl implements RepositoryAdminManageSe
 	@Autowired
 	private RepositoryAdminMapper repositoryAdminMapper;
 	@Autowired
+	private UserMapper userMapper;
+	@Autowired
+	private UserPermissionMapper userPermissionMapper;
+	@Autowired
 	private ExcelUtil excelUtil;
+	@Autowired
+	private EncryptingModel encryptingModel;
 
 	/**
 	 * 返回指定repository id 的仓库管理员记录
@@ -181,9 +192,27 @@ public class RepositoryAdminManageServiceImpl implements RepositoryAdminManageSe
 
 		if (repositoryAdmin != null) {
 			if(repositoryAdminCheck(repositoryAdmin)){
+				
+				// 添加仓库管理员信息到数据库中
 				repositoryAdminMapper.insert(repositoryAdmin);
-				if(repositoryAdmin.getId() != null)
+				if(repositoryAdmin.getId() != null){
+					// 为添加的仓库管理员创建账户
+					User user = new User();
+					user.setId(repositoryAdmin.getId());
+					try {
+						String str1 = encryptingModel.MD5(repositoryAdmin.getId().toString());
+						String password = encryptingModel.MD5(str1 + repositoryAdmin.getId().toString());
+						user.setPassword(password);
+					} catch (NoSuchAlgorithmException | NullPointerException e) {
+					}
+					user.setUserName(repositoryAdmin.getName());
+					userMapper.insert(user);
+					
+					// 为账户分配权限()
+					userPermissionMapper.insert(repositoryAdmin.getId(), 2);
 					return true;
+				}
+				
 			}
 		}
 
@@ -221,7 +250,12 @@ public class RepositoryAdminManageServiceImpl implements RepositoryAdminManageSe
 	@Override
 	public boolean deleteRepositoryAdmin(Integer repositoryAdminID) {
 		
+		// 删除仓库管理员信息
 		repositoryAdminMapper.deleteByID(repositoryAdminID);
+		// 删除账户权限信息
+		userPermissionMapper.deleteByUserID(repositoryAdminID);
+		// 删除账户
+		userMapper.deleteById(repositoryAdminID);
 		
 		return true;
 	}

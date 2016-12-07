@@ -19,6 +19,7 @@ import com.ken.wms.dao.RepositoryMapper;
 import com.ken.wms.dao.RoleMapper;
 import com.ken.wms.dao.StockInMapper;
 import com.ken.wms.dao.StockOutMapper;
+import com.ken.wms.dao.StorageMapper;
 import com.ken.wms.dao.SupplierMapper;
 import com.ken.wms.dao.UserMapper;
 import com.ken.wms.domain.ActionPermission;
@@ -26,6 +27,7 @@ import com.ken.wms.domain.Customer;
 import com.ken.wms.domain.Menu;
 import com.ken.wms.domain.Repository;
 import com.ken.wms.domain.Role;
+import com.ken.wms.domain.Storage;
 import com.ken.wms.domain.Supplier;
 import com.ken.wms.domain.User;
 
@@ -56,6 +58,8 @@ public class MapperTest {
 	private RepositoryMapper repositoryMapper;
 	@Autowired
 	private RepositoryAdminMapper repositoryAdminMapper;
+	@Autowired
+	private StorageMapper storageMapper;
 	
 	@Test
 	public void test() {
@@ -474,5 +478,70 @@ public class MapperTest {
 		
 		// delete operation test
 		repositoryAdminMapper.deleteByID(1007);
+	}
+	
+	@Test
+	public void storageMapperTest(){
+		// insert operation test
+//		Goods goods = goodsMapper.selectById(5);
+//		Storage storage = new Storage();
+//		storage.setGoodsID(goods.getId());
+//		storage.setRepositoryID(100);
+//		storage.setNumber(300);
+//		storageMapper.insert(storage);
+//		Goods goods1 = goodsMapper.selectById(3);
+//		Storage storage1 = new Storage();
+//		storage1.setGoodsInfo(goods1);
+//		storage1.setRepositoryID(102);
+//		storage1.setNumber(20);
+//		Goods goods2 = goodsMapper.selectById(5);
+//		Storage storage2 = new Storage();
+//		storage2.setGoodsInfo(goods2);
+//		storage2.setRepositoryID(102);
+//		storage2.setNumber(300);
+//		List<Storage> storages = new ArrayList<>();
+//		storages.add(storage2);
+//		storages.add(storage1);
+//		storageMapper.insertBatch(storages);
+		List<Storage> storages = storageMapper.selectByGoodsNameAndRepositoryID("Apple", null);
+		for (Storage storage : storages) {
+			System.out.println(storage);
+		}
+		
+		// select operation test
+//		List<Storage> storages = storageMapper.selectAll();
+//		for (Storage storage : storages) {
+//			System.out.println(storage);
+//		}
+//		List<Storage> storages = storageMapper.selectByGoodsID(3);
+//		for (Storage storage : storages) {
+//			System.out.println(storage);
+//		}
+//		List<Storage> storages = storageMapper.selectByGoodsIDAndRepositoryID(1, 100);
+//		for (Storage storage : storages) {
+//			System.out.println(storage);
+//		}
+//		List<Storage> storages = storageMapper.selectByGoodsName("Apple");
+//		for (Storage storage : storages) {
+//			System.out.println(storage);
+//		}
+//		List<Storage> storages = storageMapper.selectByGoodsType("fruit");
+//		for (Storage storage : storages) {
+//			System.out.println(storage);
+//		}
+//		List<Storage> storages = storageMapper.selectByRepositoryID(101);
+//		for (Storage storage : storages) {
+//			System.out.println(storage);
+//		}
+		
+		// update operation test
+//		List<Storage> storages = storageMapper.selectByGoodsID(1);
+//		Storage storage = storages.get(0);
+//		storage.setNumber(1500);
+//		storageMapper.update(storage);
+		
+		// delete operation test
+//		storageMapper.deleteByGoodsID(5);
+//		storageMapper.deleteByRepositoryID(102);
 	}
 }

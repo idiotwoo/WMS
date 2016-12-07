@@ -7,6 +7,20 @@
 	<packaging>war</packaging>
 
 	<dependencies>
+		<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
+		<dependency>
+		    <groupId>javax.servlet</groupId>
+		    <artifactId>javax.servlet-api</artifactId>
+		    <version>3.1.0</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/junit/junit -->
+		<dependency>
+		    <groupId>junit</groupId>
+		    <artifactId>junit</artifactId>
+		    <version>4.12</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>aopalliance</groupId>
 			<artifactId>aopalliance</artifactId>
@@ -182,6 +196,13 @@
 	</dependencies>
 
 	<build>
+		<resources>
+			<resource>
+				<directory>src</directory>
+			</resource>
+		</resources>
+		<!-- 
+		 -->
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>
 			<plugin>
@@ -198,6 +219,7 @@
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
+					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
 		</plugins>
