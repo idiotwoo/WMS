@@ -3,6 +3,7 @@ package com.ken.wms.controller.commons;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
@@ -24,10 +25,14 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import com.ken.wms.controller.Enum.AccountStatus;
 import com.ken.wms.controller.Enum.ResponseStatus;
 import com.ken.wms.controller.entity.PasswordModification;
+import com.ken.wms.domain.Repository;
+import com.ken.wms.domain.RepositoryAdmin;
 import com.ken.wms.domain.Role;
 import com.ken.wms.domain.User;
 import com.ken.wms.security.SecurityService;
 import com.ken.wms.service.Interface.AccountService;
+import com.ken.wms.service.Interface.RepositoryAdminManageService;
+import com.ken.wms.service.Interface.RepositoryService;
 import com.ken.wms.service.execption.AccountServiceException;
 import com.ken.wms.service.util.CheckCodeGenerator;
 
@@ -51,6 +56,8 @@ public class AccountHandler {
 	private CheckCodeGenerator checkCodeGenerator;
 	@Autowired
 	private SecurityService securityService;
+	@Autowired
+	private RepositoryAdminManageService repositoryAdminService;
 
 	/**
 	 * 登陆
@@ -60,6 +67,7 @@ public class AccountHandler {
 	 * @param request
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "signIn", method = RequestMethod.POST)
 	public @ResponseBody Map<String, Object> signIn(@RequestBody User user, HttpServletRequest request) {
 		// 初始化返回的结果集
@@ -87,6 +95,10 @@ public class AccountHandler {
 				session.setAttribute("account_status", AccountStatus.SIGNIN.toString());
 				session.setAttribute("role", role.getRoleName());
 				session.setAttribute("requestPrefix", role.getRolePrefix());
+				
+				// 如果是仓库管理员，则配置所属的仓库
+				List<RepositoryAdmin> repositoryAdmin= (List<RepositoryAdmin>) repositoryAdminService.selectByID(user.getId()).get("data");
+				session.setAttribute("repositoryBelong", (repositoryAdmin.isEmpty()) ? "none" : repositoryAdmin.get(0).getRepositoryBelongID());
 			}
 
 			targetURL = "";

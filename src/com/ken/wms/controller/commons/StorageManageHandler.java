@@ -303,9 +303,9 @@ public class StorageManageHandler {
 		String fileName = "storageRecord.xlsx";
 
 		HttpSession session = request.getSession();
-		String sessionRepositoryBelong = (String) session.getAttribute("repositoryBelong");
+		Integer sessionRepositoryBelong = (Integer) session.getAttribute("repositoryBelong");
 		if (sessionRepositoryBelong != null && !sessionRepositoryBelong.equals("none"))
-			repositoryBelong = sessionRepositoryBelong;
+			repositoryBelong = sessionRepositoryBelong.toString();
 		
 		List<Storage> storageList = null;
 		Map<String, Object> queryResult = query(searchType, keyword, repositoryBelong, -1, -1);

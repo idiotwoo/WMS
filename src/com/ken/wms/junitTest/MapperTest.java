@@ -30,6 +30,7 @@ import com.ken.wms.domain.Role;
 import com.ken.wms.domain.Storage;
 import com.ken.wms.domain.Supplier;
 import com.ken.wms.domain.User;
+import com.ken.wms.service.Interface.RepositoryAdminManageService;
 
 @ContextConfiguration(locations="classpath:config/SpringApplicationConfiguration.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -60,6 +61,8 @@ public class MapperTest {
 	private RepositoryAdminMapper repositoryAdminMapper;
 	@Autowired
 	private StorageMapper storageMapper;
+	@Autowired
+	private RepositoryAdminManageService repositoryAdminService;
 	
 	@Test
 	public void test() {
@@ -543,5 +546,12 @@ public class MapperTest {
 		// delete operation test
 //		storageMapper.deleteByGoodsID(5);
 //		storageMapper.deleteByRepositoryID(102);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testRepository(){
+		List<Repository> repository = (List<Repository>) repositoryAdminService.selectByID(1002).get("data");
+		System.out.println(repository);
 	}
 }
