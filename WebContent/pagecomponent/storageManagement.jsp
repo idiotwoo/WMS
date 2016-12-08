@@ -513,7 +513,7 @@
 	</ol>
 	<div class="panel-body">
 		<div class="row">
-			<div class="col-md-1">
+			<div class="col-md-1  col-sm-2">
 				<div class="btn-group">
 					<button class="btn btn-default dropdown-toggle"
 						data-toggle="dropdown">
@@ -527,17 +527,17 @@
 					</ul>
 				</div>
 			</div>
-			<div class="col-md-9">
+			<div class="col-md-9 col-sm-9">
 				<div>
-					<div class="col-md-3">
+					<div class="col-md-3 col-sm-3">
 						<input id="search_input_type" type="text" class="form-control"
 							placeholder="货物ID">
 					</div>
-					<div class="col-md-3">
+					<div class="col-md-3 col-sm-4">
 						<select class="form-control" id="search_input_repository">
 						</select>
 					</div>
-					<div class="col-md-2">
+					<div class="col-md-2 col-sm-2">
 						<button id="search_button" class="btn btn-success">
 							<span class="glyphicon glyphicon-search"></span> <span>查询</span>
 						</button>
@@ -583,37 +583,37 @@
 			<div class="modal-body">
 				<!-- 模态框的内容 -->
 				<div class="row">
-					<div class="col-md-1"></div>
-					<div class="col-md-8">
+					<div class="col-md-1 col-sm-1"></div>
+					<div class="col-md-8 col-sm-8">
 						<form class="form-horizontal" role="form" id="storage_form"
 							style="margin-top: 25px">
 							<div class="form-group">
-								<label for="" class="control-label col-md-4"> <span>货物ID：</span>
+								<label for="" class="control-label col-md-4 col-sm-4"> <span>货物ID：</span>
 								</label>
-								<div class="col-md-8">
+								<div class="col-md-8 col-sm-8">
 									<input type="text" class="form-control" id="storage_goodsID"
 										name="storage_goodsID" placeholder="货物ID">
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="" class="control-label col-md-4"> <span>仓库ID：</span>
+								<label for="" class="control-label col-md-4 col-sm-4"> <span>仓库ID：</span>
 								</label>
-								<div class="col-md-8">
+								<div class="col-md-8 col-sm-8">
 									<input type="text" class="form-control" id="storage_repositoryID"
 										name="storage_repositoryID" placeholder="仓库ID">
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="" class="control-label col-md-4"> <span>数量：</span>
+								<label for="" class="control-label col-md-4 col-sm-4"> <span>数量：</span>
 								</label>
-								<div class="col-md-8">
+								<div class="col-md-8 col-sm-8">
 									<input type="text" class="form-control" id="storage_number"
 										name="storage_number" placeholder="数量">
 								</div>
 							</div>
 						</form>
 					</div>
-					<div class="col-md-1"></div>
+					<div class="col-md-1 col-sm-1"></div>
 				</div>
 			</div>
 			<div class="modal-footer">
@@ -642,7 +642,7 @@
 			<div class="modal-body">
 				<div id="step1">
 					<div class="row" style="margin-top: 15px">
-						<div class="col-md-1"></div>
+						<div class="col-md-1 col-sm-1"></div>
 						<div class="col-md-10 col-sm-10">
 							<div>
 								<h4>点击下面的下载按钮，下载库存信息电子表格</h4>
@@ -659,7 +659,7 @@
 				</div>
 				<div id="step2" class="hide">
 					<div class="row" style="margin-top: 15px">
-						<div class="col-md-1"></div>
+						<div class="col-md-1 col-sm-1"></div>
 						<div class="col-md-10 col-sm-10">
 							<div>
 								<h4>请按照库存信息电子表格中指定的格式填写需要添加的一个或多个库存信息</h4>
@@ -673,7 +673,7 @@
 				</div>
 				<div id="step3" class="hide">
 					<div class="row" style="margin-top: 15px">
-						<div class="col-md-1"></div>
+						<div class="col-md-1 col-sm-1"></div>
 						<div class="col-md-8 col-sm-10">
 							<div>
 								<div>
@@ -692,8 +692,8 @@
 				</div>
 				<div class="hide" id="uploading">
 					<div class="row" style="margin-top: 15px" id="import_progress_bar">
-						<div class="col-md-1"></div>
-						<div class="col-md-10"
+						<div class="col-md-1 col-sm-1"></div>
+						<div class="col-md-10 col-sm-10"
 							style="margin-top: 30px; margin-bottom: 30px">
 							<div class="progress progress-striped active">
 								<div class="progress-bar progress-bar-success"
@@ -708,11 +708,11 @@
 							</div>
 							 -->
 						</div>
-						<div class="col-md-1"></div>
+						<div class="col-md-1 col-sm-1"></div>
 					</div>
 					<div class="row">
-						<div class="col-md-4"></div>
-						<div class="col-md-4">
+						<div class="col-md-4 col-sm-4"></div>
+						<div class="col-md-4 col-sm-4">
 							<div id="import_result" class="hide">
 								<div id="import_success" class="hide" style="text-align: center;">
 									<img src="media/icons/success-icon.png" alt=""
@@ -724,14 +724,14 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-4"></div>
+						<div class="col-md-4 col-sm-4"></div>
 					</div>
 					<div class="row" style="margin-top: 10px">
-						<div class="col-md-3"></div>
-						<div class="col-md-6" style="text-align: center;">
+						<div class="col-md-3 col-sm-3"></div>
+						<div class="col-md-6 col-sm-6" style="text-align: center;">
 							<h4 id="import_info"></h4>
 						</div>
-						<div class="col-md-3"></div>
+						<div class="col-md-3 col-sm-3"></div>
 					</div>
 				</div>
 			</div>
@@ -767,11 +767,11 @@
 			</div>
 			<div class="modal-body">
 				<div class="row">
-					<div class="col-md-3" style="text-align: center;">
+					<div class="col-md-3 col-sm-3" style="text-align: center;">
 						<img src="media/icons/warning-icon.png" alt=""
 							style="width: 70px; height: 70px; margin-top: 20px;">
 					</div>
-					<div class="col-md-8">
+					<div class="col-md-8 col-sm-8">
 						<h3>是否确认导出库存信息</h3>
 						<p>(注意：请确定要导出的库存信息，导出的内容为当前列表的搜索结果)</p>
 					</div>
@@ -801,8 +801,8 @@
 			</div>
 			<div class="modal-body">
 				<div class="row">
-					<div class="col-md-4"></div>
-					<div class="col-md-4">
+					<div class="col-md-4 col-sm-4"></div>
+					<div class="col-md-4 col-sm-4">
 						<div id="info_success" class=" hide" style="text-align: center;">
 							<img src="media/icons/success-icon.png" alt=""
 								style="width: 100px; height: 100px;">
@@ -812,14 +812,14 @@
 								style="width: 100px; height: 100px;">
 						</div>
 					</div>
-					<div class="col-md-4"></div>
+					<div class="col-md-4 col-sm-4"></div>
 				</div>
 				<div class="row" style="margin-top: 10px">
-					<div class="col-md-4"></div>
-					<div class="col-md-4" style="text-align: center;">
+					<div class="col-md-4 col-sm-4"></div>
+					<div class="col-md-4 col-sm-4" style="text-align: center;">
 						<h4 id="info_content"></h4>
 					</div>
-					<div class="col-md-4"></div>
+					<div class="col-md-4 col-sm-4"></div>
 				</div>
 			</div>
 			<div class="modal-footer">
@@ -843,11 +843,11 @@
 			</div>
 			<div class="modal-body">
 				<div class="row">
-					<div class="col-md-3" style="text-align: center;">
+					<div class="col-md-3 col-sm-3" style="text-align: center;">
 						<img src="media/icons/warning-icon.png" alt=""
 							style="width: 70px; height: 70px; margin-top: 20px;">
 					</div>
-					<div class="col-md-8">
+					<div class="col-md-8 col-sm-8">
 						<h3>是否确认删除该条库存信息</h3>
 						<p>(注意：一旦删除该条库存信息，将不能恢复)</p>
 					</div>
@@ -879,35 +879,35 @@
 			<div class="modal-body">
 				<!-- 模态框的内容 -->
 				<div class="row">
-					<div class="col-md-1"></div>
-					<div class="col-md-8">
+					<div class="col-md-1 col-sm-1"></div>
+					<div class="col-md-8 col-sm-8">
 						<form class="form-horizontal" role="form" id="storage_form_edit"
 							style="margin-top: 25px">
 							<div class="form-group">
-								<label for="" class="control-label col-md-4"> <span>货物ID：</span>
+								<label for="" class="control-label col-md-4 col-sm-4"> <span>货物ID：</span>
 								</label>
-								<div class="col-md-4">
+								<div class="col-md-4 col-sm-4">
 									<p id="storage_goodsID_edit" class="form-control-static"></p>
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="" class="control-label col-md-4"> <span>仓库ID：</span>
+								<label for="" class="control-label col-md-4 col-sm-4"> <span>仓库ID：</span>
 								</label>
-								<div class="col-md-4">
+								<div class="col-md-4 col-sm-4">
 									<p id="storage_repositoryID_edit" class="form-control-static"></p>
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="" class="control-label col-md-4"> <span>数量：</span>
+								<label for="" class="control-label col-md-4 col-sm-4"> <span>数量：</span>
 								</label>
-								<div class="col-md-8">
+								<div class="col-md-8 col-sm-8">
 									<input type="text" class="form-control" id="storage_number_edit"
 										name="storage_number" placeholder="库存数量">
 								</div>
 							</div>
 						</form>
 					</div>
-					<div class="col-md-1"></div>
+					<div class="col-md-1 col-sm-1"></div>
 				</div>
 			</div>
 			<div class="modal-footer">

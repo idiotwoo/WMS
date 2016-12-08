@@ -185,7 +185,7 @@
 	</ol>
 	<div class="panel-body">
 		<div class="row">
-			<div class="col-md-1">
+			<div class="col-md-1 col-sm-2">
 				<div class="btn-group">
 					<button class="btn btn-default dropdown-toggle"
 						data-toggle="dropdown">
@@ -199,13 +199,13 @@
 					</ul>
 				</div>
 			</div>
-			<div class="col-md-9">
+			<div class="col-md-9 col-sm-9">
 				<div>
-					<div class="col-md-3">
+					<div class="col-md-3 col-sm-3">
 						<input id="search_input_type" type="text" class="form-control"
 							placeholder="货物ID">
 					</div>
-					<div class="col-md-2">
+					<div class="col-md-2 col-sm-2">
 						<button id="search_button" class="btn btn-success">
 							<span class="glyphicon glyphicon-search"></span> <span>查询</span>
 						</button>
@@ -215,12 +215,12 @@
 		</div>
 
 		<div class="row" style="margin-top: 25px">
-			<div class="col-md-5">
+			<div class="col-md-5 col-sm-5">
 				<button class="btn btn-sm btn-default" id="export_storage">
 					<span class="glyphicon glyphicon-export"></span> <span>导出</span>
 				</button>
 			</div>
-			<div class="col-md-5"></div>
+			<div class="col-md-5 col-sm-5"></div>
 		</div>
 
 		<div class="row" style="margin-top: 15px">
@@ -244,11 +244,11 @@
 			</div>
 			<div class="modal-body">
 				<div class="row">
-					<div class="col-md-3" style="text-align: center;">
+					<div class="col-md-3 col-sm-3" style="text-align: center;">
 						<img src="media/icons/warning-icon.png" alt=""
 							style="width: 70px; height: 70px; margin-top: 20px;">
 					</div>
-					<div class="col-md-8">
+					<div class="col-md-8 col-sm-8">
 						<h3>是否确认导出库存信息</h3>
 						<p>(注意：请确定要导出的库存信息，导出的内容为当前列表的搜索结果)</p>
 					</div>
@@ -284,55 +284,55 @@
 						<form class="form-horizontal" role="form" id="storage_detail"
 							style="margin-top: 25px">
 							<div class="row">
-								<div class="col-md-6">
+								<div class="col-md-6 col-sm-6">
 									<div class="form-group">
-										<label for="" class="control-label col-md-6"> <span>货物ID：</span>
+										<label for="" class="control-label col-md-6 col-sm-6"> <span>货物ID：</span>
 										</label>
-										<div class="col-md-4">
+										<div class="col-md-4 col-sm-4">
 											<p id="storage_goodsID" class="form-control-static"></p>
 										</div>
 									</div>
 									<div class="form-group">
-										<label for="" class="control-label col-md-6"> <span>货物名称：</span>
+										<label for="" class="control-label col-md-6 col-sm-6"> <span>货物名称：</span>
 										</label>
-										<div class="col-md-4">
+										<div class="col-md-4 col-sm-4">
 											<p id="storage_goodsName" class="form-control-static"></p>
 										</div>
 									</div>
 									<div class="form-group">
-										<label for="" class="control-label col-md-6"> <span>货物类型：</span>
+										<label for="" class="control-label col-md-6 col-sm-6"> <span>货物类型：</span>
 										</label>
-										<div class="col-md-4">
+										<div class="col-md-4 col-sm-4">
 											<p id="storage_goodsType" class="form-control-static"></p>
 										</div>
 									</div>
 									<div class="form-group">
-										<label for="" class="control-label col-md-6"> <span>货物规格：</span>
+										<label for="" class="control-label col-md-6 col-sm-6"> <span>货物规格：</span>
 										</label>
-										<div class="col-md-4">
+										<div class="col-md-4 col-sm-4">
 											<p id="storage_goodsSize" class="form-control-static"></p>
 										</div>
 									</div>
 								</div>
-								<div class="col-md-6">
+								<div class="col-md-6 col-sm-6">
 									<div class="form-group">
-										<label for="" class="control-label col-md-6"> <span>货物价值：</span>
+										<label for="" class="control-label col-md-6 col-sm-6"> <span>货物价值：</span>
 										</label>
-										<div class="col-md-4">
+										<div class="col-md-4 col-sm-4">
 											<p id="storage_goodsValue" class="form-control-static"></p>
 										</div>
 									</div>
 									<div class="form-group">
-										<label for="" class="control-label col-md-6"> <span>货物存储仓库ID：</span>
+										<label for="" class="control-label col-md-6 col-sm-6"> <span>货物存储仓库ID：</span>
 										</label>
-										<div class="col-md-4">
+										<div class="col-md-4 col-sm-4">
 											<p id="storage_repositoryBelong" class="form-control-static"></p>
 										</div>
 									</div>
 									<div class="form-group">
-										<label for="" class="control-label col-md-6"> <span>库存数量：</span>
+										<label for="" class="control-label col-md-6 col-sm-6"> <span>库存数量：</span>
 										</label>
-										<div class="col-md-4">
+										<div class="col-md-4 col-sm-4">
 											<p id="storage_number" class="form-control-static"></p>
 										</div>
 									</div>
