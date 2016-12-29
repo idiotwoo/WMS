@@ -96,6 +96,24 @@ public interface StorageManageService {
 	public boolean updateStorage(Integer goodsID, Integer repositoryID, long number);
 	
 	/**
+	 * 为指定的货物库存记录增加指定数目
+	 * @param goodsID 货物ID
+	 * @param repositoryID 仓库ID
+	 * @param number 增加的数量
+	 * @return 返回一个 boolean 值，若值为true表示数目增加成功，否则表示增加失败
+	 */
+	public boolean storageIncrease(Integer goodsID, Integer repositoryID, long number);
+	
+	/**
+	 * 为指定的货物库存记录减少指定的数目
+	 * @param goodsID 货物ID
+	 * @param repositoryID 仓库ID
+	 * @param number 减少的数量
+	 * @return 返回一个 boolean 值，若值为 true 表示数目减少成功，否则表示增加失败
+	 */
+	public boolean storageDecrease(Integer goodsID, Integer repositoryID, long number);
+	
+	/**
 	 * 删除一条库存记录
 	 * 货物ID与仓库ID可唯一确定一条库存记录
 	 * @param goodsID 指定的货物ID

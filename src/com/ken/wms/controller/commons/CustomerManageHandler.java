@@ -39,6 +39,33 @@ public class CustomerManageHandler {
 	@Autowired
 	private CustomerManageService customerManageService;
 
+	private static final String SEARCH_BY_ID = "searchByID";
+	private static final String SEARCH_BY_NAME = "searchByName";
+	private static final String SEARCH_ALL = "searchAll";
+	
+	/**
+	 * 通用的结果查询方法
+	 * @param searchType 查询方式
+	 * @param keyWord 查询关键字
+	 * @param offset 分页偏移值
+	 * @param limit 分页大小
+	 * @return 返回指定条件查询的结果
+	 */
+	private Map<String, Object> query(String searchType, String keyWord, int offset, int limit){
+		Map<String, Object> queryResult = null;
+		if(searchType.equals(SEARCH_BY_ID)){
+			if(StringUtils.isNumeric(keyWord))
+				queryResult = customerManageService.selectById(Integer.valueOf(keyWord));
+		}else if(searchType.equals(SEARCH_BY_NAME)){
+			queryResult = customerManageService.selectByName(offset, limit, keyWord);
+		}else if(searchType.equals(SEARCH_ALL)){
+			queryResult = customerManageService.selectAll(offset, limit);
+		}else{
+			// do other thing
+		}
+		return queryResult;
+	}
+	
 	/**
 	 * 搜索客户信息
 	 * 
@@ -62,20 +89,21 @@ public class CustomerManageHandler {
 		List<Supplier> rows = null;
 		long total = 0;
 
-		// 根据查询类型进行查询
-		Map<String, Object> queryResult = null;
-		if (searchType.equals("searchByID")) {
-			if (keyWord != null && !keyWord.equals("") && StringUtils.isNumeric(keyWord)) {
-				Integer id = Integer.valueOf(keyWord);
-				queryResult = customerManageService.selectById(id);
-			}
-		} else if (searchType.equals("searchByName")) {
-			queryResult = customerManageService.selectByName(offset, limit, keyWord);
-		} else if (searchType.equals("searchAll")) {
-			queryResult = customerManageService.selectAll(offset, limit);
-		} else {
-			// do other thing
-		}
+//		// 根据查询类型进行查询
+//		Map<String, Object> queryResult = null;
+//		if (searchType.equals("searchByID")) {
+//			if (keyWord != null && !keyWord.equals("") && StringUtils.isNumeric(keyWord)) {
+//				Integer id = Integer.valueOf(keyWord);
+//				queryResult = customerManageService.selectById(id);
+//			}
+//		} else if (searchType.equals("searchByName")) {
+//			queryResult = customerManageService.selectByName(offset, limit, keyWord);
+//		} else if (searchType.equals("searchAll")) {
+//			queryResult = customerManageService.selectAll(offset, limit);
+//		} else {
+//			// do other thing
+//		}
+		Map<String, Object> queryResult = query(searchType, keyWord, offset, limit);
 
 		if (queryResult != null) {
 			rows = (List<Supplier>) queryResult.get("data");
@@ -219,23 +247,25 @@ public class CustomerManageHandler {
 			HttpServletResponse response) {
 
 		String fileName = "customerInfo.xlsx";
-
-		// 根据查询类型进行查询
+//
+//		// 根据查询类型进行查询
+//		List<Customer> customers = null;
+//		Map<String, Object> queryResult = null;
+//		if (searchType.equals("searchByID")) {
+//			if (keyWord != null && !keyWord.equals("")) {
+//				Integer id = Integer.valueOf(keyWord);
+//				queryResult = customerManageService.selectById(id);
+//			}
+//		} else if (searchType.equals("searchByName")) {
+//			queryResult = customerManageService.selectByName(keyWord);
+//		} else if (searchType.equals("searchAll")) {
+//			queryResult = customerManageService.selectAll();
+//		} else {
+//			// do other thing
+//			customers = new ArrayList<>();
+//		}
 		List<Customer> customers = null;
-		Map<String, Object> queryResult = null;
-		if (searchType.equals("searchByID")) {
-			if (keyWord != null && !keyWord.equals("")) {
-				Integer id = Integer.valueOf(keyWord);
-				queryResult = customerManageService.selectById(id);
-			}
-		} else if (searchType.equals("searchByName")) {
-			queryResult = customerManageService.selectByName(keyWord);
-		} else if (searchType.equals("searchAll")) {
-			queryResult = customerManageService.selectAll();
-		} else {
-			// do other thing
-			customers = new ArrayList<>();
-		}
+		Map<String, Object> queryResult = query(searchType, keyWord, -1, -1);
 
 		if (queryResult != null) {
 			customers = (List<Customer>) queryResult.get("data");

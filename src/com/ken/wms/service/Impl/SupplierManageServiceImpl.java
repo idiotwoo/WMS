@@ -80,13 +80,27 @@ public class SupplierManageServiceImpl implements SupplierManageService {
 		Map<String, Object> resultSet = new HashMap<>();
 		List<Supplier> suppliers = new ArrayList<>();
 		long total = 0;
+		boolean isPagination = true;
+		
+		// validate
+		if(offset < 0 || limit < 0)
+			isPagination = false;
 
-		// 分页查询
-		PageHelper.offsetPage(offset, limit);
-		suppliers = supplierMapper.selectApproximateByName(supplierName);
-		if (suppliers != null) {
-			PageInfo<Supplier> pageInfo = new PageInfo<>(suppliers);
-			total = pageInfo.getTotal();
+		// query
+		if(isPagination){
+			PageHelper.offsetPage(offset, limit);
+			suppliers = supplierMapper.selectApproximateByName(supplierName);
+			if (suppliers != null) {
+				PageInfo<Supplier> pageInfo = new PageInfo<>(suppliers);
+				total = pageInfo.getTotal();
+			}else
+				suppliers = new ArrayList<>();
+		}else{
+			suppliers = supplierMapper.selectApproximateByName(supplierName);
+			if(suppliers != null)
+				total = suppliers.size();
+			else
+				suppliers = new ArrayList<>();
 		}
 
 		resultSet.put("data", suppliers);
@@ -103,20 +117,7 @@ public class SupplierManageServiceImpl implements SupplierManageService {
 	 */
 	@Override
 	public Map<String, Object> selectByName(String supplierName) {
-		// 初始化结果集
-		Map<String, Object> resultSet = new HashMap<>();
-		List<Supplier> suppliers = new ArrayList<>();
-		long total = 0;
-
-		suppliers = supplierMapper.selectApproximateByName(supplierName);
-		if (suppliers != null) {
-			PageInfo<Supplier> pageInfo = new PageInfo<>(suppliers);
-			total = pageInfo.getTotal();
-		}
-
-		resultSet.put("data", suppliers);
-		resultSet.put("total", total);
-		return resultSet;
+		return selectByName(-1, -1, supplierName);
 	}
 
 	/**
@@ -134,13 +135,27 @@ public class SupplierManageServiceImpl implements SupplierManageService {
 		Map<String, Object> resultSet = new HashMap<>();
 		List<Supplier> suppliers = new ArrayList<>();
 		long total = 0;
-
-		// 分页查询
-		PageHelper.offsetPage(offset, limit);
-		suppliers = supplierMapper.selectAll();
-		if (suppliers != null) {
-			PageInfo<Supplier> pageInfo = new PageInfo<>(suppliers);
-			total = pageInfo.getTotal();
+		boolean isPagination = true;
+		
+		// validate
+		if(offset < 0 || limit < 0)
+			isPagination = false;
+		
+		// query
+		if(isPagination){
+			PageHelper.offsetPage(offset, limit);
+			suppliers = supplierMapper.selectAll();
+			if(suppliers != null){
+				PageInfo<Supplier> pageInfo = new PageInfo<>(suppliers);
+				total = pageInfo.getTotal();
+			}else
+				suppliers = new ArrayList<>();
+		}else{
+			suppliers = supplierMapper.selectAll();
+			if(suppliers != null)
+				total = suppliers.size();
+			else
+				suppliers = new ArrayList<>();
 		}
 
 		resultSet.put("data", suppliers);
@@ -155,20 +170,7 @@ public class SupplierManageServiceImpl implements SupplierManageService {
 	 */
 	@Override
 	public Map<String, Object> selectAll() {
-		// 初始化结果集
-		Map<String, Object> resultSet = new HashMap<>();
-		List<Supplier> suppliers = new ArrayList<>();
-		long total = 0;
-
-		suppliers = supplierMapper.selectAll();
-		if (suppliers != null) {
-			PageInfo<Supplier> pageInfo = new PageInfo<>(suppliers);
-			total = pageInfo.getTotal();
-		}
-
-		resultSet.put("data", suppliers);
-		resultSet.put("total", total);
-		return resultSet;
+		return selectAll(-1, -1);
 	}
 
 	/**

@@ -15,9 +15,18 @@ public class StockOut {
 	private String customerName;// 客户名称
 	private Integer goodID;// 商品ID
 	private String goodName;// 商品名称
-	private int number;// 数量
+	private Integer repositoryID;// 出库仓库ID
+	private long number;// 数量
 	private Date time;// 日期
 	private String personInCharge;// 经手人
+
+	public Integer getRepositoryID() {
+		return repositoryID;
+	}
+
+	public void setRepositoryID(Integer repositoryID) {
+		this.repositoryID = repositoryID;
+	}
 
 	public Integer getId() {
 		return id;
@@ -59,11 +68,11 @@ public class StockOut {
 		this.goodName = goodName;
 	}
 
-	public int getNumber() {
+	public long getNumber() {
 		return number;
 	}
 
-	public void setNumber(int number) {
+	public void setNumber(long number) {
 		this.number = number;
 	}
 
@@ -86,8 +95,8 @@ public class StockOut {
 	@Override
 	public String toString() {
 		return "StockOut [id=" + id + ", customerID=" + customerID + ", customerName=" + customerName + ", goodID="
-				+ goodID + ", goodName=" + goodName + ", number=" + number + ", time=" + time + ", personInCharge="
-				+ personInCharge + "]";
+				+ goodID + ", goodName=" + goodName + ", repositoryID=" + repositoryID + ", number=" + number
+				+ ", time=" + time + ", personInCharge=" + personInCharge + "]";
 	}
 
 }

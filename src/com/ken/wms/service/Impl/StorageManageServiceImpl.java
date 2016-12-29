@@ -390,5 +390,71 @@ public class StorageManageServiceImpl implements StorageManageService {
 			return null;
 		return excelUtil.excelWriter(Storage.class, storages);
 	}
+	
+	/**
+	 * 为指定的货物库存记录增加指定数目
+	 * @param goodsID 货物ID
+	 * @param repositoryID 仓库ID
+	 * @param number 增加的数量
+	 * @return 返回一个 boolean 值，若值为true表示数目增加成功，否则表示增加失败
+	 */
+	@Override
+	public boolean storageIncrease(Integer goodsID, Integer repositoryID, long number) {
+		
+		// 检查货物库存增加数目的有效性
+		if(number < 0)
+			return false;
+		
+		synchronized (this) {
+			// 检查对应的库存记录是否存在
+			Storage storage = getStrorage(goodsID, repositoryID);
+			if(storage != null){
+				long newStorage = storage.getNumber() + number;
+				updateStorage(goodsID, repositoryID, newStorage);
+			}else{
+				addNewStorage(goodsID, repositoryID, number);
+			}
+		}
+		return true;
+	}
 
+	/**
+	 * 为指定的货物库存记录减少指定的数目
+	 * @param goodsID 货物ID
+	 * @param repositoryID 仓库ID
+	 * @param number 减少的数量
+	 * @return 返回一个 boolean 值，若值为 true 表示数目减少成功，否则表示减少失败
+	 */
+	@Override
+	public boolean storageDecrease(Integer goodsID, Integer repositoryID, long number) {
+		
+		synchronized (this) {
+			// 检查对应的库存记录是否存在
+			Storage storage = getStrorage(goodsID, repositoryID);
+			if(null != storage){
+				// 检查库存减少数目的范围是否合理
+				if(number < 0 || storage.getNumber() < number)
+					return false;
+
+				long newStorage = storage.getNumber() - number;
+				updateStorage(goodsID, repositoryID, newStorage);
+				return true;
+			}else
+				return false;
+		}
+	}
+
+	/**
+	 * 获取指定货物ID，仓库ID对应的库存记录
+	 * @param goodsID 货物ID
+	 * @param repositoryID 仓库ID
+	 * @return 若存在则返回对应的记录，否则返回null
+	 */
+	private Storage getStrorage(Integer goodsID, Integer repositoryID){
+		Storage storage = null;
+		List<Storage> storages = storageMapper.selectByGoodsIDAndRepositoryID(goodsID, repositoryID);
+		if(!storages.isEmpty())
+			storage = storages.get(0);
+		return storage;
+	}
 }

@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +36,28 @@ public class SupplierManageHandler {
 	@Autowired
 	private SupplierManageService supplierManageService;
 
+	private static final String SEARCH_BY_ID = "searchByID";
+	private static final String SEARCH_BY_NAME = "searchByName";
+	private static final String SEARCH_ALL = "searchAll";
+	
+	private Map<String, Object> query(String searchType, String keyWord, int offset, int limit){
+		Map<String, Object> queryResult = null;
+		
+		if(searchType.equals(SEARCH_BY_ID)){
+			if(StringUtils.isNumeric(keyWord)){
+				queryResult = supplierManageService.selectById(Integer.valueOf(keyWord));
+			}
+		}else if(searchType.equals(SEARCH_BY_NAME)){
+			queryResult = supplierManageService.selectByName(offset, limit, keyWord);
+		}else if(searchType.equals(SEARCH_ALL)){
+			queryResult = supplierManageService.selectAll(offset, limit);
+		}else{
+			// do other thing
+		}
+		
+		return queryResult;
+	}
+	
 	/**
 	 * 搜索供应商信息
 	 * 
@@ -60,21 +81,23 @@ public class SupplierManageHandler {
 		List<Supplier> rows = null;
 		long total = 0;
 
-		// 根据查询类型进行查询
-		Map<String, Object> queryResult = null;
-		if (searchType.equals("searchByID")) {
-			if (keyWord != null && !keyWord.equals("") && StringUtils.isNumeric(keyWord)) {
-				Integer id = Integer.valueOf(keyWord);
-				queryResult = supplierManageService.selectById(id);
-			}
-		} else if (searchType.equals("searchByName")) {
-			queryResult = supplierManageService.selectByName(offset, limit, keyWord);
-		} else if (searchType.equals("searchAll")) {
-			queryResult = supplierManageService.selectAll(offset, limit);
-		} else {
-			// do other things
-		}
+//		// 根据查询类型进行查询
+//		Map<String, Object> queryResult = null;
+//		if (searchType.equals("searchByID")) {
+//			if (keyWord != null && !keyWord.equals("") && StringUtils.isNumeric(keyWord)) {
+//				Integer id = Integer.valueOf(keyWord);
+//				queryResult = supplierManageService.selectById(id);
+//			}
+//		} else if (searchType.equals("searchByName")) {
+//			queryResult = supplierManageService.selectByName(offset, limit, keyWord);
+//		} else if (searchType.equals("searchAll")) {
+//			queryResult = supplierManageService.selectAll(offset, limit);
+//		} else {
+//			// do other things
+//		}
 
+		Map<String, Object> queryResult = query(searchType, keyWord, offset, limit);
+		
 		// 结果转换
 		if (queryResult != null) {
 			rows = (List<Supplier>) queryResult.get("data");
@@ -221,19 +244,20 @@ public class SupplierManageHandler {
 		// 根据查询类型进行查询
 		List<Supplier> suppliers = null;
 		Map<String, Object> queryResult = null;
-		if (searchType.equals("searchByID")) {
-			if (keyWord != null && keyWord != "") {
-				Integer id = Integer.valueOf(keyWord);
-				queryResult = supplierManageService.selectById(id);
-			}
-		} else if (searchType.equals("searchByName")) {
-			queryResult = supplierManageService.selectByName(keyWord);
-		} else if (searchType.equals("searchAll")) {
-			queryResult = supplierManageService.selectAll();
-		} else {
-			// do other things
-			suppliers = new ArrayList<>();
-		}
+//		if (searchType.equals("searchByID")) {
+//			if (keyWord != null && keyWord != "") {
+//				Integer id = Integer.valueOf(keyWord);
+//				queryResult = supplierManageService.selectById(id);
+//			}
+//		} else if (searchType.equals("searchByName")) {
+//			queryResult = supplierManageService.selectByName(keyWord);
+//		} else if (searchType.equals("searchAll")) {
+//			queryResult = supplierManageService.selectAll();
+//		} else {
+//			// do other things
+//			suppliers = new ArrayList<>();
+//		}
+		queryResult = query(searchType, keyWord, -1, -1);
 
 		if (queryResult != null) {
 			suppliers = (List<Supplier>) queryResult.get("data");

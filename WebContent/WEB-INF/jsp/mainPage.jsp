@@ -12,6 +12,8 @@
 <link rel="stylesheet" type="text/css"
 	href="${pageContext.request.contextPath}/css/bootstrap-datetimepicker.min.css">
 <link rel="stylesheet" type="text/css"
+	href="${pageContext.request.contextPath}/css/jquery-ui.css">
+<link rel="stylesheet" type="text/css"
 	href="${pageContext.request.contextPath}/css/mainPage.css">
 </head>
 <body>
@@ -32,7 +34,7 @@
 				<ul class="nav navbar-nav navbar-right">
 					<li class="dropdown"><a href="#" class="dropdown-toggle"
 						data-toggle="dropdown"> <span class="glyphicon glyphicon-user"></span>
-							<span>欢迎&nbsp;</span> <span id="nav_userName">ID:${sessionScope.userID}</span>
+							<span>欢迎&nbsp;</span> <span id="nav_userName">用户名:${sessionScope.userName}</span>
 							<span class="caret"></span>
 					</a>
 						<ul class="dropdown-menu">
@@ -117,6 +119,8 @@
 		src="${pageContext.request.contextPath}/js/jquery-2.2.3.min.js"></script>
 	<script type="text/javascript"
 		src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
+	<script type="text/javascript"
+		src="${pageContext.request.contextPath}/js/jquery-ui.min.js"></script>
 	<script type="text/javascript"
 		src="${pageContext.request.contextPath}/js/bootstrapValidator.min.js"></script>
 	<script type="text/javascript"

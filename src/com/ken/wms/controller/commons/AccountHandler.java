@@ -25,14 +25,12 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import com.ken.wms.controller.Enum.AccountStatus;
 import com.ken.wms.controller.Enum.ResponseStatus;
 import com.ken.wms.controller.entity.PasswordModification;
-import com.ken.wms.domain.Repository;
 import com.ken.wms.domain.RepositoryAdmin;
 import com.ken.wms.domain.Role;
 import com.ken.wms.domain.User;
 import com.ken.wms.security.SecurityService;
 import com.ken.wms.service.Interface.AccountService;
 import com.ken.wms.service.Interface.RepositoryAdminManageService;
-import com.ken.wms.service.Interface.RepositoryService;
 import com.ken.wms.service.execption.AccountServiceException;
 import com.ken.wms.service.util.CheckCodeGenerator;
 
@@ -92,6 +90,7 @@ public class AccountHandler {
 			if (role != null) {
 				// 配置 Session
 				session.setAttribute("userID", user.getId());
+				session.setAttribute("userName", user.getUserName());
 				session.setAttribute("account_status", AccountStatus.SIGNIN.toString());
 				session.setAttribute("role", role.getRoleName());
 				session.setAttribute("requestPrefix", role.getRolePrefix());

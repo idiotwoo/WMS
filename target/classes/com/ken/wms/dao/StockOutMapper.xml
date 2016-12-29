@@ -88,8 +88,8 @@
 	</select>
 		
 	<insert id="insert">
-		insert into wms_record_out(RECORD_CUSTOMERID,RECORD_GOODID,RECORD_NUMBER,RECORD_TIME,RECORD_PERSON)
-		values(#{customerID},#{goodID},#{number},#{time},#{personInCharge})
+		insert into wms_record_out(RECORD_CUSTOMERID,RECORD_GOODID,RECORD_NUMBER,RECORD_TIME,RECORD_PERSON,RECORD_REPOSITORYID)
+		values(#{customerID},#{goodID},#{number},#{time},#{personInCharge},#{repositoryID})
 	</insert>
 	
 	<update id="update">

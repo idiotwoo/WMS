@@ -82,13 +82,27 @@ public class GoodsManageServiceImpl implements GoodsManageService {
 		Map<String, Object> resultSet = new HashMap<>();
 		List<Goods> goodsList = new ArrayList<>();
 		long total = 0;
-
-		// 分页查询
-		PageHelper.offsetPage(offset, limit);
-		goodsList = goodsMapper.selectApproximateByName(goodsName);
-		if (goodsList != null) {
-			PageInfo<Goods> pageInfo = new PageInfo<>(goodsList);
-			total = pageInfo.getTotal();
+		boolean isPagination = true;
+		
+		// validate
+		if(offset < 0 || limit < 0)
+			isPagination = false;
+		
+		// query
+		if(isPagination){
+			PageHelper.offsetPage(offset, limit);
+			goodsList = goodsMapper.selectApproximateByName(goodsName);
+			if(goodsList != null){
+				PageInfo<Goods> pageInfo = new PageInfo<>(goodsList);
+				total = pageInfo.getTotal();
+			}else
+				goodsList = new ArrayList<>();
+		}else{
+			goodsList = goodsMapper.selectApproximateByName(goodsName);
+			if(goodsList != null)
+				total = goodsList.size();
+			else
+				goodsList = new ArrayList<>();
 		}
 
 		resultSet.put("data", goodsList);
@@ -105,19 +119,7 @@ public class GoodsManageServiceImpl implements GoodsManageService {
 	 */
 	@Override
 	public Map<String, Object> selectByName(String goodsName) {
-		// 初始化结果集
-		Map<String, Object> resultsSet = new HashMap<>();
-		List<Goods> goodsList = new ArrayList<>();
-		long total = 0;
-
-		goodsList = goodsMapper.selectApproximateByName(goodsName);
-		if (goodsList != null) {
-			total = goodsList.size();
-		}
-
-		resultsSet.put("data", goodsList);
-		resultsSet.put("total", total);
-		return resultsSet;
+		return selectByName(-1, -1, goodsName);
 	}
 
 	/**
@@ -135,13 +137,22 @@ public class GoodsManageServiceImpl implements GoodsManageService {
 		Map<String, Object> resultSet = new HashMap<>();
 		List<Goods> goodsList = new ArrayList<>();
 		long total = 0;
-
-		// 分页查询
-		PageHelper.offsetPage(offset, limit);
-		goodsList = goodsMapper.selectAll();
-		if (goodsList != null) {
-			PageInfo<Goods> pageInfo = new PageInfo<>(goodsList);
-			total = pageInfo.getTotal();
+		boolean isPagination = true;
+		
+		// validate
+		if(offset < 0 || limit < 0)
+			isPagination = false;
+		
+		
+		// query
+		if(isPagination){
+			PageHelper.offsetPage(offset, limit);
+			goodsList = goodsMapper.selectAll();
+			if(goodsList != null){
+				PageInfo<Goods> pageInfo = new PageInfo<>(goodsList);
+				total = pageInfo.getTotal();
+			}else
+				goodsList = new ArrayList<>();
 		}
 
 		resultSet.put("data", goodsList);
@@ -156,19 +167,7 @@ public class GoodsManageServiceImpl implements GoodsManageService {
 	 */
 	@Override
 	public Map<String, Object> selectAll() {
-		// 初始化结果集
-		Map<String, Object> resultSet = new HashMap<>();
-		List<Goods> goodsList = new ArrayList<>();
-		long total = 0;
-
-		goodsList = goodsMapper.selectAll();
-		if (goodsList != null) {
-			total = goodsList.size();
-		}
-
-		resultSet.put("data", goodsList);
-		resultSet.put("total", total);
-		return resultSet;
+		return selectAll(-1, -1);
 	}
 
 	/**

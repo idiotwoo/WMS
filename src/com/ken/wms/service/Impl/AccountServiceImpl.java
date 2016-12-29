@@ -44,7 +44,7 @@ public class AccountServiceImpl implements AccountService {
 		// 获取数据库中正确的用户信息
 		User validUser = userMapper.selectById(user.getId());
 
-		// 验证输入的用户名、密码、身份类型是否一致
+		// 验证密码是否一致
 		if (validUser == null)
 			throw new AccountServiceException(false, AccountServiceException.USERID_ERROR);
 		try {
@@ -61,6 +61,9 @@ public class AccountServiceImpl implements AccountService {
 			log.error("encrying fail");
 			throw new AccountServiceException(false, AccountServiceException.ENCRYING_ERROR);
 		}
+		
+		// 填充其他字段到user供以后使用
+		user.setUserName(validUser.getUserName());
 
 		log.debug("account validate end successfully");
 	}

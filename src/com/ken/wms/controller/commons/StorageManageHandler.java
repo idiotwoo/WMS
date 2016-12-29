@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ken.wms.controller.Enum.ResponseStatus;
 import com.ken.wms.domain.Storage;
+import com.ken.wms.service.Interface.StockRecordManageService;
 import com.ken.wms.service.Interface.StorageManageService;
 
 /**
@@ -39,6 +40,8 @@ public class StorageManageHandler {
 
 	@Autowired
 	private StorageManageService storageManageService;
+	@Autowired
+	private StockRecordManageService stockRecordManageService;
 
 	private static final String SEARCH_BY_GOODSID = "searchByGoodsID";
 	private static final String SEARCH_BY_GOODSNAME = "searchByGoodsName";
@@ -158,6 +161,58 @@ public class StorageManageHandler {
 			rows = new ArrayList<>();
 		resultSet.put("rows", rows);
 		resultSet.put("total", total);
+		return resultSet;
+	}
+	
+	/**
+	 * 货物入库操作
+	 * @param supplierID 供应商ID
+	 * @param goodsID 货物ID
+	 * @param repositoryID 仓库ID
+	 * @param number 入库数目
+	 * @param request http 请求
+	 * @return 返回一个map，key为result的值表示操作是否成功
+	 */
+	@RequestMapping(value="increaseStorageAdmin", method=RequestMethod.POST)
+	public @ResponseBody Map<String, Object> increaseStorage(@RequestParam("supplierID") Integer supplierID, 
+			@RequestParam("goodsID") Integer goodsID, @RequestParam("repositoryID") Integer repositoryID,
+			@RequestParam("number") long number, HttpServletRequest request){
+		// 初始化结果集
+		Map<String, Object> resultSet = new HashMap<>();
+		
+		HttpSession session = request.getSession();
+		String personInCharge = (String) session.getAttribute("userName");
+		
+		String result = stockRecordManageService.stockInOperation(supplierID, goodsID, repositoryID, number, personInCharge) ?
+				ResponseStatus.SUCCESS.toString() : ResponseStatus.ERROR.toString();
+		
+		resultSet.put("result", result);
+		return resultSet;
+	}
+	
+	/**
+	 * 货物出库操作
+	 * @param customerID 客户ID
+	 * @param goodsID 货物ID
+	 * @param repositoryID 仓库ID
+	 * @param number 出库数量
+	 * @param request http请求
+	 * @return返回一个map，key为result的值表示操作是否成功
+	 */
+	@RequestMapping(value="decreaseStorageAdmin", method=RequestMethod.POST)
+	public @ResponseBody Map<String, Object> decreaseStorage(@RequestParam("customerID") Integer customerID,
+			@RequestParam("goodsID") Integer goodsID, @RequestParam("repositoryID") Integer repositoryID,
+			@RequestParam("number") long number, HttpServletRequest request){
+		// 初始化结果集
+		Map<String, Object> resultSet = new HashMap<>();
+		
+		HttpSession session = request.getSession();
+		String personInCharge = (String) session.getAttribute("userName");
+		
+		String result = stockRecordManageService.stockOutOperation(customerID, goodsID, repositoryID, number, personInCharge) ?
+				ResponseStatus.SUCCESS.toString() : ResponseStatus.ERROR.toString();
+		
+		resultSet.put("result", result);
 		return resultSet;
 	}
 

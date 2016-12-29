@@ -76,15 +76,29 @@ public class CustomerManageServiceImpl implements CustomerManageService {
 	public Map<String, Object> selectByName(int offset, int limit, String customerName) {
 		// 初始化结果集
 		Map<String, Object> resultSet = new HashMap<>();
-		List<Customer> customers = new ArrayList<>();
+		List<Customer> customers = null;
 		long total = 0;
-
-		// 分页查询
-		PageHelper.offsetPage(offset, limit);
-		customers = customerMapper.selectApproximateByName(customerName);
-		if (customers != null) {
-			PageInfo<Customer> pageInfo = new PageInfo<>(customers);
-			total = pageInfo.getTotal();
+		boolean isPagination = true;
+		
+		// validate
+		if(offset < 0 || limit < 0)
+			isPagination = false;
+		
+		// query
+		if(isPagination){
+			PageHelper.offsetPage(offset, limit);
+			customers = customerMapper.selectApproximateByName(customerName);
+			if(customers != null){
+				PageInfo<Customer> pageInfo = new PageInfo<>(customers);
+				total = pageInfo.getTotal();
+			}else
+				customers = new ArrayList<>();
+		}else{
+			customers = customerMapper.selectApproximateByName(customerName);
+			if(customers != null)
+				total = customers.size();
+			else
+				customers = new ArrayList<>();
 		}
 
 		resultSet.put("data", customers);
@@ -101,19 +115,7 @@ public class CustomerManageServiceImpl implements CustomerManageService {
 	 */
 	@Override
 	public Map<String, Object> selectByName(String customerName) {
-		// 初始化结果集
-		Map<String, Object> resultSet = new HashMap<>();
-		List<Customer> customers = new ArrayList<>();
-		long total = 0;
-
-		customers = customerMapper.selectApproximateByName(customerName);
-		if (customers != null) {
-			total = customers.size();
-		}
-
-		resultSet.put("data", customers);
-		resultSet.put("total", total);
-		return resultSet;
+		return selectByName(-1, -1, customerName);
 	}
 
 	/**
@@ -129,15 +131,29 @@ public class CustomerManageServiceImpl implements CustomerManageService {
 	public Map<String, Object> selectAll(int offset, int limit) {
 		// 初始化结果集
 		Map<String, Object> resultSet = new HashMap<>();
-		List<Customer> customers = new ArrayList<>();
+		List<Customer> customers = null;
 		long total = 0;
-
-		// 分页查询
-		PageHelper.offsetPage(offset, limit);
-		customers = customerMapper.selectAll();
-		if (customers != null) {
-			PageInfo<Customer> pageInfo = new PageInfo<>(customers);
-			total = pageInfo.getTotal();
+		boolean isPagination = true;
+		
+		// validate
+		if(offset < 0 || limit < 0)
+			isPagination = false;
+		
+		// query
+		if(isPagination){
+			PageHelper.offsetPage(offset, limit);
+			customers = customerMapper.selectAll();
+			if(customers != null){
+				PageInfo<Customer> pageInfo = new PageInfo<>(customers);
+				total = pageInfo.getTotal();
+			}else
+				customers = new ArrayList<>();
+		}else{
+			customers = customerMapper.selectAll();
+			if(customers != null) 
+				total = customers.size();
+			else
+				customers = new ArrayList<>();
 		}
 
 		resultSet.put("data", customers);
@@ -152,18 +168,7 @@ public class CustomerManageServiceImpl implements CustomerManageService {
 	 */
 	@Override
 	public Map<String, Object> selectAll() {
-		// 初始化结果集
-		Map<String, Object> resultSet = new HashMap<>();
-		List<Customer> customers = new ArrayList<>();
-		long total = 0;
-
-		customers = customerMapper.selectAll();
-		if (customers != null) {
-			total = customers.size();
-		}
-		resultSet.put("data", customers);
-		resultSet.put("total", total);
-		return resultSet;
+		return selectAll(-1, -1);
 	}
 
 	/**
