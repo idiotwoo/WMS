@@ -12,8 +12,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.ken.wms.dao.RepositoryAdminMapper;
 import com.ken.wms.dao.RepositoryMapper;
+import com.ken.wms.dao.StockInMapper;
+import com.ken.wms.dao.StockOutMapper;
+import com.ken.wms.dao.StorageMapper;
 import com.ken.wms.domain.Repository;
+import com.ken.wms.domain.RepositoryAdmin;
+import com.ken.wms.domain.StockIn;
+import com.ken.wms.domain.StockOut;
+import com.ken.wms.domain.Storage;
 import com.ken.wms.service.Interface.RepositoryService;
 import com.ken.wms.service.util.ExcelUtil;
 
@@ -23,7 +31,7 @@ import com.ken.wms.service.util.ExcelUtil;
  *
  */
 @Service
-public class RepositoryServiceImpl implements RepositoryService {
+public class RepositoryManageServiceImpl implements RepositoryService {
 
 	//private Logger log = Logger.getLogger("application");
 	
@@ -31,6 +39,14 @@ public class RepositoryServiceImpl implements RepositoryService {
 	private RepositoryMapper repositoryMapper;
 	@Autowired
 	private ExcelUtil excelUtil;
+	@Autowired
+	private StockInMapper stockInMapper;
+	@Autowired
+	private StockOutMapper stockOutMapper;
+	@Autowired
+	private StorageMapper storageMapper;
+	@Autowired
+	private RepositoryAdminMapper repositoryAdminMapper;
 
 	/**
 	 * 返回指定 repository ID 的仓库记录
@@ -168,6 +184,18 @@ public class RepositoryServiceImpl implements RepositoryService {
 	}
 
 	/**
+	 * 检查仓库信息是否满足
+	 * @param repository 仓库信息
+	 * @return 若仓库信息满足要求则返回true，否则返回false
+	 */
+	private boolean repositoryCheck(Repository repository){
+		if (repository.getAddress() != null && repository.getStatus() != null && repository.getArea() != null)
+			return true;
+		else
+			return false;
+	}
+	
+	/**
 	 * 添加仓库记录
 	 * 
 	 * @param repository
@@ -180,7 +208,7 @@ public class RepositoryServiceImpl implements RepositoryService {
 		// 插入一条新的记录
 		if (repository != null) {
 			// 有效性验证
-			if (repository.getAddress() != null && repository.getStatus() != null && repository.getArea() != null)
+			if (repositoryCheck(repository))
 				repositoryMapper.insert(repository);
 			if (repository.getId() != null){
 				return true;
@@ -202,10 +230,12 @@ public class RepositoryServiceImpl implements RepositoryService {
 		// 更新仓库记录
 		if (repository != null) {
 			// 有效性验证
-			if (repository.getId() != null && repository.getAddress() != null && repository.getStatus() != null
-					&& repository.getArea() != null)
-				repositoryMapper.update(repository);
-			return true;
+			if (repositoryCheck(repository)){
+				if(repository.getId() != null){
+					repositoryMapper.update(repository);
+					return true;
+				}
+			}
 		}
 		return false;
 	}
@@ -220,9 +250,25 @@ public class RepositoryServiceImpl implements RepositoryService {
 	@Override
 	public boolean deleteRepository(Integer repositoryId) {
 	
-		// 查询是否由出入库记录
+		// 检查是否存在出库记录
+		List<StockOut> stockOutList = stockOutMapper.selectByRepositoryID(repositoryId);
+		if(stockOutList != null && !stockOutList.isEmpty())
+			return false;
 		
-		// 查询是否有仓存记录
+		// 检查是否存在入库记录
+		List<StockIn> stockInList = stockInMapper.selectByRepositoryID(repositoryId);
+		if(stockInList != null && !stockInList.isEmpty())
+			return false;
+		
+		// 检查是否存在库存记录
+		List<Storage> storageRecords = storageMapper.selectAllAndRepositoryID(repositoryId);
+		if(storageRecords != null && !storageRecords.isEmpty())
+			return false;
+		
+		// 检查是否已指派仓库管理员
+		RepositoryAdmin repositoryAdmin = repositoryAdminMapper.selectByRepositoryID(repositoryId);
+		if(repositoryAdmin != null)
+			return false;
 		
 		// 删除记录
 		repositoryMapper.deleteByID(repositoryId);

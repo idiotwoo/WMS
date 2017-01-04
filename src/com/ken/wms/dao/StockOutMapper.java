@@ -32,6 +32,13 @@ public interface StockOutMapper {
 	public List<StockOut> selectByGoodId(Integer goodId);
 	
 	/**
+	 * 选择指定仓库ID关联的出库记录
+	 * @param repositoryID 指定的仓库ID
+	 * @return 返回指定仓库ID相关的出库记录
+	 */
+	public List<StockOut> selectByRepositoryID(Integer repositoryID);
+	
+	/**
 	 * 选择指定ID的出库记录
 	 * @param id 指定的出库记录ID
 	 * @return 返回指定ID的出库记录

@@ -172,6 +172,19 @@ public class CustomerManageServiceImpl implements CustomerManageService {
 	}
 
 	/**
+	 * 检查客户信息是否满足要求
+	 * @param customer
+	 * @return
+	 */
+	private boolean customerCheck(Customer customer){
+		if (customer.getName() != null && customer.getPersonInCharge() != null && customer.getTel() != null
+				&& customer.getEmail() != null && customer.getAddress() != null) {
+			return true;
+		}else
+			return false;
+	}
+	
+	/**
 	 * 添加客户信息
 	 * 
 	 * @param customer
@@ -184,10 +197,11 @@ public class CustomerManageServiceImpl implements CustomerManageService {
 		// 插入新的记录
 		if (customer != null) {
 			// 验证
-			if (customer.getName() != null && customer.getPersonInCharge() != null && customer.getTel() != null
-					&& customer.getEmail() != null && customer.getAddress() != null) {
-				customerMapper.insert(customer);
-				return true;
+			if (customerCheck(customer)) {
+				if(null == customerMapper.selectByName(customer.getName())){
+					customerMapper.insert(customer);
+					return true;
+				}
 			}
 		}
 		return false;
@@ -204,10 +218,13 @@ public class CustomerManageServiceImpl implements CustomerManageService {
 		// 更新记录
 		if(customer != null){
 			// 检验
-			if (customer.getName() != null && customer.getPersonInCharge() != null && customer.getTel() != null
-					&& customer.getEmail() != null && customer.getAddress() != null) {
-				customerMapper.update(customer);
-				return true;
+			if (customerCheck(customer)) {
+				// 检查重名
+				Customer customerFromDB = customerMapper.selectByName(customer.getName());
+				if(customerFromDB == null || (customerFromDB != null && customerFromDB.getId().equals(customer.getId()))){
+					customerMapper.update(customer);
+					return true;
+				}
 			}
 		}
 		return false;
@@ -253,8 +270,7 @@ public class CustomerManageServiceImpl implements CustomerManageService {
 			List<Customer> availableList = new ArrayList<>();
 			for (Object object : customers) {
 				customer = (Customer) object;
-				if (customer.getName() != null && customer.getPersonInCharge() != null && customer.getTel() != null
-						&& customer.getEmail() != null && customer.getAddress() != null) {
+				if (customerCheck(customer)) {
 					if(customerMapper.selectByName(customer.getName()) == null)
 						availableList.add(customer);
 				}

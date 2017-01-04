@@ -172,6 +172,20 @@ public class SupplierManageServiceImpl implements SupplierManageService {
 	public Map<String, Object> selectAll() {
 		return selectAll(-1, -1);
 	}
+	
+	/**
+	 * 检验供应商信息是否满足要求
+	 * @param supplier 供应商信息
+	 * @return 若供应商上的属性均有满足要求则返回true，否则返回false
+	 */
+	private boolean supplierCheck(Supplier supplier){
+		// 检查是否已填写属性
+		if (supplier.getName() != null && supplier.getPersonInCharge() != null
+				&& supplier.getTel() != null && supplier.getEmail() != null && supplier.getAddress() != null) {
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * 添加供应商记录
@@ -185,11 +199,16 @@ public class SupplierManageServiceImpl implements SupplierManageService {
 
 		// 插入新的记录
 		if (supplier != null) {
-			supplierMapper.insert(supplier);
-
-			if (supplier.getId() != null) {
-				log.debug("insert a new supplier successfully");
-				return true;
+			if(supplierCheck(supplier)){
+				// 检查重名
+				if(null == supplierMapper.selectBuName(supplier.getName())){
+					supplierMapper.insert(supplier);
+					if (supplier.getId() != null) {
+						if(log.isDebugEnabled())
+							log.debug("insert a new supplier successfully");
+						return true;
+					}
+				}
 			}
 		}
 		return false;
@@ -208,10 +227,15 @@ public class SupplierManageServiceImpl implements SupplierManageService {
 		// 更新记录
 		if (supplier != null) {
 			// 检验
-			if (supplier.getId() != null && supplier.getName() != null && supplier.getPersonInCharge() != null
-					&& supplier.getTel() != null && supplier.getEmail() != null && supplier.getAddress() != null) {
-				supplierMapper.update(supplier);
-				return true;
+			if (supplierCheck(supplier)) {
+				if(supplier.getId() != null){
+					// 检查重名
+					Supplier supplierFromDB = supplierMapper.selectBuName(supplier.getName());
+					if(supplierFromDB == null || (supplierFromDB != null && supplier.getId().equals(supplierFromDB.getId()))){
+						supplierMapper.update(supplier);
+						return true;
+					}
+				}
 			}
 		}
 		return false;
@@ -234,7 +258,6 @@ public class SupplierManageServiceImpl implements SupplierManageService {
 
 		// 删除该条供应商记录
 		supplierMapper.deleteById(supplierId);
-
 		return true;
 	}
 
@@ -262,11 +285,10 @@ public class SupplierManageServiceImpl implements SupplierManageService {
 			List<Supplier> availableList = new ArrayList<>();
 			for (Object object : suppliers) {
 				supplier = (Supplier) object;
-				if (supplier.getName() != null && supplier.getPersonInCharge() != null && supplier.getTel() != null
-						&& supplier.getEmail() != null && supplier.getAddress() != null) {
-					if (supplierMapper.selectBuName(supplier.getName()) == null) {
+				if (supplierCheck(supplier)) {
+					// 检查重名
+					if(null == supplierMapper.selectBuName(supplier.getName()))
 						availableList.add(supplier);
-					}
 				}
 			}
 

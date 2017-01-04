@@ -240,7 +240,7 @@
 							if (response.result == "success") {
 								type = "success";
 								msg = "供应商信息更新成功";
-							} else if (resposne == "error") {
+							} else if (response.result == "error") {
 								type = "error";
 								msg = "供应商信息更新失败"
 							}

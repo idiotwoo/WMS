@@ -14,6 +14,7 @@
 		<result property="number" column="STOCKOUT_NUMBER"/>
 		<result property="time" column="STOCKOUT_TIME"/>
 		<result property="personInCharge" column="STOCKOUT_PERSON"/>
+		<result property="repositoryID" column="STOCKOUT_REPOSITORY_ID"/>
 	</resultMap>
 	
 	<select id="selectAll" resultMap="stockOut">
@@ -25,7 +26,8 @@
 			g.GOOD_NAME as STOCKOUT_GOOD_NAME,
 			r.RECORD_NUMBER as STOCKOUT_NUMBER,
 			r.RECORD_TIME as STOCKOUT_TIME,
-			r.RECORD_PERSON as STOCKOUT_PERSON
+			r.RECORD_PERSON as STOCKOUT_PERSON,
+			r.RECORD_REPOSITORYID asSTOCKOUT_REPOSITORY_ID
 		from
 			wms_record_out r,wms_goods g,wms_customer c
 		where
@@ -42,7 +44,8 @@
 			g.GOOD_NAME as STOCKOUT_GOOD_NAME,
 			r.RECORD_NUMBER as STOCKOUT_NUMBER,
 			r.RECORD_TIME as STOCKOUT_TIME,
-			r.RECORD_PERSON as STOCKOUT_PERSON
+			r.RECORD_PERSON as STOCKOUT_PERSON,
+			r.RECORD_REPOSITORYID asSTOCKOUT_REPOSITORY_ID
 		from
 			wms_record_out r,wms_goods g,wms_customer c
 		where
@@ -60,7 +63,8 @@
 			g.GOOD_NAME as STOCKOUT_GOOD_NAME,
 			r.RECORD_NUMBER as STOCKOUT_NUMBER,
 			r.RECORD_TIME as STOCKOUT_TIME,
-			r.RECORD_PERSON as STOCKOUT_PERSON
+			r.RECORD_PERSON as STOCKOUT_PERSON,
+			r.RECORD_REPOSITORYID asSTOCKOUT_REPOSITORY_ID
 		from
 			wms_record_out r,wms_goods g,wms_customer c
 		where
@@ -78,13 +82,33 @@
 			g.GOOD_NAME as STOCKOUT_GOOD_NAME,
 			r.RECORD_NUMBER as STOCKOUT_NUMBER,
 			r.RECORD_TIME as STOCKOUT_TIME,
-			r.RECORD_PERSON as STOCKOUT_PERSON
+			r.RECORD_PERSON as STOCKOUT_PERSON,
+			r.RECORD_REPOSITORYID asSTOCKOUT_REPOSITORY_ID
 		from
 			wms_record_out r,wms_goods g,wms_customer c
 		where
 			r.RECORD_CUSTOMERID = c.CUSTOMER_ID and
 			r.RECORD_GOODID = g.GOOD_ID and
 			r.RECORD_ID = #{id}
+	</select>
+	
+	<select id="selectByRepositoryID" resultMap="stockOut">
+		select
+			r.RECORD_ID as STOCKOUT_ID,
+			r.RECORD_CUSTOMERID as STOCKOUT_CUSTOMER_ID,
+			c.CUSTOMER_NAME as STOCKOUT_CUSTOMER_NAME,
+			r.RECORD_GOODID as STOCKOUT_GOOD_ID,
+			g.GOOD_NAME as STOCKOUT_GOOD_NAME,
+			r.RECORD_NUMBER as STOCKOUT_NUMBER,
+			r.RECORD_TIME as STOCKOUT_TIME,
+			r.RECORD_PERSON as STOCKOUT_PERSON,
+			r.RECORD_REPOSITORYID as STOCKOUT_REPOSITORY_ID
+		from
+			wms_record_out r,wms_goods g,wms_customer c
+		where
+			r.RECORD_CUSTOMERID = c.CUSTOMER_ID and
+			r.RECORD_GOODID = g.GOOD_ID and
+			r.RECORD_REPOSITORYID = 1007
 	</select>
 		
 	<insert id="insert">

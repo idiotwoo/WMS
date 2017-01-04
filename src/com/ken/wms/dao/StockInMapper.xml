@@ -14,6 +14,7 @@
 		<result property="number" column="STOCKIN_NUMBER"/>
 		<result property="time" column="STOCKIN_TIME"/>
 		<result property="personInCharge" column="STOCKIN_PERSON"/>
+		<result property="repositoryID" column="STOCKIN_REPOSITORY_ID"/>
 	</resultMap>
 	
 	<select id="selectAll" resultMap="stockIn">
@@ -25,7 +26,8 @@
 			g.GOOD_NAME as STOCKIN_GOOD_NAME,
 			r.RECORD_NUMBER as STOCKIN_NUMBER,
 			r.RECORD_TIME as STOCKIN_TIME,
-			r.RECORD_PERSON as STOCKIN_PERSON
+			r.RECORD_PERSON as STOCKIN_PERSON,
+			r.RECORD_REPOSITORYID as STOCKIN_REPOSITORY_ID
 		from
 			wms_record_in r,wms_goods g,wms_supplier s
 		where
@@ -42,7 +44,8 @@
 			g.GOOD_NAME as STOCKIN_GOOD_NAME,
 			r.RECORD_NUMBER as STOCKIN_NUMBER,
 			r.RECORD_TIME as STOCKIN_TIME,
-			r.RECORD_PERSON as STOCKIN_PERSON
+			r.RECORD_PERSON as STOCKIN_PERSON,
+			r.RECORD_REPOSITORYID as STOCKIN_REPOSITORY_ID
 		from
 			wms_record_in r,wms_goods g,wms_supplier s
 		where
@@ -60,7 +63,8 @@
 			g.GOOD_NAME as STOCKIN_GOOD_NAME,
 			r.RECORD_NUMBER as STOCKIN_NUMBER,
 			r.RECORD_TIME as STOCKIN_TIME,
-			r.RECORD_PERSON as STOCKIN_PERSON
+			r.RECORD_PERSON as STOCKIN_PERSON,
+			r.RECORD_REPOSITORYID as STOCKIN_REPOSITORY_ID
 		from
 			wms_record_in r,wms_goods g,wms_supplier s
 		where
@@ -78,13 +82,33 @@
 			g.GOOD_NAME as STOCKIN_GOOD_NAME,
 			r.RECORD_NUMBER as STOCKIN_NUMBER,
 			r.RECORD_TIME as STOCKIN_TIME,
-			r.RECORD_PERSON as STOCKIN_PERSON
+			r.RECORD_PERSON as STOCKIN_PERSON,
+			r.RECORD_REPOSITORYID as STOCKIN_REPOSITORY_ID
 		from
 			wms_record_in r,wms_goods g,wms_supplier s
 		where
 			r.RECORD_SUPPLIERID = s.SUPPLIER_ID and
 			r.RECORD_GOODID = g.GOOD_ID and
 			r.RECORD_ID = #{id}
+	</select>
+	
+	<select id="selectByRepositoryID" resultMap="stockIn">
+		select
+			r.RECORD_ID as STOCKIN_ID,
+			r.RECORD_SUPPLIERID as STOCKIN_SUPPLIER_ID,
+			s.SUPPLIER_NAME as STOCKIN_SUPPLIER_NAME,
+			r.RECORD_GOODID as STOCKIN_GOOD_ID,
+			g.GOOD_NAME as STOCKIN_GOOD_NAME,
+			r.RECORD_NUMBER as STOCKIN_NUMBER,
+			r.RECORD_TIME as STOCKIN_TIME,
+			r.RECORD_PERSON as STOCKIN_PERSON,
+			r.RECORD_REPOSITORYID as STOCKIN_REPOSITORY_ID
+		from
+			wms_record_in r,wms_goods g,wms_supplier s
+		where
+			r.RECORD_SUPPLIERID = s.SUPPLIER_ID and
+			r.RECORD_GOODID = g.GOOD_ID and
+			r.RECORD_REPOSITORYID = #{repositoryID}
 	</select>
 	
 	<insert id="insert">

@@ -359,35 +359,35 @@ function infoModal(type, msg) {
 					</ol>
 					<div class="panel-body">
 						<div class="row">
-							<div class="col-md-6">
+							<div class="col-md-6 col-sm-6">
 								<div class="row">
-									<div class="col-md-1"></div>
-									<div class="col-md-10">
+									<div class="col-md-1 col-sm-1"></div>
+									<div class="col-md-10 col-sm-11">
 										<form action="" class="form-inline">
 											<div class="form-group">
-												<label for="" class="form-label">&nbsp;&nbsp;&nbsp;&nbsp;供应商：</label>
-												<input type="text" class="form-control" id="supplier_input" placeholder="请输入供应商编号">
+												<label for="" class="form-label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;供应商：</label>
+												<input type="text" class="form-control" id="supplier_input" placeholder="请输入供应商名称">
 											</div>
 										</form>
 									</div>
 								</div>
 							</div>
-							<div class="col-md-6">
+							<div class="col-md-6 col-sm-6">
 								<div class="row">
-									<div class="col-md-1"></div>
-									<div class="col-md-10">
+									<div class="col-md-1 col-sm-1"></div>
+									<div class="col-md-10 col-sm-11">
 										<form action="" class="form-inline">
 											<div class="form-group">
 												<label for="" class="form-label">入库货物：</label>
-												<input type="text" class="form-control" id="goods_input" placeholder="请输入货物编号">
+												<input type="text" class="form-control" id="goods_input" placeholder="请输入货物名称">
 											</div>
 										</form>
 									</div>
 								</div>
 							</div>
 						</div>
-						<div class="row">
-							<div class="col-md-12">
+						<div class="row visible-md visible-lg">
+							<div class="col-md-12 col-sm-12">
 								<div class='pull-right' style="cursor:pointer" id="info-show">
 									<span>显示详细信息</span>
 									<span class="glyphicon glyphicon-chevron-down"></span>
@@ -399,35 +399,35 @@ function infoModal(type, msg) {
 							</div>
 						</div>
 						<div class="row hide" id="detailInfo" style="margin-bottom:30px">
-							<div class="col-md-6">
+							<div class="col-md-6 col-sm-6  visible-md visible-lg">
 								<div class="row">
-									<div class="col-md-1"></div>
-									<div class="col-md-10">
+									<div class="col-md-1 col-sm-1"></div>
+									<div class="col-md-10 col-sm-10">
 										<label for="" class="text-info">供应商信息</label>
 									</div>
 								</div>
 								<div class="row">
-									<div class="col-md-1"></div>
-									<div class="col-md-11">
-										<div class="col-md-6">
+									<div class="col-md-1 col-sm-1"></div>
+									<div class="col-md-11 col-sm-11">
+										<div class="col-md-6 col-sm-6">
 											<div style="margin-top:5px">
-												<div class="col-md-6">
+												<div class="col-md-6 col-sm-6">
 													<span for="" class="pull-right">供应商ID：</span>
 												</div>
-												<div class="col-md-6">
+												<div class="col-md-6 col-sm-6">
 													<span id="info_supplier_ID">-</span>
 												</div>
 											</div>
 											<div style="margin-top:5px">
-												<div class="col-md-6">
+												<div class="col-md-6 col-sm-6">
 													<span for="" class="pull-right">负责人：</span>
 												</div>
-												<div class="col-md-6">
+												<div class="col-md-6 col-sm-6">
 													<span id="info_supplier_person">-</span>
 												</div>
 											</div>
 											<div style="margin-top:5px">
-												<div class="col-md-6">
+												<div class="col-md-6 col-sm-6">
 													<span for="" class="pull-right">电子邮件：</span>
 												</div>
 												<div class="col-md-6">
@@ -435,28 +435,28 @@ function infoModal(type, msg) {
 												</div>
 											</div>
 										</div>
-										<div class="col-md-6">
+										<div class="col-md-6 col-sm-6  visible-md visible-lg">
 											<div style="margin-top:5px">
-												<div class="col-md-6">
+												<div class="col-md-6 col-sm-6">
 													<span for="" class="pull-right">供应商名：</span>
 												</div>
-												<div class="col-md-6">
+												<div class="col-md-6 col-sm-6">
 													<span id="info_supplier_name">-</span>
 												</div>
 											</div>
 											<div style="margin-top:5px">
-												<div class="col-md-6">
+												<div class="col-md-6 col-sm-6">
 													<span for="" class="pull-right">联系电话：</span>
 												</div>
-												<div class="col-md-6">
+												<div class="col-md-6 col-sm-6">
 													<span id="info_supplier_tel">-</span>
 												</div>
 											</div>
 											<div style="margin-top:5px">
-												<div class="col-md-6">
+												<div class="col-md-6 col-sm-6">
 													<span for="" class="pull-right">联系地址：</span>
 												</div>
-												<div class="col-md-6">
+												<div class="col-md-6 col-sm-6">
 													<span id="info_supplier_address">-</span>
 												</div>
 											</div>
@@ -465,56 +465,56 @@ function infoModal(type, msg) {
 									</div>
 								</div>
 							</div>
-							<div class="col-md-6">
+							<div class="col-md-6 col-sm-6">
 								<div class="row">
-									<div class="col-md-1"></div>
-									<div class="col-md-11">
+									<div class="col-md-1 col-sm-1"></div>
+									<div class="col-md-11 col-sm-11">
 										<label for="" class="text-info">货物信息</label>
 									</div>
 								</div>
 								<div class="row">
-									<div class="col-md-1"></div>
-									<div class="col-md-11">
-										<div class="col-md-6">
+									<div class="col-md-1 col-sm-1"></div>
+									<div class="col-md-11 col-sm-11">
+										<div class="col-md-6 col-sm-6">
 											<div style="margin-top:5px">
-												<div class="col-md-6">
+												<div class="col-md-6 col-sm-6">
 													<span for="" class="pull-right">货物ID：</span>
 												</div>
-												<div class="col-md-6">
+												<div class="col-md-6 col-sm-6">
 													<span id="info_goods_ID">-</span>
 												</div>
 											</div>
 											<div style="margin-top:5px">
-												<div class="col-md-6">
+												<div class="col-md-6 col-sm-6">
 													<span for="" class="pull-right">货物类型：</span>
 												</div>
-												<div class="col-md-6">
+												<div class="col-md-6 col-sm-6">
 													<span id="info_goods_type">-</span>
 												</div>
 											</div>
 											<div style="margin-top:5px">
-												<div class="col-md-6">
+												<div class="col-md-6 col-sm-6">
 													<span for="" class="pull-right">货物名：</span>
 												</div>
-												<div class="col-md-6">
+												<div class="col-md-6 col-sm-6">
 													<span id="info_goods_name">-</span>
 												</div>
 											</div>
 										</div>
-										<div class="col-md-6">
+										<div class="col-md-6 col-sm-6">
 											<div style="margin-top:5px">
-												<div class="col-md-6">
+												<div class="col-md-6 col-sm-6">
 													<span for="" class="pull-right">货物规格：</span>
 												</div>
-												<div class="col-md-6">
+												<div class="col-md-6 col-sm-6">
 													<span id="info_goods_size">-</span>
 												</div>
 											</div>
 											<div style="margin-top:5px">
-												<div class="col-md-6">
+												<div class="col-md-6 col-sm-6">
 													<span for="" class="pull-right">货物价值：</span>
 												</div>
-												<div class="col-md-6">
+												<div class="col-md-6 col-sm-6">
 													<span id="info_goods_value">-</span>
 												</div>
 											</div>
@@ -523,11 +523,11 @@ function infoModal(type, msg) {
 								</div>
 							</div>
 						</div>
-						<div class="row">
-							<div class="col-md-6">
+						<div class="row" style="margin-top: 10px">
+							<div class="col-md-6 col-sm-6">
 								<div class="row">
-									<div class="col-md-1"></div>
-									<div class="col-md-10">
+									<div class="col-md-1 col-sm-1"></div>
+									<div class="col-md-10 col-sm-11">
 										<form action="" class="form-inline">
 											<div class="form-group">
 												<label for="" class="form-label">入库仓库：</label>
@@ -540,10 +540,10 @@ function infoModal(type, msg) {
 							</div>
 						</div>
 						<div class="row" style="margin-top:20px">
-							<div class="col-md-6">
+							<div class="col-md-6 col-sm-6">
 								<div class="row">
-									<div class="col-md-1"></div>
-									<div class="col-md-10">
+									<div class="col-md-1 col-sm-1"></div>
+									<div class="col-md-10 col-sm-11">
 										<form action="" class="form-inline" id="stockin_form">
 											<div class="form-group">
 												<label for="" class="control-label">入库数量：</label>

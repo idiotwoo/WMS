@@ -27,6 +27,7 @@ import com.ken.wms.domain.Customer;
 import com.ken.wms.domain.Menu;
 import com.ken.wms.domain.Repository;
 import com.ken.wms.domain.Role;
+import com.ken.wms.domain.StockIn;
 import com.ken.wms.domain.Storage;
 import com.ken.wms.domain.Supplier;
 import com.ken.wms.domain.User;
@@ -288,7 +289,7 @@ public class MapperTest {
 //		for (StockOut stockOut : stockOuts) {
 //			System.out.println(stockOut);
 //		}
-//		List<StockOut> stockOuts = stockOutMapper.selectByGoodId(1);
+//		List<StockOut> stockOuts = stockOutMapper.selectByGoodId(105);
 //		for (StockOut stockOut : stockOuts) {
 //			System.out.println(stockOut);
 //		}
@@ -299,7 +300,13 @@ public class MapperTest {
 //		stockOutMapper.update(stockOut);
 		
 		// delete operation test
-		stockOutMapper.deleteById(3);
+//		stockOutMapper.deleteById(3);
+		
+//		List<StockOut> list = stockOutMapper.selectByRepositoryID(1004);
+//		System.out.println(list.size());
+//		for (StockOut stockOut : list) {
+//			System.out.println(stockOut);
+//		}
 	}
 	
 	@Test

@@ -240,7 +240,7 @@
 							if (response.result == "success") {
 								type = "success";
 								msg = "客户信息更新成功";
-							} else if (resposne == "error") {
+							} else if (response.result == "error") {
 								type = "error";
 								msg = "客户信息更新失败"
 							}
@@ -848,7 +848,7 @@
 					</div>
 					<div class="col-md-8 col-sm-8">
 						<h3>是否确认删除该条客户信息</h3>
-						<p>(注意：若该客户已经有仓库出库记录，则该客户信息将不能删除成功。如需删除该客户的信息，请先删除该客户的入库记录)</p>
+						<p>(注意：若该客户已经有仓库出库记录，则该客户信息将不能删除成功。如需删除该客户的信息，请先删除该客户的出库记录)</p>
 					</div>
 				</div>
 			</div>

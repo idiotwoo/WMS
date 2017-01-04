@@ -120,7 +120,7 @@ public class GoodsManageHandler {
 	public @ResponseBody Map<String, Object> addGoods(@RequestBody Goods goods) {
 		// 初始化结果集
 		Map<String, Object> resultSet = new HashMap<>();
-
+		
 		// 添加记录
 		String result = goodsManageService.addGoods(goods) ? ResponseStatus.SUCCESS.toString()
 				: ResponseStatus.ERROR.toString();

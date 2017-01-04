@@ -15,9 +15,11 @@ import com.github.pagehelper.PageInfo;
 import com.ken.wms.dao.GoodsMapper;
 import com.ken.wms.dao.StockInMapper;
 import com.ken.wms.dao.StockOutMapper;
+import com.ken.wms.dao.StorageMapper;
 import com.ken.wms.domain.Goods;
 import com.ken.wms.domain.StockIn;
 import com.ken.wms.domain.StockOut;
+import com.ken.wms.domain.Storage;
 import com.ken.wms.service.Interface.GoodsManageService;
 import com.ken.wms.service.util.ExcelUtil;
 
@@ -36,6 +38,8 @@ public class GoodsManageServiceImpl implements GoodsManageService {
 	private StockInMapper stockInMapper;
 	@Autowired
 	private StockOutMapper stockOutMapper;
+	@Autowired
+	private StorageMapper storageMapper;
 	@Autowired
 	private ExcelUtil excelUtil;
 
@@ -171,6 +175,20 @@ public class GoodsManageServiceImpl implements GoodsManageService {
 	}
 
 	/**
+	 * 检查货物信息是否满足要求
+	 * @param goods 货物信息
+	 * @return 若货物信息满足要求则返回true，否则返回false
+	 */
+	private boolean goodsCheck(Goods goods){
+		if(goods != null){
+			if(goods.getName() != null && goods.getValue() != null){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
 	 * 添加货物记录
 	 * 
 	 * @param goods
@@ -183,8 +201,7 @@ public class GoodsManageServiceImpl implements GoodsManageService {
 		// 插入新的记录
 		if (goods != null) {
 			// 验证
-			if (goods.getName() != null) {
-				// or check whether the name is unique
+			if(goodsCheck(goods)){
 				goodsMapper.insert(goods);
 				return true;
 			}
@@ -205,8 +222,7 @@ public class GoodsManageServiceImpl implements GoodsManageService {
 		// 更新记录
 		if (goods != null) {
 			// 检验
-			if (goods.getName() != null) {
-				// or check whether the name is unique
+			if(goodsCheck(goods)){
 				goodsMapper.update(goods);
 				return true;
 			}
@@ -224,14 +240,21 @@ public class GoodsManageServiceImpl implements GoodsManageService {
 	@Override
 	public boolean deleteGoods(Integer goodsId) {
 
-		// note： 货物的存储信息关联检测未实现
-		
-		// 查询该货物是否有进出库关联
-		List<StockIn> inRecords = stockInMapper.selectByGoodID(goodsId);
-		List<StockOut> outRecords = stockOutMapper.selectByGoodId(goodsId);
-		if (inRecords != null && inRecords.size() > 0 && outRecords != null && outRecords.size() > 0)
+		// 检查该货物是否有入库信息
+		List<StockIn> stockInRecord = stockInMapper.selectByGoodID(goodsId);
+		if(stockInRecord != null && !stockInRecord.isEmpty())
 			return false;
-
+		
+		// 检查该货物是否有出库信息
+		List<StockOut> stockOutRecord = stockOutMapper.selectByGoodId(goodsId);
+		if(stockOutRecord != null && !stockOutRecord.isEmpty())
+			return false;
+		
+		// 检查该货物是否有存储信息
+		List<Storage> storageRecord = storageMapper.selectByGoodsIDAndRepositoryID(goodsId, null);
+		if(storageRecord != null && !storageRecord.isEmpty())
+			return false;
+		
 		// 删除货物记录
 		goodsMapper.deleteById(goodsId);
 		return true;
@@ -259,7 +282,7 @@ public class GoodsManageServiceImpl implements GoodsManageService {
 			List<Goods> availableList = new ArrayList<>();
 			for (Object object : goodsList) {
 				goods = (Goods) object;
-				if(goods.getName() != null && goodsMapper.selectByName(goods.getName()) == null){
+				if(goodsCheck(goods)){
 					availableList.add(goods);
 				}
 			}

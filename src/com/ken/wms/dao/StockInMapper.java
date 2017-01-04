@@ -32,6 +32,13 @@ public interface StockInMapper {
 	public List<StockIn> selectByGoodID(Integer goodID);
 	
 	/**
+	 * 选择指定仓库ID相关的入库记录
+	 * @param repositoryID 指定的仓库ID
+	 * @return 返回指定仓库相关的入库记录
+	 */
+	public List<StockIn> selectByRepositoryID(Integer repositoryID);
+	
+	/**
 	 * 选择指定入库记录的ID的入库记录
 	 * @param id 入库记录ID
 	 * @return 返回指定ID的入库记录

@@ -85,15 +85,28 @@ public class RepositoryAdminManageServiceImpl implements RepositoryAdminManageSe
 		Map<String, Object> resultSet = new HashMap<>();
 		List<RepositoryAdmin> repositoryAdmins = null;
 		long total = 0;
-
-		// 查询
-		PageHelper.offsetPage(offset, limit);
-		repositoryAdmins = repositoryAdminMapper.selectByName(name);
-		if (repositoryAdmins != null) {
-			PageInfo<RepositoryAdmin> pageInfo = new PageInfo<>(repositoryAdmins);
-			total = pageInfo.getTotal();
-		} else
-			repositoryAdmins = new ArrayList<>();
+		boolean isPagination = true;
+		
+		// validate
+		if(offset < 0 || limit < 0)
+			isPagination = false;
+		
+		// query
+		if(isPagination){
+			PageHelper.offsetPage(offset, limit);
+			repositoryAdmins = repositoryAdminMapper.selectByName(name);
+			if(repositoryAdmins != null){
+				PageInfo<RepositoryAdmin> pageInfo = new PageInfo<>(repositoryAdmins);
+				total = pageInfo.getTotal();
+			}else
+				repositoryAdmins = new ArrayList<>();
+		}else{
+			repositoryAdmins = repositoryAdminMapper.selectByName(name);
+			if(repositoryAdmins != null)
+				total = repositoryAdmins.size();
+			else
+				repositoryAdmins = new ArrayList<>();
+		}
 
 		resultSet.put("data", repositoryAdmins);
 		resultSet.put("total", total);
@@ -109,21 +122,7 @@ public class RepositoryAdminManageServiceImpl implements RepositoryAdminManageSe
 	 */
 	@Override
 	public Map<String, Object> selectByName(String name) {
-		// 初始化结果集
-		Map<String, Object> resultSet = new HashMap<>();
-		List<RepositoryAdmin> repositoryAdmins = null;
-		long total = 0;
-
-		// 查询
-		repositoryAdmins = repositoryAdminMapper.selectByName(name);
-		if (repositoryAdmins != null) {
-			total = repositoryAdmins.size();
-		} else
-			repositoryAdmins = new ArrayList<>();
-
-		resultSet.put("data", repositoryAdmins);
-		resultSet.put("total", total);
-		return resultSet;
+		return selectByName(-1, -1, name);
 	}
 
 	/**
@@ -141,15 +140,28 @@ public class RepositoryAdminManageServiceImpl implements RepositoryAdminManageSe
 		Map<String, Object> resultSet = new HashMap<>();
 		List<RepositoryAdmin> repositoryAdmins = null;
 		long total = 0;
-
-		// 查询
-		PageHelper.offsetPage(offset, limit);
-		repositoryAdmins = repositoryAdminMapper.selectAll();
-		if (repositoryAdmins != null) {
-			PageInfo<RepositoryAdmin> pageInfo = new PageInfo<>(repositoryAdmins);
-			total = pageInfo.getTotal();
-		} else
-			repositoryAdmins = new ArrayList<>();
+		boolean isPagination = true;
+		
+		// validate
+		if(offset < 0 || limit < 0)
+			isPagination = false;
+		
+		// query
+		if(isPagination){
+			PageHelper.offsetPage(offset, limit);
+			repositoryAdmins = repositoryAdminMapper.selectAll();
+			if(repositoryAdmins != null){
+				PageInfo<RepositoryAdmin> pageInfo = new PageInfo<>(repositoryAdmins);
+				total = pageInfo.getTotal();
+			}else
+				repositoryAdmins = new ArrayList<>();
+		}else{
+			repositoryAdmins = repositoryAdminMapper.selectAll();
+			if(repositoryAdmins != null)
+				total = repositoryAdmins.size();
+			else
+				repositoryAdmins = new ArrayList<>();
+		}
 
 		resultSet.put("data", repositoryAdmins);
 		resultSet.put("total", total);
@@ -163,21 +175,7 @@ public class RepositoryAdminManageServiceImpl implements RepositoryAdminManageSe
 	 */
 	@Override
 	public Map<String, Object> selectAll() {
-		// 初始化结果集
-		Map<String, Object> resultSet = new HashMap<>();
-		List<RepositoryAdmin> repositoryAdmins = null;
-		long total = 0;
-
-		// 查询
-		repositoryAdmins = repositoryAdminMapper.selectAll();
-		if (repositoryAdmins != null) {
-			total = repositoryAdmins.size();
-		} else
-			repositoryAdmins = new ArrayList<>();
-
-		resultSet.put("data", repositoryAdmins);
-		resultSet.put("total", total);
-		return resultSet;
+		return selectAll(-1, -1);
 	}
 
 	/**
@@ -215,7 +213,6 @@ public class RepositoryAdminManageServiceImpl implements RepositoryAdminManageSe
 				
 			}
 		}
-
 		return false;
 	}
 
@@ -229,15 +226,25 @@ public class RepositoryAdminManageServiceImpl implements RepositoryAdminManageSe
 	@Override
 	public boolean updateRepositoryAdmin(RepositoryAdmin repositoryAdmin) {
 		
-		if(repositoryAdmin != null && repositoryAdminCheck(repositoryAdmin)){
-			// 检查所属仓库是否已经被指派
-			if(repositoryAdminMapper.selectByRepositoryID(repositoryAdmin.getRepositoryBelongID()) == null){
-				repositoryAdminMapper.update(repositoryAdmin);
-				return true;
+		if(repositoryAdmin != null){
+			
+			// 检查属性
+			if(!repositoryAdminCheck(repositoryAdmin))
+				return false;
+			
+			// 若有指派的仓库则检查
+			if(repositoryAdmin.getRepositoryBelongID() != null){
+				RepositoryAdmin rAdminFromDB = repositoryAdminMapper.selectByRepositoryID(repositoryAdmin.getRepositoryBelongID());
+				if(rAdminFromDB != null && rAdminFromDB.getId() != repositoryAdmin.getId())
+					return false;
 			}
-		}
+			
+			// 更新
+			repositoryAdminMapper.update(repositoryAdmin);
+			return true;
+		}else
+			return false;
 		
-		return false;
 	}
 
 	/**
@@ -250,14 +257,20 @@ public class RepositoryAdminManageServiceImpl implements RepositoryAdminManageSe
 	@Override
 	public boolean deleteRepositoryAdmin(Integer repositoryAdminID) {
 		
-		// 删除仓库管理员信息
-		repositoryAdminMapper.deleteByID(repositoryAdminID);
-		// 删除账户权限信息
-		userPermissionMapper.deleteByUserID(repositoryAdminID);
-		// 删除账户
-		userMapper.deleteById(repositoryAdminID);
-		
-		return true;
+		// 判断是否已指派仓库
+		RepositoryAdmin repositoryAdmin = repositoryAdminMapper.selectByID(repositoryAdminID);
+		if(repositoryAdmin != null && repositoryAdmin.getRepositoryBelongID() == null){
+			
+			// 删除仓库管理员信息
+			repositoryAdminMapper.deleteByID(repositoryAdminID);
+			// 删除账户权限信息
+			userPermissionMapper.deleteByUserID(repositoryAdminID);
+			// 删除账户
+			userMapper.deleteById(repositoryAdminID);
+			
+			return true;
+		}else
+			return false;
 	}
 
 	/**
@@ -276,9 +289,8 @@ public class RepositoryAdminManageServiceImpl implements RepositoryAdminManageSe
 		if(repositoryAdmin != null){
 			repositoryAdmin.setRepositoryBelongID(repositoryID);
 			return updateRepositoryAdmin(repositoryAdmin);
-		}
-		
-		return false;
+		}else
+			return false;
 	}
 
 	/**

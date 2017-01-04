@@ -12,13 +12,20 @@ var subMenuModel = '<li class="list-group-item curItem"><a href="javascript:void
 var requestPrefix;
 $(function() {
 	sideBarInit();
+	welcomePageInit();
 	signOut();
 	getRequestPrefix();
+	homePage();
 });
 
 // 获取请求前缀
 function getRequestPrefix(){
 	requestPrefix = $('#requestPrefix').text();
+}
+
+// 加载欢迎界面
+function welcomePageInit(){
+	$('#panel').load('pagecomponent/welcomePage.jsp');
 }
 
 // 加载侧边栏
@@ -56,6 +63,13 @@ function sideBarInit() {
 		}
 	});
 
+}
+
+// 跳回首页
+function homePage(){
+	$('.home').click(function(){
+		$('#panel').load('pagecomponent/welcomePage.jsp');
+	})
 }
 
 // 侧边栏连接点击动作

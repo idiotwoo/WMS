@@ -45,7 +45,7 @@ public class Goods {
 		this.size = size;
 	}
 
-	public double getValue() {
+	public Double getValue() {
 		return value;
 	}
 
