@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ken.wms.dao.StorageMapper">
+	
+	<!-- 结果映射 -->
+	<resultMap type="com.ken.wms.domain.Storage" id="storage">
+		<id property="goodsID" column="goodsID"/>
+		<result property="goodsName" column="goodsName"/>
+		<result property="goodsSize" column="goodsSize"/>
+		<result property="goodsType" column="goodsType"/>
+		<result property="goodsValue" column="goodsValue"/>
+		<result property="repositoryID" column="repositoryID"/>
+		<result property="number" column="number"/>
+		<!-- 
+		<association property="goodsInfo" javaType="com.ken.Goods" resultMap="goods"/>
+		 -->
+	</resultMap>
+	
+	<!-- 
+	<resultMap type="com.ken.Goods" id="goods">
+		<id property="id" column="goodsID"/>
+		<result property="name" column="goodsName"/>
+		<result property="size" column="goodsSize"/>
+		<result property="type" column="goodsType"/>
+		<result property="value" column="goodsValue"/>
+	</resultMap>
+	 -->
+	 
+	<select id="selectAllAndRepositoryID" resultMap="storage">
+		select
+			r.REPO_ID as repositoryID,
+			s.RECORD_NUMBER as number,
+			g.GOOD_ID as goodsID,
+			g.GOOD_NAME as goodsName,
+			g.GOOD_RYPE as goodsType,
+			g.GOOD_SIZE as goodsSize,
+			g.GOOD_VALUE as goodsValue
+		from
+			wms_record_storage s,wms_respository r, wms_goods g
+		where
+		 	s.RECORD_GOODID = g.GOOD_ID and
+		 	s.RECORD_REPOSITORY = r.REPO_ID
+		 	<if test="repositoryID != null">
+		 		and r.REPO_ID = #{repositoryID}
+		 	</if>
+	</select>
+	
+	<select id="selectByGoodsIDAndRepositoryID" resultMap="storage">
+		select
+			r.REPO_ID as repositoryID,
+			s.RECORD_NUMBER as number,
+			g.GOOD_ID as goodsID,
+			g.GOOD_NAME as goodsName,
+			g.GOOD_RYPE as goodsType,
+			g.GOOD_SIZE as goodsSize,
+			g.GOOD_VALUE as goodsValue
+		from
+			wms_record_storage s,wms_respository r, wms_goods g
+		where
+		 	s.RECORD_GOODID = g.GOOD_ID and
+		 	s.RECORD_REPOSITORY = r.REPO_ID and
+		 	g.GOOD_ID = #{goodsID}
+		 	<if test="repositoryID != null">
+		 		and r.REPO_ID = #{repositoryID}
+		 	</if>
+	</select>
+	
+	<select id="selectByGoodsNameAndRepositoryID" resultMap="storage">
+		select
+			r.REPO_ID as repositoryID,
+			s.RECORD_NUMBER as number,
+			g.GOOD_ID as goodsID,
+			g.GOOD_NAME as goodsName,
+			g.GOOD_RYPE as goodsType,
+			g.GOOD_SIZE as goodsSize,
+			g.GOOD_VALUE as goodsValue
+		from
+			wms_record_storage s,wms_respository r, wms_goods g
+		where
+		 	s.RECORD_GOODID = g.GOOD_ID and
+		 	s.RECORD_REPOSITORY = r.REPO_ID and
+		 	g.GOOD_NAME like concat("%",concat(#{goodsName},"%"))
+		 	<if test="repositoryID != null">
+		 		and r.REPO_ID = #{repositoryID}
+		 	</if>
+	</select>
+	
+	<select id="selectByGoodsTypeAndRepositoryID" resultMap="storage">
+		select
+			r.REPO_ID as repositoryID,
+			s.RECORD_NUMBER as number,
+			g.GOOD_ID as goodsID,
+			g.GOOD_NAME as goodsName,
+			g.GOOD_RYPE as goodsType,
+			g.GOOD_SIZE as goodsSize,
+			g.GOOD_VALUE as goodsValue
+		from
+			wms_record_storage s,wms_respository r, wms_goods g
+		where
+		 	s.RECORD_GOODID = g.GOOD_ID and
+		 	s.RECORD_REPOSITORY = r.REPO_ID and
+		 	g.GOOD_RYPE like concat("%",concat(#{goodsType},"%"))
+		 	<if test="repositoryID != null">
+		 		and r.REPO_ID = #{repositoryID}
+		 	</if>
+	</select>
+	
+	<update id="update">
+		update 
+			wms_record_storage
+		set
+			RECORD_GOODID = #{goodsID},
+			RECORD_REPOSITORY = #{repositoryID},
+			RECORD_NUMBER = #{number}
+		where
+			RECORD_GOODID = #{goodsID} and
+			RECORD_REPOSITORY = #{repositoryID}
+	</update>
+	
+	<insert id="insert">
+		insert into wms_record_storage
+		(
+			RECORD_GOODID,
+			RECORD_REPOSITORY,
+			RECORD_NUMBER
+		)
+		values
+		(
+			#{goodsID},
+			#{repositoryID},
+			#{number}
+		)
+	</insert>
+	
+	<insert id="insertBatch">
+		insert into wms_record_storage(RECORD_GOODID,RECORD_REPOSITORY,RECORD_NUMBER)
+		values
+		<foreach collection="list" item="storage" separator=",">
+			(
+			#{storage.goodsID},#{storage.repositoryID},#{storage.number})
+		</foreach>
+	</insert>
+	
+	<delete id="deleteByGoodsID">
+		delete from 
+			wms_record_storage
+		where
+			RECORD_GOODID = #{goodsID}
+	</delete>
+	
+	<delete id="deleteByRepositoryID">
+		delete from
+			wms_record_storage
+		where
+			wms_record_storage.RECORD_REPOSITORY = #{repositoryID}
+	</delete>
+	
+	<delete id="deleteByRepositoryIDAndGoodsID">
+		delete from
+			wms_record_storage
+		where
+			RECORD_GOODID = #{goodsID} and
+			wms_record_storage.RECORD_REPOSITORY = #{repositoryID}
+	</delete>
+</mapper>
