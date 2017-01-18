@@ -1,3 +1,13 @@
+## .gitignore
+
+# .gitignore for maven
 target/
+
+# web application file
 src/main/webapp/WEB-INF/lib/
 src/main/webapp/WEB-INF/temp/
+src/main/webapp/WEB-INF/logs/
+
+# IDE support file
+.idea
+WMS.iml
