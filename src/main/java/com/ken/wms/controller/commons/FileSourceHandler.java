@@ -14,34 +14,34 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * 
- * @author Ken
+ *  处理文件下载请求
  *
+ * @author Ken
  */
 @Controller
 @RequestMapping("/commons/fileSource")
 public class FileSourceHandler {
 
-	@RequestMapping(value = "download/{fileName:.+}", method = RequestMethod.GET)
-	public void fileDownload(@PathVariable("fileName") String fileName, HttpServletRequest request,
-			HttpServletResponse response) {
+    @RequestMapping(value = "download/{fileName:.+}", method = RequestMethod.GET)
+    public void fileDownload(@PathVariable("fileName") String fileName, HttpServletRequest request,
+                             HttpServletResponse response) {
 
-		if (fileName == null)
-			return;
+        if (fileName == null)
+            return;
 
-		// 获取文件
-		ServletContext context = request.getServletContext();
-		String directory = context.getRealPath("/WEB-INF/download");
-		Path file = Paths.get(directory, fileName);
-		if (Files.exists(file)) {
-			// 设置响应头
-			try {
-				response.addHeader("Content-Disposition", "attachment;filename=" + file.getFileName());
-				Files.copy(file, response.getOutputStream());
-				response.getOutputStream().flush();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-			}
-		}
-	}
+        // 获取文件
+        ServletContext context = request.getServletContext();
+        String directory = context.getRealPath("/WEB-INF/download");
+        Path file = Paths.get(directory, fileName);
+        if (Files.exists(file)) {
+            // 设置响应头
+            try {
+                response.addHeader("Content-Disposition", "attachment;filename=" + file.getFileName());
+                Files.copy(file, response.getOutputStream());
+                response.getOutputStream().flush();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+            }
+        }
+    }
 }

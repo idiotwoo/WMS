@@ -1,6 +1,5 @@
 package com.ken.wms.junitTest;
 
-import com.ken.wms.controller.Enum.ResponseStatus;
 import com.ken.wms.dao.*;
 import com.ken.wms.domain.*;
 import com.ken.wms.service.Interface.RepositoryAdminManageService;
@@ -65,12 +64,6 @@ public class MapperTest {
 		for (Menu menu : menus) {
 			System.out.println(menu);
 		}
-	}
-	
-	@Test
-	public void ensum(){
-		String error = ResponseStatus.ERROR.toString();
-		System.out.println(error);
 	}
 	
 	@Test

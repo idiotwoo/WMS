@@ -1,7 +1,14 @@
 package com.ken.wms.controller.commons;
 
-import com.ken.wms.controller.Enum.*;
+import com.ken.wms.controller.Enum.AccountStatus;
+import com.ken.wms.controller.entity.PasswordModification;
+import com.ken.wms.controller.util.Response;
+import com.ken.wms.controller.util.ResponseUtil;
 import com.ken.wms.domain.RepositoryAdmin;
+import com.ken.wms.domain.Role;
+import com.ken.wms.domain.User;
+import com.ken.wms.security.SecurityService;
+import com.ken.wms.service.Interface.AccountService;
 import com.ken.wms.service.Interface.RepositoryAdminManageService;
 import com.ken.wms.service.execption.AccountServiceException;
 import com.ken.wms.service.util.CheckCodeGenerator;
@@ -9,11 +16,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import com.ken.wms.controller.entity.PasswordModification;
-import com.ken.wms.domain.Role;
-import com.ken.wms.domain.User;
-import com.ken.wms.security.SecurityService;
-import com.ken.wms.service.Interface.AccountService;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
@@ -22,190 +24,199 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
  * 处理涉及账户的请求
- * 
- * @author Ken
  *
+ * @author Ken
  */
-@SessionAttributes(value = { "checkCode" })
+@SessionAttributes(value = {"checkCode"})
 @RequestMapping("/commons/account")
 @Controller
 public class AccountHandler {
 
-	// 日志
-	private static Logger log = Logger.getLogger("application");
+    // 日志
+    private static Logger log = Logger.getLogger("application");
 
-	@Autowired
-	private AccountService accountService;
-	@Autowired
-	private CheckCodeGenerator checkCodeGenerator;
-	@Autowired
-	private SecurityService securityService;
-	@Autowired
-	private RepositoryAdminManageService repositoryAdminService;
+    @Autowired
+    private AccountService accountService;
+    @Autowired
+    private CheckCodeGenerator checkCodeGenerator;
+    @Autowired
+    private SecurityService securityService;
+    @Autowired
+    private RepositoryAdminManageService repositoryAdminService;
+    @Autowired
+    private ResponseUtil responseUtil;
 
-	/**
-	 * 登陆
-	 * 
-	 * @param user
-	 * @param request
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "signIn", method = RequestMethod.POST)
-	public @ResponseBody Map<String, Object> signIn(@RequestBody User user, HttpServletRequest request) {
-		// 初始化返回的结果集
-		Map<String, Object> resultSet = new HashMap<>();
-		String errorMsg = "";
-		String result = com.ken.wms.controller.Enum.ResponseStatus.ERROR.toString();
-		String targetURL = "";
-		String message = ""; // 用于记录日志
+    /**
+     * 登陆
+     *
+     * @param user    用户信息
+     * @param request HttpServletRequest
+     * @return 返回一个 Map 对象，其中包含登陆操作的结果
+     */
+    @SuppressWarnings("unchecked")
+    @RequestMapping(value = "signIn", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    Map<String, Object> signIn(@RequestBody User user, HttpServletRequest request) {
+        // 初始化 Response
+        Response responseContent = responseUtil.newResponseInstance();
 
-		try {
-			// 获取 session
-			HttpSession session = request.getSession();
+        String result = Response.RESPONSE_RESULT_ERROR;
+        String errorMsg = "";
+        String targetURL = "";
+        String message = ""; // 用于记录日志
 
-			// 获取 Session 中的 checkCode
-			String checkCode = (String) session.getAttribute("checkCode");
+        try {
+            // 获取 session
+            HttpSession session = request.getSession();
 
-			// 用户验证
-			accountService.signIn(user, checkCode);
+            // 获取 Session 中的 checkCode
+            String checkCode = (String) session.getAttribute("checkCode");
 
-			// 获用户角色
-			Role role = securityService.getRole(user.getId());
-			if (role != null) {
-				// 配置 Session
-				session.setAttribute("userID", user.getId());
-				session.setAttribute("userName", user.getUserName());
-				session.setAttribute("account_status", AccountStatus.SIGNIN.toString());
-				session.setAttribute("role", role.getRoleName());
-				session.setAttribute("requestPrefix", role.getRolePrefix());
-				
-				// 如果是仓库管理员，则配置所属的仓库
-				List<RepositoryAdmin> repositoryAdmin= (List<RepositoryAdmin>) repositoryAdminService.selectByID(user.getId()).get("data");
-				session.setAttribute("repositoryBelong", (repositoryAdmin.isEmpty()) ? "none" : repositoryAdmin.get(0).getRepositoryBelongID());
-			}
+            // 用户验证
+            accountService.signIn(user, checkCode);
 
-			targetURL = "";
+            // 获用户角色
+            Role role = securityService.getRole(user.getId());
+            if (role != null) {
+                // 配置 Session
+                session.setAttribute("userID", user.getId());
+                session.setAttribute("userName", user.getUserName());
+                session.setAttribute("account_status", AccountStatus.SIGNIN.toString());
+                session.setAttribute("role", role.getRoleName());
+                session.setAttribute("requestPrefix", role.getRolePrefix());
 
-			result = com.ken.wms.controller.Enum.ResponseStatus.SUCCESS.toString();
+                // 如果是仓库管理员，则配置所属的仓库
+                List<RepositoryAdmin> repositoryAdmin = (List<RepositoryAdmin>) repositoryAdminService.selectByID(user.getId()).get("data");
+                session.setAttribute("repositoryBelong", (repositoryAdmin.isEmpty()) ? "none" : repositoryAdmin.get(0).getRepositoryBelongID());
+            }
 
-		} catch (AccountServiceException e) {
-			errorMsg = e.getErrorType();
-		} catch (NullPointerException e) {
-			// TODO: handle exception
-		} finally {
-			// 记录日志
-			log.info("操作：用户登陆" + " 用户ID:" + user.getId() + " IP:" + request.getRemoteAddr() + " 状态：" + result + " 信息:"
-					+ message);
-		}
+            targetURL = "";
 
-		// 配置结果集
-		resultSet.put("result", result);
-		resultSet.put("url", targetURL);
-		resultSet.put("errorMsg", errorMsg);
+            result = Response.RESPONSE_RESULT_SUCCESS;
 
-		return resultSet;
-	}
+        } catch (AccountServiceException e) {
+            errorMsg = e.getErrorType();
+        } catch (NullPointerException e) {
+            // TODO: handle exception
+        } finally {
+            // 记录日志
+            log.info("操作：用户登陆" + " 用户ID:" + user.getId() + " IP:" + request.getRemoteAddr() + " 状态：" + result + " 信息:"
+                    + message);
+        }
 
-	/**
-	 * 注销登陆
-	 * 
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping(value = "signOut", method = RequestMethod.GET)
-	public @ResponseBody Map<String, String> signOut(HttpServletRequest request) {
-		Map<String, String> resultSet = new HashMap<>();
-		// do something when sign out
+        // 设置 Response
+        responseContent.setResponseResult(result);
+        responseContent.setResponseMsg(errorMsg);
+        responseContent.setCustomerInfo("url", targetURL);
 
-		HttpSession session = request.getSession();
-		session.setAttribute("userID", "none");
-		session.setAttribute("role", "none");
-		session.setAttribute("account_status", AccountStatus.SIGNOUT.toString());
+        return responseContent.generateResponse();
+    }
 
-		resultSet.put("result", com.ken.wms.controller.Enum.ResponseStatus.SUCCESS.toString());
-		return resultSet;
-	}
+    /**
+     * 注销登陆
+     *
+     * @param request HttpServletRequest
+     * @return 返回一个 Map 对象，键值为 result 的内容代表注销操作的结果，值为 success 或 error
+     */
+    @RequestMapping(value = "signOut", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    Map<String, Object> signOut(HttpServletRequest request) {
+        // 初始化 Response
+        Response responseContent = responseUtil.newResponseInstance();
 
-	/**
-	 * 
-	 * @param passwordInfo
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping(value="passwordModify")
-	public @ResponseBody Map<String, Object> passwordModify(@RequestBody PasswordModification passwordInfo, HttpServletRequest request){
-		//初始化返回的结果集
-		Map<String, Object> resultSet = new HashMap<>();
-		String errorMsg = null;
-		String result = com.ken.wms.controller.Enum.ResponseStatus.ERROR.toString();
-		
-		// 获取用户 ID
-		HttpSession session = request.getSession();
-		Integer userID = (Integer) session.getAttribute("userID");
-		
-		try {
-			// 更改密码
-			accountService.passwordModify(userID, passwordInfo);
-			
-			result = com.ken.wms.controller.Enum.ResponseStatus.SUCCESS.toString();
-		} catch (NullPointerException e) {
-			log.debug("The passwordModification object or userID is null");
-		}catch (AccountServiceException e) {
-			errorMsg = e.getErrorType();
-			log.debug("error type:" + errorMsg);
-		}
-		
-		resultSet.put("result", result);
-		resultSet.put("errorMsg", errorMsg);
-		return resultSet;
-	}
+		/* do something when sign out*/
 
-	/**
-	 * 获取图形验证码 将返回一个包含4位字符（字母或数字）的图形验证码，并且将图形验证码的值设置到用户的 session 中
-	 * 
-	 * @param time
-	 *            时间戳
-	 * @param response
-	 *            返回的 HttpServletResponse 响应
-	 * @param map
-	 *            用于设置 session
-	 */
-	@RequestMapping(value = "checkCode/{time}", method = RequestMethod.GET)
-	public void getCheckCode(@PathVariable("time") String time, HttpServletResponse response, Map<String, Object> map) {
+        HttpSession session = request.getSession();
+        session.setAttribute("userID", "none");
+        session.setAttribute("role", "none");
+        session.setAttribute("account_status", AccountStatus.SIGNOUT.toString());
 
-		BufferedImage checkCodeImage = null;
-		String checkCodeString = null;
+        responseContent.setResponseResult(Response.RESPONSE_RESULT_SUCCESS);
+        return responseContent.generateResponse();
+    }
 
-		// 获取图形验证码
-		Map<String, Object> checkCode = checkCodeGenerator.generlateCheckCode();
+    /**
+     * 修改账户密码
+     *
+     * @param passwordInfo 修改密码信息
+     * @param request      HttpServletRequest
+     * @return 返回一个 Map 对象，其中键值为 result 代表修改密码操作的结果，值为 success 或 error；键值为 msg 代表需要返回给用户的信息
+     */
+    @RequestMapping(value = "passwordModify")
+    public
+    @ResponseBody
+    Map<String, Object> passwordModify(@RequestBody PasswordModification passwordInfo, HttpServletRequest request) {
+        //初始化 Response
+        Response responseContent = responseUtil.newResponseInstance();
 
-		if (checkCode != null) {
-			checkCodeString = (String) checkCode.get("checkCodeString");
-			checkCodeImage = (BufferedImage) checkCode.get("checkCodeImage");
-		}
+        String errorMsg = null;
+        String result = Response.RESPONSE_RESULT_ERROR;
 
-		if (checkCodeString != null && checkCodeImage != null) {
-			try (ServletOutputStream outputStream = response.getOutputStream();) {
-				// 设置 Session
-				map.put("checkCode", checkCodeString);
+        // 获取用户 ID
+        HttpSession session = request.getSession();
+        Integer userID = (Integer) session.getAttribute("userID");
 
-				// 将验证码输出
-				ImageIO.write(checkCodeImage, "png", outputStream);
+        try {
+            // 更改密码
+            accountService.passwordModify(userID, passwordInfo);
 
-				response.setHeader("Pragma", "no-cache");
-				response.setHeader("Cache-Control", "no-cache");
-				response.setDateHeader("Expires", 0);
-				response.setContentType("image/png");
-			} catch (IOException e) {
-				log.error("fail to get the ServletOutputStream");
-			}
-		}
-	}
+            result = Response.RESPONSE_RESULT_SUCCESS;
+        } catch (NullPointerException e) {
+            log.debug("The passwordModification object or userID is null");
+        } catch (AccountServiceException e) {
+            errorMsg = e.getErrorType();
+            log.debug("error type:" + errorMsg);
+        }
+
+        // 设置 Resposne
+        responseContent.setResponseResult(result);
+        responseContent.setResponseMsg(errorMsg);
+        return responseContent.generateResponse();
+    }
+
+    /**
+     * 获取图形验证码 将返回一个包含4位字符（字母或数字）的图形验证码，并且将图形验证码的值设置到用户的 session 中
+     *
+     * @param time     时间戳
+     * @param response 返回的 HttpServletResponse 响应
+     * @param map      用于设置 session
+     */
+    @RequestMapping(value = "checkCode/{time}", method = RequestMethod.GET)
+    public void getCheckCode(@PathVariable("time") String time, HttpServletResponse response, Map<String, Object> map) {
+
+        BufferedImage checkCodeImage = null;
+        String checkCodeString = null;
+
+        // 获取图形验证码
+        Map<String, Object> checkCode = checkCodeGenerator.generlateCheckCode();
+
+        if (checkCode != null) {
+            checkCodeString = (String) checkCode.get("checkCodeString");
+            checkCodeImage = (BufferedImage) checkCode.get("checkCodeImage");
+        }
+
+        if (checkCodeString != null && checkCodeImage != null) {
+            try (ServletOutputStream outputStream = response.getOutputStream();) {
+                // 设置 Session
+                map.put("checkCode", checkCodeString);
+
+                // 将验证码输出
+                ImageIO.write(checkCodeImage, "png", outputStream);
+
+                response.setHeader("Pragma", "no-cache");
+                response.setHeader("Cache-Control", "no-cache");
+                response.setDateHeader("Expires", 0);
+                response.setContentType("image/png");
+            } catch (IOException e) {
+                log.error("fail to get the ServletOutputStream");
+            }
+        }
+    }
 }

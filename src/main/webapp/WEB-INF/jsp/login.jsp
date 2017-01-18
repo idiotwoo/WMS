@@ -182,11 +182,11 @@
 						if(response.result == 'error'){
 							var errorMessage;
 							var field;
-							if(response.errorMsg == "userIDError"){
+							if(response.msg == "userIDError"){
 								errorMessage = "用户名错误";
 								field = "userID";
 							}
-							else if(response.errorMsg == "passwordError"){
+							else if(response.msg == "passwordError"){
 								errorMessage = "密码或验证码错误";
 								field = "password";
 								$('#password').val("");

@@ -1,13 +1,14 @@
 package com.ken.wms.controller.commons;
 
+import com.ken.wms.controller.util.Response;
+import com.ken.wms.controller.util.ResponseUtil;
 import com.ken.wms.domain.RepositoryAdmin;
+import com.ken.wms.service.Interface.RepositoryAdminManageService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import com.ken.wms.controller.Enum.ResponseStatus;
-import com.ken.wms.service.Interface.RepositoryAdminManageService;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -15,7 +16,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +30,8 @@ public class RepositoryAdminManageHandler {
 
     @Autowired
     private RepositoryAdminManageService repositoryAdminManageService;
+    @Autowired
+    private ResponseUtil responseUtil;
 
     // 查询类型
     private static final String SEARCH_BY_ID = "searchByID";
@@ -37,22 +39,37 @@ public class RepositoryAdminManageHandler {
     private static final String SEARCH_BY_REPOSITORY_ID = "searchByRepositoryID";
     private static final String SEARCH_ALL = "searchAll";
 
-    private Map<String ,Object> query(String keyWord,String searchType, int offset, int limit){
+    /**
+     * 通用记录查询
+     *
+     * @param keyWord    查询关键字
+     * @param searchType 查询类型
+     * @param offset     分页偏移值
+     * @param limit      分页大小
+     * @return 返回所有符合条件的记录
+     */
+    private Map<String, Object> query(String keyWord, String searchType, int offset, int limit) {
         Map<String, Object> queryResult = null;
 
         // query
-        if(searchType.equals(SEARCH_ALL)){
-            queryResult = repositoryAdminManageService.selectAll(offset,limit);
-        }else if(searchType.equals(SEARCH_BY_ID)){
-            if(StringUtils.isNumeric(keyWord))
-                queryResult = repositoryAdminManageService.selectByID(Integer.valueOf(keyWord));
-        }else if(searchType.equals(SEARCH_BY_NAME)){
-            queryResult = repositoryAdminManageService.selectByName(offset,limit,keyWord);
-        }else if(searchType.equals(SEARCH_BY_REPOSITORY_ID)){
-            if(StringUtils.isNumeric(keyWord))
-                queryResult = repositoryAdminManageService.selectByRepositoryID(Integer.valueOf(keyWord));
-        }else{
-            // do other things
+        switch (searchType) {
+            case SEARCH_ALL:
+                queryResult = repositoryAdminManageService.selectAll(offset, limit);
+                break;
+            case SEARCH_BY_ID:
+                if (StringUtils.isNumeric(keyWord))
+                    queryResult = repositoryAdminManageService.selectByID(Integer.valueOf(keyWord));
+                break;
+            case SEARCH_BY_NAME:
+                queryResult = repositoryAdminManageService.selectByName(offset, limit, keyWord);
+                break;
+            case SEARCH_BY_REPOSITORY_ID:
+                if (StringUtils.isNumeric(keyWord))
+                    queryResult = repositoryAdminManageService.selectByRepositoryID(Integer.valueOf(keyWord));
+                break;
+            default:
+                // do other things
+                break;
         }
 
         return queryResult;
@@ -74,22 +91,24 @@ public class RepositoryAdminManageHandler {
     Map<String, Object> getRepositoryAdmin(@RequestParam("searchType") String searchType,
                                            @RequestParam("keyWord") String keyWord, @RequestParam("offset") int offset,
                                            @RequestParam("limit") int limit) {
-        // 初始化结果集
-        Map<String, Object> resultSet = new HashMap<>();
+        // 初始化 Response
+        Response responseContent = responseUtil.newResponseInstance();
+
         List<RepositoryAdmin> rows = null;
         long total = 0;
 
         // 查询
-        Map<String, Object> queryResult = query(keyWord,searchType,offset,limit);
+        Map<String, Object> queryResult = query(keyWord, searchType, offset, limit);
 
         if (queryResult != null) {
             rows = (List<RepositoryAdmin>) queryResult.get("data");
             total = (long) queryResult.get("total");
         }
 
-        resultSet.put("rows", rows);
-        resultSet.put("total", total);
-        return resultSet;
+        // 设置 Response
+        responseContent.setCustomerInfo("rows", rows);
+        responseContent.setResponseTotal(total);
+        return responseContent.generateResponse();
     }
 
     /**
@@ -102,15 +121,16 @@ public class RepositoryAdminManageHandler {
     public
     @ResponseBody
     Map<String, Object> addRepositoryAdmin(@RequestBody RepositoryAdmin repositoryAdmin) {
-        // 初始化结果集
-        Map<String, Object> resultSet = new HashMap<>();
+        // 初始化 Response
+        Response responseContent = responseUtil.newResponseInstance();
 
         // 添加结果
         String result = repositoryAdminManageService.addRepositoryAdmin(repositoryAdmin)
-                ? ResponseStatus.SUCCESS.toString() : ResponseStatus.ERROR.toString();
+                ? Response.RESPONSE_RESULT_SUCCESS : Response.RESPONSE_RESULT_ERROR;
 
-        resultSet.put("result", result);
-        return resultSet;
+        // 设置 Response
+        responseContent.setResponseResult(result);
+        return responseContent.generateResponse();
     }
 
     /**
@@ -124,20 +144,22 @@ public class RepositoryAdminManageHandler {
     public
     @ResponseBody
     Map<String, Object> getRepositoryAdminInfo(Integer repositoryAdminID) {
-        // 初始化结果集
-        Map<String, Object> resultSet = new HashMap<>();
-        String result = ResponseStatus.ERROR.toString();
+        // 初始化 Response
+        Response responseContent = responseUtil.newResponseInstance();
+        String result = Response.RESPONSE_RESULT_ERROR;
 
         // 查询
         RepositoryAdmin repositoryAdmin = null;
         Map<String, Object> queryResult = repositoryAdminManageService.selectByID(repositoryAdminID);
         if (queryResult != null) {
             if ((repositoryAdmin = (RepositoryAdmin) queryResult.get("data")) != null)
-                result = ResponseStatus.SUCCESS.toString();
+                result = Response.RESPONSE_RESULT_SUCCESS;
         }
-        resultSet.put("reuslt", result);
-        resultSet.put("data", repositoryAdmin);
-        return resultSet;
+
+        // 设置 Response
+        responseContent.setResponseResult(result);
+        responseContent.setResponseData(repositoryAdmin);
+        return responseContent.generateResponse();
     }
 
     /**
@@ -151,15 +173,16 @@ public class RepositoryAdminManageHandler {
     public
     @ResponseBody
     Map<String, Object> updateRepositoryAdmin(@RequestBody RepositoryAdmin repositoryAdmin) {
-        // 初始化结果集
-        Map<String, Object> resultSet = new HashMap<>();
+        // 初始化 Response
+        Response responseContent = responseUtil.newResponseInstance();
 
         // 更新
         String result = repositoryAdminManageService.updateRepositoryAdmin(repositoryAdmin)
-                ? ResponseStatus.SUCCESS.toString() : ResponseStatus.ERROR.toString();
+                ? Response.RESPONSE_RESULT_SUCCESS : Response.RESPONSE_RESULT_ERROR;
 
-        resultSet.put("result", result);
-        return resultSet;
+        // 设置 Response
+        responseContent.setResponseResult(result);
+        return responseContent.generateResponse();
     }
 
     /**
@@ -173,15 +196,16 @@ public class RepositoryAdminManageHandler {
     public
     @ResponseBody
     Map<String, Object> deleteRepositoryAdmin(Integer repositoryAdminID) {
-        // 初始化结果集
-        Map<String, Object> resultSet = new HashMap<>();
+        // 初始化 Response
+        Response responseContent = responseUtil.newResponseInstance();
 
         // 删除记录
         String result = repositoryAdminManageService.deleteRepositoryAdmin(repositoryAdminID)
-                ? ResponseStatus.SUCCESS.toString() : ResponseStatus.ERROR.toString();
+                ? Response.RESPONSE_RESULT_SUCCESS : Response.RESPONSE_RESULT_ERROR;
 
-        resultSet.put("result", result);
-        return resultSet;
+        // 设置 Response
+        responseContent.setResponseResult(result);
+        return responseContent.generateResponse();
     }
 
     /**
@@ -195,9 +219,9 @@ public class RepositoryAdminManageHandler {
     public
     @ResponseBody
     Map<String, Object> importRepositoryAdmin(MultipartFile file) {
-        // 初始化结果集
-        Map<String, Object> resultSet = new HashMap<>();
-        String result = ResponseStatus.ERROR.toString();
+        // 初始化 Response
+        Response responseContent = responseUtil.newResponseInstance();
+        String result = Response.RESPONSE_RESULT_ERROR;
 
         // 读取文件
         long total = 0;
@@ -207,14 +231,15 @@ public class RepositoryAdminManageHandler {
             if (importInfo != null) {
                 total = (long) importInfo.get("total");
                 available = (long) importInfo.get("available");
-                result = ResponseStatus.SUCCESS.toString();
+                result = Response.RESPONSE_RESULT_SUCCESS;
             }
         }
 
-        resultSet.put("result", result);
-        resultSet.put("total", total);
-        resultSet.put("available", available);
-        return resultSet;
+        // 设置 Response
+        responseContent.setResponseResult(result);
+        responseContent.setResponseTotal(total);
+        responseContent.setCustomerInfo("available", available);
+        return responseContent.generateResponse();
     }
 
     /**
@@ -233,27 +258,8 @@ public class RepositoryAdminManageHandler {
         String fileName = "repositoryAdminInfo.xlsx";
 
         // 查询
-        List<RepositoryAdmin> repositoryAdmins = null;
-        Map<String, Object> queryResult = query(keyWord,searchType,-1,-1);
-//        Map<String, Object> queryResult = null;
-//        if (searchType.equals("searchByID")) {
-//            if (keyWord != null && !keyWord.equals("")) {
-//                Integer id = Integer.valueOf(keyWord);
-//                queryResult = repositoryAdminManageService.selectByID(id);
-//            }
-//        } else if (searchType.equals("searchByName")) {
-//            queryResult = repositoryAdminManageService.selectByName(keyWord);
-//        } else if (searchType.equals("searchByRepositoryID")) {
-//            if (keyWord != null && !keyWord.equals("")) {
-//                Integer id = Integer.valueOf(keyWord);
-//                queryResult = repositoryAdminManageService.selectByID(id);
-//                queryResult = repositoryAdminManageService.selectByRepositoryID(id);
-//            }
-//        } else if (searchType.equals("searchAll")) {
-//            queryResult = repositoryAdminManageService.selectAll();
-//        } else {
-//            // do other thing
-//        }
+        List<RepositoryAdmin> repositoryAdmins;
+        Map<String, Object> queryResult = query(keyWord, searchType, -1, -1);
 
         if (queryResult != null)
             repositoryAdmins = (List<RepositoryAdmin>) queryResult.get("data");

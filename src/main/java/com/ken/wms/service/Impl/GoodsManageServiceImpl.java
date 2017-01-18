@@ -139,7 +139,7 @@ public class GoodsManageServiceImpl implements GoodsManageService {
 	public Map<String, Object> selectAll(int offset, int limit) {
 		// 初始化结果集
 		Map<String, Object> resultSet = new HashMap<>();
-		List<Goods> goodsList = new ArrayList<>();
+		List<Goods> goodsList;
 		long total = 0;
 		boolean isPagination = true;
 		
@@ -157,6 +157,12 @@ public class GoodsManageServiceImpl implements GoodsManageService {
 				total = pageInfo.getTotal();
 			}else
 				goodsList = new ArrayList<>();
+		}else{
+			goodsList = goodsMapper.selectAll();
+			if(goodsList != null)
+			    total = goodsList.size();
+			else
+			    goodsList = new ArrayList<>();
 		}
 
 		resultSet.put("data", goodsList);

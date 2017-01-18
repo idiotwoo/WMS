@@ -15,49 +15,53 @@ import java.util.Map;
 
 /**
  * 负责页面加载
- * @author Ken
  *
+ * @author Ken
  */
 @RequestMapping("/")
 @Controller
 public class PageLoadHandler {
-	
-	// 日志
-	private static Logger log = Logger.getLogger("application");
-	
-	@Autowired
-	private MenuComponentService menuComponentService;
-	
-	/**
-	 * 跳转到主页面
-	 * @return
-	 */
-	@RequestMapping("")
-	public String showLoginView(){
-		return "mainPage";
-	}
-	
-	/**
-	 * 获取侧边栏菜单项
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping(value="commons/pageLoad/loadMenus",method=RequestMethod.GET)
-	public @ResponseBody Map<String, List<String[]>> loadMenu(HttpServletRequest request){
-		// 获得 Session
-		HttpSession session = request.getSession();
-		Map<String, List<String[]>> menus = null;
-		
-		String roleName = (String) session.getAttribute("role");
-		if(roleName != null)
-			menus = menuComponentService.getMenuByRole(roleName);
-		
-		log.debug("get  menus by role:" + roleName);
-		if(menus != null){
-			log.debug("get menus successfully");
-		}
-		
-		return menus;
-	}
-	
+
+    // 日志
+    private static Logger log = Logger.getLogger("application");
+
+    @Autowired
+    private MenuComponentService menuComponentService;
+
+    /**
+     * 跳转到主页面
+     *
+     * @return
+     */
+    @RequestMapping("")
+    public String showLoginView() {
+        return "mainPage";
+    }
+
+    /**
+     * 获取侧边栏菜单项
+     *
+     * @param request HttpServletRequest
+     * @return 返回侧边栏菜单数据项
+     */
+    @RequestMapping(value = "commons/pageLoad/loadMenus", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    Map<String, List<String[]>> loadMenu(HttpServletRequest request) {
+        // 获得 Session
+        HttpSession session = request.getSession();
+        Map<String, List<String[]>> menus = null;
+
+        String roleName = (String) session.getAttribute("role");
+        if (roleName != null)
+            menus = menuComponentService.getMenuByRole(roleName);
+
+        log.debug("get  menus by role:" + roleName);
+        if (menus != null) {
+            log.debug("get menus successfully");
+        }
+
+        return menus;
+    }
+
 }
