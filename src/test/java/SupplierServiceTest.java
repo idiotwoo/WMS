@@ -1,7 +1,7 @@
 package com.ken.wms.junitTest;
 
 import com.ken.wms.domain.Supplier;
-import com.ken.wms.service.Interface.SupplierManageService;
+import com.ken.wms.common.service.Interface.SupplierManageService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

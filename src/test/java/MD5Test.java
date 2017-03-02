@@ -1,7 +1,7 @@
 package com.ken.wms.junitTest;
 
 import org.junit.Test;
-import com.ken.wms.service.util.EncryptingModel;
+import com.ken.wms.security.util.EncryptingModel;
 
 public class MD5Test {
 	

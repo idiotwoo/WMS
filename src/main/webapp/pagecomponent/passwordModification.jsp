@@ -75,7 +75,7 @@
 			// 将数据通过 AJAX 发送到后端
 			$.ajax({
 				type: "POST",
-				url:"commons/account/passwordModify",
+				url:"account/passwordModify",
 				dataType:"json",
 				contentType:"application/json",
 				data:JSON.stringify(data),

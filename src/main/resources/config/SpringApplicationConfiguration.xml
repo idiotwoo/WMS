@@ -1,64 +1,131 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:aop="http://www.springframework.org/schema/aop"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:tx="http://www.springframework.org/schema/tx"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
-		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
-	<!-- 加载资源文件 -->
-	<context:property-placeholder location="classpath:config/DBConfig.properties"/>
+    <!-- 加载资源文件 -->
+    <context:property-placeholder location="classpath:config/DBConfig.properties"/>
 
-	<!-- 配置自动扫描包 -->	
-	<context:component-scan base-package="com.ken.wms">
-		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
-		<context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
-	</context:component-scan>
-	
-	<!-- 配置 ExcelUtil -->
-	<bean id="ExcelUtil" class="com.ken.wms.service.util.ExcelUtil">
-		<constructor-arg type="java.lang.String" value="config/ExcelUtilConfig.xml"/>
-	</bean>
-	
-	<!-- 持久化配置 -->
-	
-	<!-- 配置数据源 -->
-	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
-		<property name="user" value="${jdbc.user}"/>
-		<property name="password" value="${jdbc.password}"/>
-		<property name="driverClass" value="${jdbc.driverClass}"/>
-		<property name="jdbcUrl" value="${jdbc.jdbcUrl}"/>
-		<property name="testConnectionOnCheckout" value="${jdbc.testConnectionOnCheckout}"/>
-	</bean>
-	
-	<!-- 配置 SqlSessionFactoryBean -->
-	<bean id="SqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="dataSource"/>
-		<property name="configLocation" value="classpath:config/MyBatisConfiguration.xml"/>
-	</bean>
-	
-	<!-- 配置事务 -->
-	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="dataSource"/>	
-	</bean>
-	
-	<tx:advice id="txAdvice" transaction-manager="transactionManager">
-	 	<tx:attributes>
-	 		<tx:method name="select*" read-only="true"/>
-	 		<tx:method name="*"/>
-	 	</tx:attributes>
-	 </tx:advice>
-	 <aop:config>
-	 	<aop:pointcut expression="execution(* com.ken.wms.service..*.*(..))" 
-	 		id="pointcut"/>
-	 	<aop:advisor advice-ref="txAdvice" pointcut-ref="pointcut"/>
-	 </aop:config>
-	
-	<!-- 配置 MyBatis MapperScannerConfigurer -->
-	<bean id="" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.ken.wms.dao"/>
-	</bean>
+    <!-- 配置自动扫描包 -->
+    <context:component-scan base-package="com.ken.wms">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        <context:exclude-filter type="annotation"
+                                expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+    </context:component-scan>
+
+
+    <!-- ============================================
+                ExcelUtil 配置
+         ============================================-->
+    <bean id="ExcelUtil" class="com.ken.wms.common.util.ExcelUtil">
+        <constructor-arg type="java.lang.String" value="config/ExcelUtilConfig.xml"/>
+    </bean>
+
+
+    <!-- ============================================
+               Shiro 核心组件 配置
+        ============================================-->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="cacheManager" ref="cacheManager"/>
+        <property name="authenticator" ref="authenticator"/>
+        <property name="realms">
+            <list>
+                <ref bean="userAuthorizingRealm"/>
+            </list>
+        </property>
+    </bean>
+    <bean id="authenticator" class="org.apache.shiro.authc.pam.ModularRealmAuthenticator">
+        <property name="authenticationStrategy">
+            <bean class="org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy"/>
+        </property>
+    </bean>
+    <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <property name="cacheManagerConfigFile" value="classpath:config/ehcache.xml"/>
+    </bean>
+    <!-- Realm 的配置 -->
+    <bean id="userAuthorizingRealm" class="com.ken.wms.security.realms.UserAuthorizingRealm"/>
+
+
+    <!-- ============================================
+               Shiro - Spring 整合 配置
+        ============================================-->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+          depends-on="lifecycleBeanPostProcessor"/>
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"/>
+        <property name="loginUrl" value="/login"/>
+        <property name="successUrl" value="/main"/>
+        <property name="unauthorizedUrl" value="/jsp/unauthorized.html"/>
+        <property name="filters">
+            <util:map>
+                <entry key="authc" value-ref="extendFormAuthenticationFilter"/>
+            </util:map>
+        </property>
+        <property name="filterChainDefinitionMap" ref="filterChainDefinitionMap"/>
+    </bean>
+    <!-- 配置身份验证器，处理 Ajax 请求 -->
+    <bean id="extendFormAuthenticationFilter" class="com.ken.wms.security.filter.ExtendFormAuthenticationFilter">
+        <property name="usernameParam" value="username"/>
+        <property name="passwordParam" value="password"/>
+        <property name="rememberMeParam" value="rememberMe"/>
+        <property name="loginUrl" value="/login"/>
+    </bean>
+    <!-- 配置获取 URL 权限信息的 Factory -->
+    <bean id="filterChainDefinitionMap" factory-bean="filterChainDefinitionMapBuilder"
+          factory-method="builderFilterChainDefinitionMap"/>
+    <bean id="filterChainDefinitionMapBuilder"
+          class="com.ken.wms.security.Service.FilterChainDefinitionMapBuilder"/>
+
+
+    <!-- ============================================
+               持久化配置
+        ============================================-->
+    <!-- 配置数据源 -->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="user" value="${jdbc.user}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="driverClass" value="${jdbc.driverClass}"/>
+        <property name="jdbcUrl" value="${jdbc.jdbcUrl}"/>
+        <property name="testConnectionOnCheckout" value="${jdbc.testConnectionOnCheckout}"/>
+    </bean>
+
+    <!-- 配置 SqlSessionFactoryBean -->
+    <bean id="SqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:config/MyBatisConfiguration.xml"/>
+    </bean>
+
+    <!-- 配置事务 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="select*" read-only="true"/>
+            <tx:method name="*"/>
+        </tx:attributes>
+    </tx:advice>
+    <!--<aop:config>-->
+        <!--<aop:pointcut expression="execution(* com.ken.wms.common.service..*.*(..))"-->
+                      <!--id="pointcut"/>-->
+        <!--<aop:advisor advice-ref="txAdvice" pointcut-ref="pointcut"/>-->
+    <!--</aop:config>-->
+
+    <!-- 配置 MyBatis MapperScannerConfigurer -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.ken.wms.dao"/>
+    </bean>
 </beans>

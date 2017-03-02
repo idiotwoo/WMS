@@ -16,37 +16,37 @@
 	
 	<!-- 配置视图解析器 -->
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="prefix" value="/WEB-INF/jsp/"></property>
-		<property name="suffix" value=".jsp"></property>
+		<property name="prefix" value="/WEB-INF/jsp/"/>
+		<property name="suffix" value=".jsp"/>
 	</bean>
 	
 	<mvc:default-servlet-handler/>
-	<mvc:annotation-driven></mvc:annotation-driven>
+	<mvc:annotation-driven/>
 	
 	<!-- 配置自定义拦截器 -->
-	<mvc:interceptors>
-		<!-- 自定义用户授权认证拦截器 -->
-		<mvc:interceptor>
-			<!-- 
-			<mvc:mapping path="/account/security/**"/>
-			<mvc:mapping path="/commonsAdmin/**"/>
-			<mvc:mapping path="/systemAdmin/**"/>
-			 -->
-			 <mvc:mapping path="/**"/>
-			 <mvc:exclude-mapping path="/css/**"/>
-			 <mvc:exclude-mapping path="/js/**"/>
-			 <mvc:exclude-mapping path="/fonts/**"/>
-			 <mvc:exclude-mapping path="/media/**"/>
-			 <mvc:exclude-mapping path="/pagecomponent/**"/>
-			 <mvc:exclude-mapping path="/commons/**"/>
-			<bean class="com.ken.wms.security.SecurityInterceptor"/>
-		</mvc:interceptor>
-	</mvc:interceptors>
+	<!--<mvc:interceptors>-->
+		<!--&lt;!&ndash; 自定义用户授权认证拦截器 &ndash;&gt;-->
+		<!--<mvc:interceptor>-->
+			<!--&lt;!&ndash; -->
+			<!--<mvc:mapping path="/account/security/**"/>-->
+			<!--<mvc:mapping path="/commonsAdmin/**"/>-->
+			<!--<mvc:mapping path="/systemAdmin/**"/>-->
+			 <!--&ndash;&gt;-->
+			 <!--<mvc:mapping path="/**"/>-->
+			 <!--<mvc:exclude-mapping path="/css/**"/>-->
+			 <!--<mvc:exclude-mapping path="/js/**"/>-->
+			 <!--<mvc:exclude-mapping path="/fonts/**"/>-->
+			 <!--<mvc:exclude-mapping path="/media/**"/>-->
+			 <!--<mvc:exclude-mapping path="/pagecomponent/**"/>-->
+			 <!--<mvc:exclude-mapping path="/commons/**"/>-->
+			<!--<bean class="com.ken.wms.security.SecurityInterceptor"/>-->
+		<!--</mvc:interceptor>-->
+	<!--</mvc:interceptors>-->
 	
 	<!-- 配置 MultipartResolver -->
 	<bean id="multipartResolver" 
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-		<property name="defaultEncoding" value="UTF-8"></property>
-		<property name="maxUploadSize" value="4095000"></property>
+		<property name="defaultEncoding" value="UTF-8"/>
+		<property name="maxUploadSize" value="4095000"/>
 	</bean>
 </beans>

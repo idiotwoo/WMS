@@ -59,7 +59,7 @@
 								</div>
 								<div>
 									<img id="checkCodeImg" alt="checkCodeImg"
-										src="commons/account/checkCode/1">
+										src="account/checkCode/1">
 								</div>
 							</div>
 
@@ -99,7 +99,7 @@
 		function refreshCheckCode() {
 			$('#checkCodeImg').click(function() {
 				var timestamp = new Date().getTime();
-				$(this).attr("src", "commons/account/checkCode/" + timestamp)
+				$(this).attr("src", "account/checkCode/" + timestamp)
 			})
 		}
 
@@ -171,7 +171,7 @@
 				}
 				$.ajax({
 					type:"POST",
-					url:"commons/account/signIn",
+					url:"account/login",
 					dataType:"json",
 					contentType:"application/json",
 					data:JSON.stringify(data),
@@ -182,11 +182,11 @@
 						if(response.result == 'error'){
 							var errorMessage;
 							var field;
-							if(response.msg == "userIDError"){
+							if(response.msg == "unknownAccount"){
 								errorMessage = "用户名错误";
 								field = "userID";
 							}
-							else if(response.msg == "passwordError"){
+							else if(response.msg == "incorrectCredentials"){
 								errorMessage = "密码或验证码错误";
 								field = "password";
 								$('#password').val("");
@@ -197,14 +197,14 @@
 							bv.updateStatus(field,'INVALID','callback');
 							bv.updateStatus("checkCode",'INVALID','callback');
 							
-							$('#checkCodeImg').attr("src","commons/account/checkCode/" + new Date().getTime());
+							$('#checkCodeImg').attr("src","account/checkCode/" + new Date().getTime());
 							$('#checkCode').val("");
 						}else{
 							// 页面跳转
-							var URL = response.url;
-							if(URL != null){
-								window.location.href = URL;
-							}
+							//var URL = response.url;
+							//if(URL != null){
+								window.location.href = "/WMS";
+							//}
 							
 						}
 					},

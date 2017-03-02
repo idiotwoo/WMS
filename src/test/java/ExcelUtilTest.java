@@ -7,7 +7,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.multipart.MultipartFile;
-import com.ken.wms.service.util.ExcelUtil;
+import com.ken.wms.common.util.ExcelUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
