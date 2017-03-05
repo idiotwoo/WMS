@@ -118,8 +118,7 @@
 											}
 										}
 									} ],
-							url : requestPrefix
-									+ '/supplierManage/getSupplierList',
+							url : 'supplierManage/getSupplierList',
 							method : 'GET',
 							queryParams : queryParams,
 							sidePagination : "server",
@@ -229,7 +228,7 @@
 					// ajax
 					$.ajax({
 						type : "POST",
-						url : requestPrefix + '/supplierManage/updateSupplier',
+						url : 'supplierManage/updateSupplier',
 						dataType : "json",
 						contentType : "application/json",
 						data : JSON.stringify(data),
@@ -263,7 +262,7 @@
 			// ajax
 			$.ajax({
 				type : "GET",
-				url : requestPrefix + "/supplierManage/deleteSupplier",
+				url : "supplierManage/deleteSupplier",
 				dataType : "json",
 				contentType : "application/json",
 				data : data,
@@ -305,7 +304,7 @@
 			// ajax
 			$.ajax({
 				type : "POST",
-				url : requestPrefix + "/supplierManage/addSupplier",
+				url : "supplierManage/addSupplier",
 				dataType : "json",
 				contentType : "application/json",
 				data : JSON.stringify(data),
@@ -385,7 +384,7 @@
 
 			// ajax
 			$.ajaxFileUpload({
-				url : requestPrefix + "/supplierManage/importSupplier",
+				url : "supplierManage/importSupplier",
 				secureuri: false,
 				dataType: 'json',
 				fileElementId:"file",
@@ -432,7 +431,7 @@
 				searchType : search_type_supplier,
 				keyWord : search_keyWord
 			}
-			var url = requestPrefix + "/supplierManage/exportSupplier?" + $.param(data)
+			var url = "supplierManage/exportSupplier?" + $.param(data)
 			window.open(url, '_blank');
 			$('#export_modal').modal("hide");
 		})

@@ -1,11 +1,11 @@
-package com.ken.wms.security.Service.Impl;
+package com.ken.wms.security.service.Impl;
 
 import com.ken.wms.dao.UserInfoMapper;
 import com.ken.wms.dao.UserPermissionMapper;
 import com.ken.wms.domain.RoleDO;
 import com.ken.wms.domain.UserInfoDO;
 import com.ken.wms.domain.UserInfoDTO;
-import com.ken.wms.security.Service.Interface.UserInfoService;
+import com.ken.wms.security.service.Interface.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * 用户账户信息 Service 实现类
+ * 用户账户信息 service 实现类
  *
  * @author ken
  * @since 2017/2/26.

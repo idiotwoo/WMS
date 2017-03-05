@@ -1,4 +1,4 @@
-package com.ken.wms.security.Service.execption;
+package com.ken.wms.security.service.execption;
 
 /**
  * 

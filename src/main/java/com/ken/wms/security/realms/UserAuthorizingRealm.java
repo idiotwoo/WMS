@@ -1,7 +1,9 @@
 package com.ken.wms.security.realms;
 
+import com.ken.wms.dao.AccessRecordMapper;
+import com.ken.wms.domain.AccessRecordDO;
 import com.ken.wms.domain.RepositoryAdmin;
-import com.ken.wms.security.Service.Interface.UserInfoService;
+import com.ken.wms.security.service.Interface.UserInfoService;
 import com.ken.wms.domain.UserInfoDTO;
 import com.ken.wms.common.service.Interface.RepositoryAdminManageService;
 import com.ken.wms.security.util.EncryptingModel;
@@ -17,6 +19,7 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,6 +37,8 @@ public class UserAuthorizingRealm extends AuthorizingRealm {
     private EncryptingModel encryptingModel;
     @Autowired
     private RepositoryAdminManageService repositoryAdminManageService;
+    @Autowired
+    private AccessRecordMapper accessRecordMapper;
 
     /**
      * 对用户进行角色授权
@@ -61,6 +66,16 @@ public class UserAuthorizingRealm extends AuthorizingRealm {
                     Session session = currentUser.getSession();
                     List<RepositoryAdmin> repositoryAdmin = (List<RepositoryAdmin>) repositoryAdminManageService.selectByID(userInfo.getUserID()).get("data");
                     session.setAttribute("repositoryBelong", (repositoryAdmin.isEmpty()) ? "none" : repositoryAdmin.get(0).getRepositoryBelongID());
+
+                    // 记录用户登陆状态，用于作登出日志
+                    session.setAttribute("isAuthenticate", "true");
+                    AccessRecordDO accessRecord = new AccessRecordDO();
+                    accessRecord.setUserID((Integer) session.getAttribute("userID"));
+                    accessRecord.setUserName((String) session.getAttribute("userName"));
+                    accessRecord.setAccessType("登入");
+                    accessRecord.setAccessTime(new Date());
+
+                    accessRecordMapper.insertAccessRecord(accessRecord);
                 }
             }
         }

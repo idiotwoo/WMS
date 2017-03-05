@@ -118,8 +118,7 @@
 											}
 										}
 									} ],
-							url : requestPrefix
-									+ '/customerManage/getCustomerList',
+							url : 'customerManage/getCustomerList',
 							method : 'GET',
 							queryParams : queryParams,
 							sidePagination : "server",
@@ -229,7 +228,7 @@
 					// ajax
 					$.ajax({
 						type : "POST",
-						url : requestPrefix + '/customerManage/updateCustomer',
+						url : 'customerManage/updateCustomer',
 						dataType : "json",
 						contentType : "application/json",
 						data : JSON.stringify(data),
@@ -263,7 +262,7 @@
 			// ajax
 			$.ajax({
 				type : "GET",
-				url : requestPrefix + "/customerManage/deleteCustomer",
+				url : "customerManage/deleteCustomer",
 				dataType : "json",
 				contentType : "application/json",
 				data : data,
@@ -305,7 +304,7 @@
 			// ajax
 			$.ajax({
 				type : "POST",
-				url : requestPrefix + "/customerManage/addCustomer",
+				url : "customerManage/addCustomer",
 				dataType : "json",
 				contentType : "application/json",
 				data : JSON.stringify(data),
@@ -385,7 +384,7 @@
 
 			// ajax
 			$.ajaxFileUpload({
-				url : requestPrefix + "/customerManage/importCustomer",
+				url : "customerManage/importCustomer",
 				secureuri: false,
 				dataType: 'json',
 				fileElementId:"file",
@@ -432,7 +431,7 @@
 				searchType : search_type_customer,
 				keyWord : search_keyWord
 			}
-			var url = requestPrefix + "/customerManage/exportCustomer?" + $.param(data)
+			var url = "customerManage/exportCustomer?" + $.param(data)
 			window.open(url, '_blank');
 			$('#export_modal').modal("hide");
 		})

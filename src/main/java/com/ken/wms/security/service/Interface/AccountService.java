@@ -1,4 +1,4 @@
-package com.ken.wms.security.Service.Interface;
+package com.ken.wms.security.service.Interface;
 
 import java.util.Map;
 

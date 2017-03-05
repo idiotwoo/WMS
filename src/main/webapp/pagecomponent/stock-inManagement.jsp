@@ -49,7 +49,7 @@ function goodsAutocomplete(){
 		source : function(request, response){
 			$.ajax({
 				type : 'GET',
-				url : requestPrefix + '/goodsManage/getGoodsList',
+				url : 'goodsManage/getGoodsList',
 				dataType : 'json',
 				contentType : 'application/json',
 				data : {
@@ -90,7 +90,7 @@ function supplierAutocomplete(){
 		source : function(request, response){
 			$.ajax({
 				type : "GET",
-				url : requestPrefix + '/supplierManage/getSupplierList',
+				url : 'supplierManage/getSupplierList',
 				dataType : 'json',
 				contentType : 'application/json',
 				data : {
@@ -217,7 +217,7 @@ function detilInfoToggle(){
 function repositorySelectorInit(){
 	$.ajax({
 		type : 'GET',
-		url : requestPrefix + '/repositoryManage/getRepositoryList',
+		url : 'repositoryManage/getRepositoryList',
 		dataType : 'json',
 		contentType : 'application/json',
 		data : {
@@ -250,7 +250,7 @@ function loadStorageInfo(){
 	if(stockin_repository != null && stockin_goods != null){
 		$.ajax({
 			type : 'GET',
-			url : requestPrefix + '/storageManage/getStorageListWithRepository',
+			url : 'storageManage/getStorageListWithRepository',
 			dataType : 'json',
 			contentType : 'application/json',
 			data : {
@@ -293,7 +293,7 @@ function stockInOption(){
 
 		$.ajax({
 			type : 'POST',
-			url : requestPrefix + '/storageManage/increaseStorageAdmin',
+			url : 'storageManage/increaseStorageAdmin',
 			dataType : 'json',
 			content : 'application/json',
 			data : data,

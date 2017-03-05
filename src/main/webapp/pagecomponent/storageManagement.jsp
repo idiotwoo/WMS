@@ -52,7 +52,7 @@
 	function repositoryOptionInit(){
 		$.ajax({
 			type : 'GET',
-			url : requestPrefix + '/repositoryManage/getRepositoryList',
+			url : 'repositoryManage/getRepositoryList',
 			dataType : 'json',
 			contentType : 'application/json',
 			data:{
@@ -155,8 +155,7 @@
 											}
 										}
 									} ],
-							url : requestPrefix
-									+ '/storageManage/getStorageListWithRepository',
+							url : 'storageManage/getStorageListWithRepository',
 							method : 'GET',
 							queryParams : queryParams,
 							sidePagination : "server",
@@ -243,7 +242,7 @@
 					// ajax
 					$.ajax({
 						type : "POST",
-						url : requestPrefix + '/storageManage/updateStorageRecord',
+						url : 'storageManage/updateStorageRecord',
 						dataType : "json",
 						contentType : "application/json",
 						data : JSON.stringify(data),
@@ -278,7 +277,7 @@
 			// ajax
 			$.ajax({
 				type : "GET",
-				url : requestPrefix + "/storageManage/deleteStorageRecord",
+				url : "storageManage/deleteStorageRecord",
 				dataType : "json",
 				contentType : "application/json",
 				data : data,
@@ -318,7 +317,7 @@
 			// ajax
 			$.ajax({
 				type : "POST",
-				url : requestPrefix + "/storageManage/addStorageRecord",
+				url : "storageManage/addStorageRecord",
 				dataType : "json",
 				contentType : "application/json",
 				data : JSON.stringify(data),
@@ -396,7 +395,7 @@
 
 			// ajax
 			$.ajaxFileUpload({
-				url : requestPrefix + "/storageManage/importStorageRecord",
+				url : "storageManage/importStorageRecord",
 				secureuri: false,
 				dataType: 'json',
 				fileElementId:"file",
@@ -444,7 +443,7 @@
 				repositoryBelong : search_repository,
 				keyword : search_keyWord
 			}
-			var url = requestPrefix + "/storageManage/exportStorageRecord?" + $.param(data)
+			var url = "storageManage/exportStorageRecord?" + $.param(data)
 			window.open(url, '_blank');
 			$('#export_modal').modal("hide");
 		})

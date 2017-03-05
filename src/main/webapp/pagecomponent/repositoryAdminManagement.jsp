@@ -127,8 +127,7 @@
 											}
 										}
 									} ],
-							url : requestPrefix
-									+ '/repositoryAdminManage/getRepositoryAdminList',
+							url : 'repositoryAdminManage/getRepositoryAdminList',
 							method : 'GET',
 							queryParams : queryParams,
 							sidePagination : "server",
@@ -171,7 +170,7 @@
 		$('#repositoryInfo').removeClass('hide').addClass('hide');
 		$.ajax({
 			type : 'GET',
-			url : requestPrefix + '/repositoryManage/getUnassignRepository',
+			url : 'repositoryManage/getUnassignRepository',
 			dataType : 'json',
 			contentTypr : 'application/json',
 			success : function(response){
@@ -268,7 +267,7 @@
 					// ajax
 					$.ajax({
 						type : "POST",
-						url : requestPrefix + '/repositoryAdminManage/updateRepositoryAdmin',
+						url : 'repositoryAdminManage/updateRepositoryAdmin',
 						dataType : "json",
 						contentType : "application/json",
 						data : JSON.stringify(data),
@@ -316,7 +315,7 @@
 			// ajax
 			$.ajax({
 				type : "GET",
-				url : requestPrefix + "/repositoryAdminManage/deleteRepositoryAdmin",
+				url : "repositoryAdminManage/deleteRepositoryAdmin",
 				dataType : "json",
 				contentType : "application/json",
 				data : data,
@@ -358,7 +357,7 @@
 			// ajax
 			$.ajax({
 				type : "POST",
-				url : requestPrefix + "/repositoryAdminManage/addRepositoryAdmin",
+				url : "repositoryAdminManage/addRepositoryAdmin",
 				dataType : "json",
 				contentType : "application/json",
 				data : JSON.stringify(data),
@@ -438,7 +437,7 @@
 
 			// ajax
 			$.ajaxFileUpload({
-				url : requestPrefix + "/repositoryAdminManage/importRepositoryAdmin",
+				url : "repositoryAdminManage/importRepositoryAdmin",
 				secureuri: false,
 				dataType: 'json',
 				fileElementId:"file",
@@ -485,7 +484,7 @@
 				searchType : search_type_repositoryAdmin,
 				keyWord : search_keyWord
 			}
-			var url = requestPrefix + "/repositoryAdminManage/exportRepositoryAdmin?" + $.param(data)
+			var url = "repositoryAdminManage/exportRepositoryAdmin?" + $.param(data)
 			window.open(url, '_blank');
 			$('#export_modal').modal("hide");
 		})

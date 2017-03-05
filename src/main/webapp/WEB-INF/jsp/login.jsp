@@ -190,6 +190,10 @@
 								errorMessage = "密码或验证码错误";
 								field = "password";
 								$('#password').val("");
+							}else{
+							    errorMessage = "服务器错误";
+                                field = "password";
+                                $('#password').val("");
 							}
 								
 							// 更新 callback 错误信息，以及为错误对应的字段添加 错误信息
@@ -201,11 +205,7 @@
 							$('#checkCode').val("");
 						}else{
 							// 页面跳转
-							//var URL = response.url;
-							//if(URL != null){
-								window.location.href = "/WMS";
-							//}
-							
+							window.location.href = "/WMS";
 						}
 					},
 					error:function(data){

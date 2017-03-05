@@ -1,3 +1,9 @@
+create database wms_db
+DEFAULT CHARACTER SET utf8
+DEFAULT COLLATE utf8_general_ci;
+
+use wms_db;
+
 create table wms_supplier
 (
 	SUPPLIER_ID int not null auto_increment,
@@ -166,3 +172,13 @@ create table wms_role_action
     foreign key(ROLE_ID) references wms_roles(ROLE_ID),
     foreign key(ACTION_ID) references wms_action(ACTION_ID)
 )engine=innodb;
+
+
+create table wms_access_record
+(
+	RECORD_ID int primary key,
+    USER_ID int not null,
+    USER_NAME varchar(50) not null,
+    ACCESS_TYPE varchar(30) not null,
+    ACCESS_TIME datetime not null
+);

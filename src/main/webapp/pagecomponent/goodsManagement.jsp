@@ -112,8 +112,7 @@
 											}
 										}
 									} ],
-							url : requestPrefix
-									+ '/goodsManage/getGoodsList',
+							url : 'goodsManage/getGoodsList',
 							method : 'GET',
 							queryParams : queryParams,
 							sidePagination : "server",
@@ -196,7 +195,7 @@
 					// ajax
 					$.ajax({
 						type : "POST",
-						url : requestPrefix + '/goodsManage/updateGoods',
+						url : 'goodsManage/updateGoods',
 						dataType : "json",
 						contentType : "application/json",
 						data : JSON.stringify(data),
@@ -230,7 +229,7 @@
 			// ajax
 			$.ajax({
 				type : "GET",
-				url : requestPrefix + "/goodsManage/deleteGoods",
+				url : "goodsManage/deleteGoods",
 				dataType : "json",
 				contentType : "application/json",
 				data : data,
@@ -271,7 +270,7 @@
 			// ajax
 			$.ajax({
 				type : "POST",
-				url : requestPrefix + "/goodsManage/addGoods",
+				url : "goodsManage/addGoods",
 				dataType : "json",
 				contentType : "application/json",
 				data : JSON.stringify(data),
@@ -350,7 +349,7 @@
 
 			// ajax
 			$.ajaxFileUpload({
-				url : requestPrefix + "/goodsManage/importGoods",
+				url : "goodsManage/importGoods",
 				secureuri: false,
 				dataType: 'json',
 				fileElementId:"file",
@@ -397,7 +396,7 @@
 				searchType : search_type_goods,
 				keyWord : search_keyWord
 			}
-			var url = requestPrefix + "/goodsManage/exportGoods?" + $.param(data)
+			var url = "goodsManage/exportGoods?" + $.param(data)
 			window.open(url, '_blank');
 			$('#export_modal').modal("hide");
 		})

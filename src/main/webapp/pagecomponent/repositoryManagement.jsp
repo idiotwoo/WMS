@@ -118,8 +118,7 @@
 											}
 										}
 									} ],
-							url : requestPrefix
-									+ '/repositoryManage/getRepositoryList',
+							url : 'repositoryManage/getRepositoryList',
 							method : 'GET',
 							queryParams : queryParams,
 							sidePagination : "server",
@@ -209,7 +208,7 @@
 					// ajax
 					$.ajax({
 						type : "POST",
-						url : requestPrefix + '/repositoryManage/updateRepository',
+						url : 'repositoryManage/updateRepository',
 						dataType : "json",
 						contentType : "application/json",
 						data : JSON.stringify(data),
@@ -243,7 +242,7 @@
 			// ajax
 			$.ajax({
 				type : "GET",
-				url : requestPrefix + "/repositoryManage/deleteRepository",
+				url : "repositoryManage/deleteRepository",
 				dataType : "json",
 				contentType : "application/json",
 				data : data,
@@ -285,7 +284,7 @@
 			// ajax
 			$.ajax({
 				type : "POST",
-				url : requestPrefix + "/repositoryManage/addRepository",
+				url : "repositoryManage/addRepository",
 				dataType : "json",
 				contentType : "application/json",
 				data : JSON.stringify(data),
@@ -364,7 +363,7 @@
 
 			// ajax
 			$.ajaxFileUpload({
-				url : requestPrefix + "/repositoryManage/importRepository",
+				url : "repositoryManage/importRepository",
 				secureuri : false,
 				dataType : 'json',
 				fileElementId : "file",
@@ -413,7 +412,7 @@
 						searchType : search_type_repository,
 						keyWord : search_keyWord
 					}
-					var url = requestPrefix + "/repositoryManage/exportRepository?"
+					var url = "repositoryManage/exportRepository?"
 							+ $.param(data)
 					window.open(url, '_blank');
 					$('#export_modal').modal("hide");

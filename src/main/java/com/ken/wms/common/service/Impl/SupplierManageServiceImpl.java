@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 供应商信息管理 Service 实现类
+ * 供应商信息管理 service 实现类
  * @author Ken
  *
  */

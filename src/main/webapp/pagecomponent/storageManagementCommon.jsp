@@ -114,8 +114,7 @@
 											}
 										}
 									} ],
-							url : requestPrefix
-									+ '/storageManage/getStorageList',
+							url : 'storageManage/getStorageList',
 							method : 'GET',
 							queryParams : queryParams,
 							sidePagination : "server",
@@ -160,7 +159,7 @@
 				searchType : search_type_storage,
 				keyword : search_keyWord
 			}
-			var url = requestPrefix + "/storageManage/exportStorageRecord?" + $.param(data)
+			var url = "storageManage/exportStorageRecord?" + $.param(data)
 			window.open(url, '_blank');
 			$('#export_modal').modal("hide");
 		})

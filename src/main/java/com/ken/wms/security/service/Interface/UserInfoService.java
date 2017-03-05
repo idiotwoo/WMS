@@ -1,13 +1,12 @@
-package com.ken.wms.security.Service.Interface;
+package com.ken.wms.security.service.Interface;
 
-import com.ken.wms.domain.User;
 import com.ken.wms.domain.UserInfoDTO;
 
 import java.util.List;
 import java.util.Set;
 
 /**
- * 用户账户信息 Service
+ * 用户账户信息 service
  * @author ken
  * @since 2017/2/26.
  */

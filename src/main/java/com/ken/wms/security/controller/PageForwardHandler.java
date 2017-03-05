@@ -1,5 +1,7 @@
 package com.ken.wms.security.controller;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -19,7 +21,12 @@ public class PageForwardHandler {
      */
     @RequestMapping("login")
     public String loginPageForward(){
-        return "login";
+        // 判断但钱用户是否已经登陆
+        Subject currentSubject = SecurityUtils.getSubject();
+        if (!currentSubject.isAuthenticated())
+            return "login";
+        else
+            return "mainPage";
     }
 
     /**

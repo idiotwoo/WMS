@@ -1,4 +1,4 @@
-package com.ken.wms.security.Service;
+package com.ken.wms.security.service;
 
 import com.ken.wms.dao.RolePermissionMapper;
 import com.ken.wms.domain.RolePermissionDO;
@@ -58,10 +58,23 @@ public class FilterChainDefinitionMapBuilder {
         if (rolePermissionDOS != null){
             permissionData = new LinkedHashMap<>(rolePermissionDOS.size());
             String url;
+            String role;
             String permission;
             for (RolePermissionDO rolePermissionDO : rolePermissionDOS){
                 url = rolePermissionDO.getUrl();
-                permission = permissionStringBuilder(rolePermissionDO.getRole());
+                role = rolePermissionDO.getRole();
+
+                // 判断该 url 是否已经存在
+                if (permissionData.containsKey(url)){
+                    builder.delete(0, builder.length());
+                    builder.append(permissionData.get(url));
+                    builder.insert(builder.length() - 1, ",");
+                    builder.insert(builder.length() - 1, role);
+                }else{
+                    builder.delete(0, builder.length());
+                    builder.append("authc,roles[").append(role).append("]");
+                }
+                permission = builder.toString();
 //                System.out.println(url + ":" + permission);
                 permissionData.put(url, permission);
             }
@@ -70,13 +83,13 @@ public class FilterChainDefinitionMapBuilder {
         return permissionData;
     }
 
-    /**
-     * 构造角色权限
-     * @param role 角色
-     * @return 返回 roles[role name] 格式的字符串
-     */
-    private String permissionStringBuilder(String role){
-        builder.delete(0, builder.length());
-        return builder.append("authc,roles[").append(role).append("]").toString();
-    }
+//    /**
+//     * 构造角色权限
+//     * @param role 角色
+//     * @return 返回 roles[role name] 格式的字符串
+//     */
+//    private String permissionStringBuilder(String role){
+//        builder.delete(0, builder.length());
+//        return builder.append("authc,roles[").append(role).append("]").toString();
+//    }
 }

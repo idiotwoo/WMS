@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 货物信息管理 Service
+ * 货物信息管理 service
  * @author Ken
  *
  */

@@ -70,6 +70,7 @@
         <property name="unauthorizedUrl" value="/jsp/unauthorized.html"/>
         <property name="filters">
             <util:map>
+                <entry key="roles" value-ref="anyOfRoles"/>
                 <entry key="authc" value-ref="extendFormAuthenticationFilter"/>
             </util:map>
         </property>
@@ -82,11 +83,12 @@
         <property name="rememberMeParam" value="rememberMe"/>
         <property name="loginUrl" value="/login"/>
     </bean>
+    <bean id="anyOfRoles" class="com.ken.wms.security.filter.AnyOfRolesAuthorizationFilter"/>
     <!-- 配置获取 URL 权限信息的 Factory -->
     <bean id="filterChainDefinitionMap" factory-bean="filterChainDefinitionMapBuilder"
           factory-method="builderFilterChainDefinitionMap"/>
     <bean id="filterChainDefinitionMapBuilder"
-          class="com.ken.wms.security.Service.FilterChainDefinitionMapBuilder"/>
+          class="com.ken.wms.security.service.FilterChainDefinitionMapBuilder"/>
 
 
     <!-- ============================================
@@ -118,11 +120,12 @@
             <tx:method name="*"/>
         </tx:attributes>
     </tx:advice>
-    <!--<aop:config>-->
-        <!--<aop:pointcut expression="execution(* com.ken.wms.common.service..*.*(..))"-->
-                      <!--id="pointcut"/>-->
-        <!--<aop:advisor advice-ref="txAdvice" pointcut-ref="pointcut"/>-->
-    <!--</aop:config>-->
+    <aop:config>
+        <aop:pointcut expression="execution(* com.ken.wms.common.service.Interface..*.*(..)) ||
+         execution(* com.ken.wms.security.service.Interface.*.*(..))"
+                      id="pointcut"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="pointcut"/>
+    </aop:config>
 
     <!-- 配置 MyBatis MapperScannerConfigurer -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">

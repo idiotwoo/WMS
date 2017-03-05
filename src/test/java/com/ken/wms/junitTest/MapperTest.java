@@ -1,13 +1,13 @@
 package com.ken.wms.junitTest;
 
-import com.ken.wms.dao.RolesMapper;
+import com.ken.wms.dao.AccessRecordMapper;
 import com.ken.wms.dao.UserPermissionMapper;
+import com.ken.wms.domain.AccessRecordDO;
 import com.ken.wms.domain.RoleDO;
 import com.ken.wms.domain.RolePermissionDO;
-import com.ken.wms.security.Service.Interface.UserInfoService;
+import com.ken.wms.security.service.Interface.UserInfoService;
 import com.ken.wms.dao.RolePermissionMapper;
 import com.ken.wms.dao.UserInfoMapper;
-import com.ken.wms.domain.UserInfoDO;
 import com.ken.wms.domain.UserInfoDTO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Date;
 import java.util.List;
 
 @ContextConfiguration(locations = "classpath:config/SpringApplicationConfiguration.xml")
@@ -30,6 +31,18 @@ public class MapperTest {
     private UserInfoService userInfoService;
     @Autowired
     private UserPermissionMapper userPermissionMapper;
+    @Autowired
+    private AccessRecordMapper accessRecordMapper;
+
+    @Test
+    public void testAccessRecordMapper(){
+        AccessRecordDO accessRecordDO = new AccessRecordDO();
+        accessRecordDO.setUserID(1001);
+        accessRecordDO.setUserName("ken");
+        accessRecordDO.setAccessType("login");
+        accessRecordDO.setAccessTime(new Date());
+        accessRecordMapper.insertAccessRecord(accessRecordDO);
+    }
 
     @Test
     public void testRolesMapper(){
