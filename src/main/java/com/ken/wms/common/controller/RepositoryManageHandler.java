@@ -1,14 +1,15 @@
 package com.ken.wms.common.controller;
 
+import com.ken.wms.common.service.Interface.RepositoryService;
 import com.ken.wms.common.util.Response;
 import com.ken.wms.common.util.ResponseUtil;
 import com.ken.wms.domain.Repository;
+import com.ken.wms.exception.RepositoryManageServiceException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import com.ken.wms.common.service.Interface.RepositoryService;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -47,7 +48,7 @@ public class RepositoryManageHandler {
      * @param limit      分页大小
      * @return 返回所有符合条件的查询结果
      */
-    private Map<String, Object> query(String searchType, String keyword, int offset, int limit) {
+    private Map<String, Object> query(String searchType, String keyword, int offset, int limit) throws RepositoryManageServiceException {
         Map<String, Object> queryResult = null;
 
         switch (searchType) {
@@ -85,7 +86,7 @@ public class RepositoryManageHandler {
     @ResponseBody
     Map<String, Object> getRepositoryList(@RequestParam("searchType") String searchType,
                                           @RequestParam("offset") int offset, @RequestParam("limit") int limit,
-                                          @RequestParam("keyWord") String keyWord) {
+                                          @RequestParam("keyWord") String keyWord) throws RepositoryManageServiceException {
         // 初始化 Response
         Response responseContent = responseUtil.newResponseInstance();
 
@@ -115,7 +116,7 @@ public class RepositoryManageHandler {
     @RequestMapping(value = "getUnassignRepository", method = RequestMethod.GET)
     public
     @ResponseBody
-    Map<String, Object> getUnassignRepository() {
+    Map<String, Object> getUnassignRepository() throws RepositoryManageServiceException {
         // 初始化结果集
         Map<String, Object> resultSet = new HashMap<>();
         List<Repository> data;
@@ -143,7 +144,7 @@ public class RepositoryManageHandler {
     @RequestMapping(value = "addRepository", method = RequestMethod.POST)
     public
     @ResponseBody
-    Map<String, Object> addRepository(@RequestBody Repository repository) {
+    Map<String, Object> addRepository(@RequestBody Repository repository) throws RepositoryManageServiceException {
         // 初始化 Response
         Response responseContent = responseUtil.newResponseInstance();
 
@@ -165,7 +166,7 @@ public class RepositoryManageHandler {
     @RequestMapping(value = "getRepositoryInfo", method = RequestMethod.GET)
     public
     @ResponseBody
-    Map<String, Object> getRepositoryInfo(@RequestParam("repositoryID") Integer repositoryID) {
+    Map<String, Object> getRepositoryInfo(@RequestParam("repositoryID") Integer repositoryID) throws RepositoryManageServiceException {
         // 初始化 Response
         Response responseContent = responseUtil.newResponseInstance();
         String result = Response.RESPONSE_RESULT_ERROR;
@@ -195,7 +196,7 @@ public class RepositoryManageHandler {
     @RequestMapping(value = "updateRepository", method = RequestMethod.POST)
     public
     @ResponseBody
-    Map<String, Object> updateRepository(@RequestBody Repository repository) {
+    Map<String, Object> updateRepository(@RequestBody Repository repository) throws RepositoryManageServiceException {
         // 初始化 Response
         Response responseContent = responseUtil.newResponseInstance();
 
@@ -217,7 +218,7 @@ public class RepositoryManageHandler {
     @RequestMapping(value = "deleteRepository", method = RequestMethod.GET)
     public
     @ResponseBody
-    Map<String, Object> deleteRepository(@RequestParam("repositoryID") Integer repositoryID) {
+    Map<String, Object> deleteRepository(@RequestParam("repositoryID") Integer repositoryID) throws RepositoryManageServiceException {
         // 初始化 Response
         Response responseContent = responseUtil.newResponseInstance();
 
@@ -239,7 +240,7 @@ public class RepositoryManageHandler {
     @RequestMapping(value = "importRepository", method = RequestMethod.POST)
     public
     @ResponseBody
-    Map<String, Object> importRepository(MultipartFile file) {
+    Map<String, Object> importRepository(MultipartFile file) throws RepositoryManageServiceException {
         // 初始化 Response
         Response responseContent = responseUtil.newResponseInstance();
         String result = Response.RESPONSE_RESULT_ERROR;
@@ -273,7 +274,7 @@ public class RepositoryManageHandler {
     @SuppressWarnings("unchecked")
     @RequestMapping(value = "exportRepository", method = RequestMethod.GET)
     public void exportRepository(@RequestParam("searchType") String searchType, @RequestParam("keyWord") String keyWord,
-                                 HttpServletResponse response) {
+                                 HttpServletResponse response) throws RepositoryManageServiceException, IOException {
 
         // 导出文件名
         String fileName = "repositoryInfo.xlsx";
@@ -295,23 +296,18 @@ public class RepositoryManageHandler {
         if (file != null) {
             // 设置响应头
             response.addHeader("Content-Disposition", "attachment;filename=" + fileName);
-            try {
-                FileInputStream inputStream = new FileInputStream(file);
-                OutputStream outputStream = response.getOutputStream();
-                byte[] buffer = new byte[8192];
+            FileInputStream inputStream = new FileInputStream(file);
+            OutputStream outputStream = response.getOutputStream();
+            byte[] buffer = new byte[8192];
 
-                int len;
-                while ((len = inputStream.read(buffer, 0, buffer.length)) > 0) {
-                    outputStream.write(buffer, 0, len);
-                    outputStream.flush();
-                }
-
-                inputStream.close();
-                outputStream.close();
-
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
+            int len;
+            while ((len = inputStream.read(buffer, 0, buffer.length)) > 0) {
+                outputStream.write(buffer, 0, len);
+                outputStream.flush();
             }
+
+            inputStream.close();
+            outputStream.close();
         }
     }
 }

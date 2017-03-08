@@ -21,6 +21,9 @@
                                 expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
     </context:component-scan>
 
+    <!-- 启动@AspectJ支持 -->
+    <!--<aop:aspectj-autoproxy/>-->
+
 
     <!-- ============================================
                 ExcelUtil 配置
@@ -122,9 +125,20 @@
     </tx:advice>
     <aop:config>
         <aop:pointcut expression="execution(* com.ken.wms.common.service.Interface..*.*(..)) ||
-         execution(* com.ken.wms.security.service.Interface.*.*(..))"
+         execution(* com.ken.wms.security.service.Interface..*.*(..))"
                       id="pointcut"/>
-        <aop:advisor advice-ref="txAdvice" pointcut-ref="pointcut"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="pointcut" order="2"/>
+    </aop:config>
+
+
+    <!-- 配置 Service 层日志记录 -->
+    <bean id="serviceLogging" class="com.ken.wms.util.ServiceLogging"/>
+    <aop:config>
+        <aop:pointcut id="serviceMethodLoggingPointcut" expression="execution(* com.ken.wms.common.service.Impl.*.*(..)) ||
+         execution(* com.ken.wms.security.service.Impl.*.*(..))"/>
+        <aop:aspect id="serviceLoggingAspect" ref="serviceLogging">
+            <aop:before method="loggingServiceException" pointcut-ref="serviceMethodLoggingPointcut"/>
+        </aop:aspect>
     </aop:config>
 
     <!-- 配置 MyBatis MapperScannerConfigurer -->

@@ -80,13 +80,13 @@
 				contentType:"application/json",
 				data:JSON.stringify(data),
 				success:function(response){
-					// 接收并处理后端返回的响应
+					// 接收并处理后端返回的响应e'd'
 					if(response.result == "error"){
 						var errorMessage;
 						if(response.errorMsg == "passwordError"){
 							errorMessage = "密码错误";
 							field = "oldPassword"
-						}else if(response.errorMsg == "passwordUnmatch"){
+						}else if(response.errorMsg == "passwordUnmatched"){
 							errorMessage = "密码不一致";
 							field = "newPassword"
 						}

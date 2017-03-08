@@ -2,8 +2,8 @@ package com.ken.wms.security.controller;
 
 import com.ken.wms.common.util.Response;
 import com.ken.wms.common.util.ResponseUtil;
+import com.ken.wms.exception.UserAccountServiceException;
 import com.ken.wms.security.service.Interface.AccountService;
-import com.ken.wms.security.service.execption.AccountServiceException;
 import com.ken.wms.security.util.CheckCodeGenerator;
 import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -27,6 +27,7 @@ import java.util.Map;
 
 /**
  * 用户账户请求 Handler
+ *
  * @author Ken
  * @since 017/2/26.
  */
@@ -49,11 +50,14 @@ public class AccountHandler {
 
     /**
      * 登陆账户
+     *
      * @param user 账户信息
      * @return 返回一个 Map 对象，其中包含登陆操作的结果
      */
     @RequestMapping(value = "login", method = RequestMethod.POST)
-    public @ResponseBody Map<String, Object> login(@RequestBody Map<String, Object> user){
+    public
+    @ResponseBody
+    Map<String, Object> login(@RequestBody Map<String, Object> user) {
         // 初始化 Response
         Response response = responseUtil.newResponseInstance();
         String result = Response.RESPONSE_RESULT_ERROR;
@@ -63,24 +67,24 @@ public class AccountHandler {
         Subject currentUser = SecurityUtils.getSubject();
 
         // 判断用户是否已经登陆
-        if (currentUser != null && !currentUser.isAuthenticated()){
+        if (currentUser != null && !currentUser.isAuthenticated()) {
             String id = (String) user.get(USER_ID);
             String password = (String) user.get(USER_PASSWORD);
-            UsernamePasswordToken token = new UsernamePasswordToken(id,password);
+            UsernamePasswordToken token = new UsernamePasswordToken(id, password);
 
             // 执行登陆操作
-            try{
+            try {
                 currentUser.login(token);
                 result = Response.RESPONSE_RESULT_SUCCESS;
-            }catch (UnknownAccountException e){
+            } catch (UnknownAccountException e) {
                 errorMsg = "unknownAccount";
-            }catch (IncorrectCredentialsException e){
+            } catch (IncorrectCredentialsException e) {
                 errorMsg = "incorrectCredentials";
-            }catch (AuthenticationException e){
+            } catch (AuthenticationException e) {
                 errorMsg = "authenticationError";
 //                e.printStackTrace();
             }
-        }else{
+        } else {
             errorMsg = "already login";
         }
 
@@ -92,19 +96,22 @@ public class AccountHandler {
 
     /**
      * 注销账户
+     *
      * @return 返回一个 Map 对象，键值为 result 的内容代表注销操作的结果，值为 success 或 error
      */
     @RequestMapping(value = "logout", method = RequestMethod.GET)
-    public @ResponseBody Map<String, Object> logout(){
+    public
+    @ResponseBody
+    Map<String, Object> logout() {
         // 初始化 Response
         Response response = responseUtil.newResponseInstance();
 
         Subject currentSubject = SecurityUtils.getSubject();
-        if (currentSubject != null && currentSubject.isAuthenticated()){
+        if (currentSubject != null && currentSubject.isAuthenticated()) {
             // 执行账户注销操作
             currentSubject.logout();
             response.setResponseResult(Response.RESPONSE_RESULT_SUCCESS);
-        }else{
+        } else {
             response.setResponseResult(Response.RESPONSE_RESULT_ERROR);
             response.setResponseMsg("did not login");
         }
@@ -114,14 +121,17 @@ public class AccountHandler {
 
     /**
      * 修改账户密码
+     *
      * @param passwordInfo 密码信息
-     * @param request 请求
+     * @param request      请求
      * @return 返回一个 Map 对象，其中键值为 result 代表修改密码操作的结果，
      * 值为 success 或 error；键值为 msg 代表需要返回给用户的信息
      */
     @RequestMapping(value = "passwordModify", method = RequestMethod.POST)
-    public @ResponseBody Map<String, Object> passwordModify(@RequestBody Map<String, Object> passwordInfo,
-                                                            HttpServletRequest request){
+    public
+    @ResponseBody
+    Map<String, Object> passwordModify(@RequestBody Map<String, Object> passwordInfo,
+                                       HttpServletRequest request) {
         //初始化 Response
         Response responseContent = responseUtil.newResponseInstance();
 
@@ -137,14 +147,10 @@ public class AccountHandler {
             accountService.passwordModify(userID, passwordInfo);
 
             result = Response.RESPONSE_RESULT_SUCCESS;
-        } catch (NullPointerException e) {
-            log.debug("The passwordModification object or userID is null");
-        } catch (AccountServiceException e) {
-            errorMsg = e.getErrorType();
-            log.debug("error type:" + errorMsg);
+        } catch (UserAccountServiceException e) {
+            errorMsg = e.getExceptionDesc();
         }
-
-        // 设置 Resposne
+        // 设置 Response
         responseContent.setResponseResult(result);
         responseContent.setResponseMsg(errorMsg);
         return responseContent.generateResponse();

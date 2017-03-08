@@ -1,5 +1,7 @@
 package com.ken.wms.common.service.Interface;
 
+import com.ken.wms.exception.StockRecordManageServiceException;
+
 /**
  * 出入库管理
  * @author Ken
@@ -15,7 +17,7 @@ public interface StockRecordManageService {
 	 * @param number 入库数量
 	 * @return 返回一个boolean 值，若值为true表示入库成功，否则表示入库失败
 	 */
-	public boolean stockInOperation(Integer supplierID, Integer goodsID, Integer repositoryID, long number, String personInCharge);
+	public boolean stockInOperation(Integer supplierID, Integer goodsID, Integer repositoryID, long number, String personInCharge) throws StockRecordManageServiceException;
 	
 	/**
 	 * 货物出库操作
@@ -25,5 +27,5 @@ public interface StockRecordManageService {
 	 * @param number 出库数量
 	 * @return 返回一个boolean值，若值为true表示出库成功，否则表示出库失败
 	 */
-	public boolean stockOutOperation(Integer customerID, Integer goodsID, Integer repositoryID, long number, String personInCharge);
+	public boolean stockOutOperation(Integer customerID, Integer goodsID, Integer repositoryID, long number, String personInCharge) throws StockRecordManageServiceException;
 }

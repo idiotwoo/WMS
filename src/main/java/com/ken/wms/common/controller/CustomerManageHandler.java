@@ -1,10 +1,11 @@
 package com.ken.wms.common.controller;
 
+import com.ken.wms.common.service.Interface.CustomerManageService;
 import com.ken.wms.common.util.Response;
 import com.ken.wms.common.util.ResponseUtil;
 import com.ken.wms.domain.Customer;
 import com.ken.wms.domain.Supplier;
-import com.ken.wms.common.service.Interface.CustomerManageService;
+import com.ken.wms.exception.CustomerManageServiceException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -46,7 +47,7 @@ public class CustomerManageHandler {
      * @param limit      分页大小
      * @return 返回指定条件查询的结果
      */
-    private Map<String, Object> query(String searchType, String keyWord, int offset, int limit) {
+    private Map<String, Object> query(String searchType, String keyWord, int offset, int limit) throws CustomerManageServiceException {
         Map<String, Object> queryResult = null;
 
         switch (searchType) {
@@ -82,7 +83,7 @@ public class CustomerManageHandler {
     @ResponseBody
     Map<String, Object> getCustomerList(@RequestParam("searchType") String searchType,
                                         @RequestParam("offset") int offset, @RequestParam("limit") int limit,
-                                        @RequestParam("keyWord") String keyWord) {
+                                        @RequestParam("keyWord") String keyWord) throws CustomerManageServiceException {
         // 初始化 Response
         Response responseContent = responseUtil.newResponseInstance();
 
@@ -112,7 +113,7 @@ public class CustomerManageHandler {
     @RequestMapping(value = "addCustomer", method = RequestMethod.POST)
     public
     @ResponseBody
-    Map<String, Object> addCustomer(@RequestBody Customer customer) {
+    Map<String, Object> addCustomer(@RequestBody Customer customer) throws CustomerManageServiceException {
         // 初始化 Response
         Response responseContent = responseUtil.newResponseInstance();
 
@@ -133,7 +134,7 @@ public class CustomerManageHandler {
     @RequestMapping(value = "getCustomerInfo", method = RequestMethod.GET)
     public
     @ResponseBody
-    Map<String, Object> getCustomerInfo(@RequestParam("customerID") int customerID) {
+    Map<String, Object> getCustomerInfo(@RequestParam("customerID") int customerID) throws CustomerManageServiceException {
         // 初始化 Response
         Response responseContent = responseUtil.newResponseInstance();
         String result = Response.RESPONSE_RESULT_ERROR;
@@ -164,7 +165,7 @@ public class CustomerManageHandler {
     @RequestMapping(value = "updateCustomer", method = RequestMethod.POST)
     public
     @ResponseBody
-    Map<String, Object> updateCustomer(@RequestBody Customer customer) {
+    Map<String, Object> updateCustomer(@RequestBody Customer customer) throws CustomerManageServiceException {
         // 初始化 Response
         Response responseContent = responseUtil.newResponseInstance();
 
@@ -184,7 +185,7 @@ public class CustomerManageHandler {
     @RequestMapping(value = "deleteCustomer", method = RequestMethod.GET)
     public
     @ResponseBody
-    Map<String, Object> deleteCustomer(@RequestParam("customerID") int customerID) {
+    Map<String, Object> deleteCustomer(@RequestParam("customerID") int customerID) throws CustomerManageServiceException {
         // 初始化 Response
         Response responseContent = responseUtil.newResponseInstance();
 
@@ -205,7 +206,7 @@ public class CustomerManageHandler {
     @RequestMapping(value = "importCustomer", method = RequestMethod.POST)
     public
     @ResponseBody
-    Map<String, Object> importCustomer(@RequestParam("file") MultipartFile file) {
+    Map<String, Object> importCustomer(@RequestParam("file") MultipartFile file) throws CustomerManageServiceException {
         // 初始化 Response
         Response responseContent = responseUtil.newResponseInstance();
         String result = Response.RESPONSE_RESULT_SUCCESS;
@@ -232,12 +233,12 @@ public class CustomerManageHandler {
      *
      * @param searchType 查找类型
      * @param keyWord    查找关键字
-     * @param response HttpServletResponse
+     * @param response   HttpServletResponse
      */
     @SuppressWarnings("unchecked")
     @RequestMapping(value = "exportCustomer", method = RequestMethod.GET)
     public void exportCustomer(@RequestParam("searchType") String searchType, @RequestParam("keyWord") String keyWord,
-                               HttpServletResponse response) {
+                               HttpServletResponse response) throws CustomerManageServiceException, IOException {
 
         String fileName = "customerInfo.xlsx";
 
@@ -255,23 +256,19 @@ public class CustomerManageHandler {
         if (file != null) {
             // 设置响应头
             response.addHeader("Content-Disposition", "attachment;filename=" + fileName);
-            try {
-                FileInputStream inputStream = new FileInputStream(file);
-                OutputStream outputStream = response.getOutputStream();
-                byte[] buffer = new byte[8192];
+            FileInputStream inputStream = new FileInputStream(file);
+            OutputStream outputStream = response.getOutputStream();
+            byte[] buffer = new byte[8192];
 
-                int len;
-                while ((len = inputStream.read(buffer, 0, buffer.length)) > 0) {
-                    outputStream.write(buffer, 0, len);
-                    outputStream.flush();
-                }
-
-                inputStream.close();
-                outputStream.close();
-
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
+            int len;
+            while ((len = inputStream.read(buffer, 0, buffer.length)) > 0) {
+                outputStream.write(buffer, 0, len);
+                outputStream.flush();
             }
+
+            inputStream.close();
+            outputStream.close();
+
         }
     }
 }

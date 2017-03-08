@@ -23,26 +23,6 @@
 	<mvc:default-servlet-handler/>
 	<mvc:annotation-driven/>
 	
-	<!-- 配置自定义拦截器 -->
-	<!--<mvc:interceptors>-->
-		<!--&lt;!&ndash; 自定义用户授权认证拦截器 &ndash;&gt;-->
-		<!--<mvc:interceptor>-->
-			<!--&lt;!&ndash; -->
-			<!--<mvc:mapping path="/account/security/**"/>-->
-			<!--<mvc:mapping path="/commonsAdmin/**"/>-->
-			<!--<mvc:mapping path="/systemAdmin/**"/>-->
-			 <!--&ndash;&gt;-->
-			 <!--<mvc:mapping path="/**"/>-->
-			 <!--<mvc:exclude-mapping path="/css/**"/>-->
-			 <!--<mvc:exclude-mapping path="/js/**"/>-->
-			 <!--<mvc:exclude-mapping path="/fonts/**"/>-->
-			 <!--<mvc:exclude-mapping path="/media/**"/>-->
-			 <!--<mvc:exclude-mapping path="/pagecomponent/**"/>-->
-			 <!--<mvc:exclude-mapping path="/commons/**"/>-->
-			<!--<bean class="com.ken.wms.security.SecurityInterceptor"/>-->
-		<!--</mvc:interceptor>-->
-	<!--</mvc:interceptors>-->
-	
 	<!-- 配置 MultipartResolver -->
 	<bean id="multipartResolver" 
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">

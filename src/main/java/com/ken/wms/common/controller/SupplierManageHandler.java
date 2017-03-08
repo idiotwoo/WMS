@@ -1,9 +1,10 @@
 package com.ken.wms.common.controller;
 
+import com.ken.wms.common.service.Interface.SupplierManageService;
 import com.ken.wms.common.util.Response;
 import com.ken.wms.common.util.ResponseUtil;
 import com.ken.wms.domain.Supplier;
-import com.ken.wms.common.service.Interface.SupplierManageService;
+import com.ken.wms.exception.SupplierManageServiceException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -45,7 +46,7 @@ public class SupplierManageHandler {
      * @param limit      分页大小
      * @return 返回所有符合条件的记录
      */
-    private Map<String, Object> query(String searchType, String keyWord, int offset, int limit) {
+    private Map<String, Object> query(String searchType, String keyWord, int offset, int limit) throws SupplierManageServiceException {
         Map<String, Object> queryResult = null;
 
         switch (searchType) {
@@ -83,7 +84,7 @@ public class SupplierManageHandler {
     @ResponseBody
     Map<String, Object> getSupplierList(@RequestParam("searchType") String searchType,
                                         @RequestParam("offset") int offset, @RequestParam("limit") int limit,
-                                        @RequestParam("keyWord") String keyWord) {
+                                        @RequestParam("keyWord") String keyWord) throws SupplierManageServiceException {
         // 初始化 Response
         Response responseContent = responseUtil.newResponseInstance();
 
@@ -112,7 +113,7 @@ public class SupplierManageHandler {
     @RequestMapping(value = "addSupplier", method = RequestMethod.POST)
     public
     @ResponseBody
-    Map<String, Object> addSupplier(@RequestBody Supplier supplier) {
+    Map<String, Object> addSupplier(@RequestBody Supplier supplier) throws SupplierManageServiceException {
         // 初始化 Response
         Response responseContent = responseUtil.newResponseInstance();
 
@@ -134,7 +135,7 @@ public class SupplierManageHandler {
     @RequestMapping(value = "getSupplierInfo", method = RequestMethod.GET)
     public
     @ResponseBody
-    Map<String, Object> getSupplierInfo(@RequestParam("supplierID") int supplierID) {
+    Map<String, Object> getSupplierInfo(@RequestParam("supplierID") int supplierID) throws SupplierManageServiceException {
         // 初始化 Response
         Response responseContent = responseUtil.newResponseInstance();
         String result = Response.RESPONSE_RESULT_ERROR;
@@ -163,7 +164,7 @@ public class SupplierManageHandler {
     @RequestMapping(value = "updateSupplier", method = RequestMethod.POST)
     public
     @ResponseBody
-    Map<String, Object> updateSupplier(@RequestBody Supplier supplier) {
+    Map<String, Object> updateSupplier(@RequestBody Supplier supplier) throws SupplierManageServiceException {
         // 初始化 Response
         Response responseContent = responseUtil.newResponseInstance();
 
@@ -239,7 +240,7 @@ public class SupplierManageHandler {
     @SuppressWarnings("unchecked")
     @RequestMapping(value = "exportSupplier", method = RequestMethod.GET)
     public void exportSupplier(@RequestParam("searchType") String searchType, @RequestParam("keyWord") String keyWord,
-                               HttpServletResponse response) {
+                               HttpServletResponse response) throws SupplierManageServiceException, IOException {
 
         String fileName = "supplierInfo.xlsx";
 
@@ -259,23 +260,18 @@ public class SupplierManageHandler {
         if (file != null) {
             // 设置响应头
             response.addHeader("Content-Disposition", "attachment;filename=" + fileName);
-            try {
-                FileInputStream inputStream = new FileInputStream(file);
-                OutputStream outputStream = response.getOutputStream();
-                byte[] buffer = new byte[8192];
+            FileInputStream inputStream = new FileInputStream(file);
+            OutputStream outputStream = response.getOutputStream();
+            byte[] buffer = new byte[8192];
 
-                int len;
-                while ((len = inputStream.read(buffer, 0, buffer.length)) > 0) {
-                    outputStream.write(buffer, 0, len);
-                    outputStream.flush();
-                }
-
-                inputStream.close();
-                outputStream.close();
-
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
+            int len;
+            while ((len = inputStream.read(buffer, 0, buffer.length)) > 0) {
+                outputStream.write(buffer, 0, len);
+                outputStream.flush();
             }
+
+            inputStream.close();
+            outputStream.close();
         }
     }
 }

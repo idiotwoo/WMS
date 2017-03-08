@@ -1,9 +1,10 @@
 package com.ken.wms.common.controller;
 
+import com.ken.wms.common.service.Interface.RepositoryAdminManageService;
 import com.ken.wms.common.util.Response;
 import com.ken.wms.common.util.ResponseUtil;
 import com.ken.wms.domain.RepositoryAdmin;
-import com.ken.wms.common.service.Interface.RepositoryAdminManageService;
+import com.ken.wms.exception.RepositoryAdminManageServiceException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -48,7 +49,7 @@ public class RepositoryAdminManageHandler {
      * @param limit      分页大小
      * @return 返回所有符合条件的记录
      */
-    private Map<String, Object> query(String keyWord, String searchType, int offset, int limit) {
+    private Map<String, Object> query(String keyWord, String searchType, int offset, int limit) throws RepositoryAdminManageServiceException {
         Map<String, Object> queryResult = null;
 
         // query
@@ -90,7 +91,7 @@ public class RepositoryAdminManageHandler {
     @ResponseBody
     Map<String, Object> getRepositoryAdmin(@RequestParam("searchType") String searchType,
                                            @RequestParam("keyWord") String keyWord, @RequestParam("offset") int offset,
-                                           @RequestParam("limit") int limit) {
+                                           @RequestParam("limit") int limit) throws RepositoryAdminManageServiceException {
         // 初始化 Response
         Response responseContent = responseUtil.newResponseInstance();
 
@@ -120,7 +121,7 @@ public class RepositoryAdminManageHandler {
     @RequestMapping(value = "addRepositoryAdmin", method = RequestMethod.POST)
     public
     @ResponseBody
-    Map<String, Object> addRepositoryAdmin(@RequestBody RepositoryAdmin repositoryAdmin) {
+    Map<String, Object> addRepositoryAdmin(@RequestBody RepositoryAdmin repositoryAdmin) throws RepositoryAdminManageServiceException {
         // 初始化 Response
         Response responseContent = responseUtil.newResponseInstance();
 
@@ -143,7 +144,7 @@ public class RepositoryAdminManageHandler {
     @RequestMapping(value = "getRepositoryAdminInfo", method = RequestMethod.GET)
     public
     @ResponseBody
-    Map<String, Object> getRepositoryAdminInfo(Integer repositoryAdminID) {
+    Map<String, Object> getRepositoryAdminInfo(Integer repositoryAdminID) throws RepositoryAdminManageServiceException {
         // 初始化 Response
         Response responseContent = responseUtil.newResponseInstance();
         String result = Response.RESPONSE_RESULT_ERROR;
@@ -172,7 +173,7 @@ public class RepositoryAdminManageHandler {
     @RequestMapping(value = "updateRepositoryAdmin", method = RequestMethod.POST)
     public
     @ResponseBody
-    Map<String, Object> updateRepositoryAdmin(@RequestBody RepositoryAdmin repositoryAdmin) {
+    Map<String, Object> updateRepositoryAdmin(@RequestBody RepositoryAdmin repositoryAdmin) throws RepositoryAdminManageServiceException {
         // 初始化 Response
         Response responseContent = responseUtil.newResponseInstance();
 
@@ -195,7 +196,7 @@ public class RepositoryAdminManageHandler {
     @RequestMapping(value = "deleteRepositoryAdmin", method = RequestMethod.GET)
     public
     @ResponseBody
-    Map<String, Object> deleteRepositoryAdmin(Integer repositoryAdminID) {
+    Map<String, Object> deleteRepositoryAdmin(Integer repositoryAdminID) throws RepositoryAdminManageServiceException {
         // 初始化 Response
         Response responseContent = responseUtil.newResponseInstance();
 
@@ -218,7 +219,7 @@ public class RepositoryAdminManageHandler {
     @RequestMapping(value = "importRepositoryAdmin", method = RequestMethod.POST)
     public
     @ResponseBody
-    Map<String, Object> importRepositoryAdmin(MultipartFile file) {
+    Map<String, Object> importRepositoryAdmin(MultipartFile file) throws RepositoryAdminManageServiceException {
         // 初始化 Response
         Response responseContent = responseUtil.newResponseInstance();
         String result = Response.RESPONSE_RESULT_ERROR;
@@ -252,7 +253,7 @@ public class RepositoryAdminManageHandler {
     @SuppressWarnings("unchecked")
     @RequestMapping(value = "exportRepositoryAdmin", method = RequestMethod.GET)
     public void exportRepositoryAdmin(@RequestParam("searchType") String searchType,
-                                      @RequestParam("keyWord") String keyWord, HttpServletResponse response) {
+                                      @RequestParam("keyWord") String keyWord, HttpServletResponse response) throws RepositoryAdminManageServiceException, IOException {
 
         // 导出文件名
         String fileName = "repositoryAdminInfo.xlsx";
@@ -273,23 +274,18 @@ public class RepositoryAdminManageHandler {
         if (file != null) {
             // 设置响应头
             response.addHeader("Content-Disposition", "attachment;filename=" + fileName);
-            try {
-                FileInputStream inputStream = new FileInputStream(file);
-                OutputStream outputStream = response.getOutputStream();
-                byte[] buffer = new byte[8192];
+            FileInputStream inputStream = new FileInputStream(file);
+            OutputStream outputStream = response.getOutputStream();
+            byte[] buffer = new byte[8192];
 
-                int len;
-                while ((len = inputStream.read(buffer, 0, buffer.length)) > 0) {
-                    outputStream.write(buffer, 0, len);
-                    outputStream.flush();
-                }
-
-                inputStream.close();
-                outputStream.close();
-
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
+            int len;
+            while ((len = inputStream.read(buffer, 0, buffer.length)) > 0) {
+                outputStream.write(buffer, 0, len);
+                outputStream.flush();
             }
+
+            inputStream.close();
+            outputStream.close();
         }
     }
 }

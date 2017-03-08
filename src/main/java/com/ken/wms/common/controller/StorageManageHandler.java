@@ -1,10 +1,12 @@
 package com.ken.wms.common.controller;
 
+import com.ken.wms.common.service.Interface.StockRecordManageService;
+import com.ken.wms.common.service.Interface.StorageManageService;
 import com.ken.wms.common.util.Response;
 import com.ken.wms.common.util.ResponseUtil;
 import com.ken.wms.domain.Storage;
-import com.ken.wms.common.service.Interface.StockRecordManageService;
-import com.ken.wms.common.service.Interface.StorageManageService;
+import com.ken.wms.exception.StockRecordManageServiceException;
+import com.ken.wms.exception.StorageManageServiceException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -54,7 +56,7 @@ public class StorageManageHandler {
      * @return 结果的一个Map，其中： key为 data 的代表记录数据；key 为 total 代表结果记录的数量
      */
     private Map<String, Object> query(String searchType, String keyword, String repositoryBelong, int offset,
-                                      int limit) {
+                                      int limit) throws StorageManageServiceException {
         Map<String, Object> queryResult = null;
 
         switch (searchType) {
@@ -114,7 +116,7 @@ public class StorageManageHandler {
     @ResponseBody
     Map<String, Object> getStorageListWithRepoID(@RequestParam("keyword") String keyword,
                                                  @RequestParam("searchType") String searchType, @RequestParam("repositoryBelong") String repositoryBelong,
-                                                 @RequestParam("offset") int offset, @RequestParam("limit") int limit) {
+                                                 @RequestParam("offset") int offset, @RequestParam("limit") int limit) throws StorageManageServiceException {
         // 初始化 Response
         Response responseContent = responseUtil.newResponseInstance();
 
@@ -151,7 +153,7 @@ public class StorageManageHandler {
     @ResponseBody
     Map<String, Object> getStorageList(@RequestParam("keyword") String keyword,
                                        @RequestParam("searchType") String searchType, @RequestParam("offset") int offset,
-                                       @RequestParam("limit") int limit, HttpServletRequest request) {
+                                       @RequestParam("limit") int limit, HttpServletRequest request) throws StorageManageServiceException {
         // 初始化 Response
         Response responseContent = responseUtil.newResponseInstance();
 
@@ -192,7 +194,7 @@ public class StorageManageHandler {
     @ResponseBody
     Map<String, Object> increaseStorage(@RequestParam("supplierID") Integer supplierID,
                                         @RequestParam("goodsID") Integer goodsID, @RequestParam("repositoryID") Integer repositoryID,
-                                        @RequestParam("number") long number, HttpServletRequest request) {
+                                        @RequestParam("number") long number, HttpServletRequest request) throws StockRecordManageServiceException {
         // 初始化 Response
         Response responseContent = responseUtil.newResponseInstance();
 
@@ -222,7 +224,7 @@ public class StorageManageHandler {
     @ResponseBody
     Map<String, Object> decreaseStorage(@RequestParam("customerID") Integer customerID,
                                         @RequestParam("goodsID") Integer goodsID, @RequestParam("repositoryID") Integer repositoryID,
-                                        @RequestParam("number") long number, HttpServletRequest request) {
+                                        @RequestParam("number") long number, HttpServletRequest request) throws StockRecordManageServiceException {
         // 初始化 Response
         Response responseContent = responseUtil.newResponseInstance();
 
@@ -245,7 +247,7 @@ public class StorageManageHandler {
     @RequestMapping(value = "addStorageRecord", method = RequestMethod.POST)
     public
     @ResponseBody
-    Map<String, Object> addStorageRecord(@RequestBody Map<String, Object> params) {
+    Map<String, Object> addStorageRecord(@RequestBody Map<String, Object> params) throws StorageManageServiceException {
         // 初始化 Response
         Response responseContent = responseUtil.newResponseInstance();
         String isSuccess = Response.RESPONSE_RESULT_ERROR;
@@ -280,7 +282,7 @@ public class StorageManageHandler {
     @RequestMapping(value = "updateStorageRecord", method = RequestMethod.POST)
     public
     @ResponseBody
-    Map<String, Object> updateStorageRecord(@RequestBody Map<String, Object> params) {
+    Map<String, Object> updateStorageRecord(@RequestBody Map<String, Object> params) throws StorageManageServiceException {
         // 初始化 Response
         Response responseContent = responseUtil.newResponseInstance();
         boolean isAvailable = true;
@@ -318,7 +320,7 @@ public class StorageManageHandler {
     public
     @ResponseBody
     Map<String, Object> deleteStorageRecord(@RequestParam("goodsID") String goodsID,
-                                            @RequestParam("repositoryID") String repositoryID) {
+                                            @RequestParam("repositoryID") String repositoryID) throws StorageManageServiceException {
         // 初始化 Response
         Response responseContent = responseUtil.newResponseInstance();
 
@@ -350,7 +352,7 @@ public class StorageManageHandler {
     @RequestMapping(value = "importStorageRecord", method = RequestMethod.POST)
     public
     @ResponseBody
-    Map<String, Object> importStorageRecord(@RequestParam("file") MultipartFile file) {
+    Map<String, Object> importStorageRecord(@RequestParam("file") MultipartFile file) throws StorageManageServiceException {
         // 初始化 Response
         Response responseContent = responseUtil.newResponseInstance();
         String result = Response.RESPONSE_RESULT_ERROR;
@@ -388,7 +390,7 @@ public class StorageManageHandler {
     public void exportStorageRecord(@RequestParam("searchType") String searchType,
                                     @RequestParam("keyword") String keyword,
                                     @RequestParam(value = "repositoryBelong", required = false) String repositoryBelong,
-                                    HttpServletRequest request, HttpServletResponse response) {
+                                    HttpServletRequest request, HttpServletResponse response) throws StorageManageServiceException, IOException {
         String fileName = "storageRecord.xlsx";
 
         HttpSession session = request.getSession();
@@ -405,23 +407,19 @@ public class StorageManageHandler {
         if (file != null) {
             // 设置响应头
             response.addHeader("Content-Disposition", "attachment;filename=" + fileName);
-            try {
-                FileInputStream inputStream = new FileInputStream(file);
-                OutputStream outputStream = response.getOutputStream();
-                byte[] buffer = new byte[8192];
+            FileInputStream inputStream = new FileInputStream(file);
+            OutputStream outputStream = response.getOutputStream();
+            byte[] buffer = new byte[8192];
 
-                int len;
-                while ((len = inputStream.read(buffer, 0, buffer.length)) > 0) {
-                    outputStream.write(buffer, 0, len);
-                    outputStream.flush();
-                }
-
-                inputStream.close();
-                outputStream.close();
-
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
+            int len;
+            while ((len = inputStream.read(buffer, 0, buffer.length)) > 0) {
+                outputStream.write(buffer, 0, len);
+                outputStream.flush();
             }
+
+            inputStream.close();
+            outputStream.close();
+
         }
     }
 }

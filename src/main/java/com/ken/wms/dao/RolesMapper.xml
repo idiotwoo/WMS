@@ -5,4 +5,12 @@
 
 <mapper namespace="com.ken.wms.dao.RolesMapper">
 
+    <select id="getRoleID" resultType="java.lang.Integer">
+        select
+            ROLE_ID
+        from
+            wms_roles
+        where
+            ROLE_NAME = #{roleName}
+    </select>
 </mapper>

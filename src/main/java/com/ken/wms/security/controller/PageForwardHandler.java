@@ -17,10 +17,11 @@ public class PageForwardHandler {
 
     /**
      * 内部重定向到登陆页面
+     *
      * @return 跳转的 jsp
      */
     @RequestMapping("login")
-    public String loginPageForward(){
+    public String loginPageForward() {
         // 判断但钱用户是否已经登陆
         Subject currentSubject = SecurityUtils.getSubject();
         if (!currentSubject.isAuthenticated())
@@ -31,6 +32,7 @@ public class PageForwardHandler {
 
     /**
      * 内部重定向到主页面
+     *
      * @return 跳转的 jsp
      */
     @RequestMapping("")

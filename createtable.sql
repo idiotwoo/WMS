@@ -176,7 +176,7 @@ create table wms_role_action
 
 create table wms_access_record
 (
-	RECORD_ID int primary key,
+	RECORD_ID int auto_increment key,
     USER_ID int not null,
     USER_NAME varchar(50) not null,
     ACCESS_TYPE varchar(30) not null,
