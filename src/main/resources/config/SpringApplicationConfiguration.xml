@@ -137,7 +137,9 @@
         <aop:pointcut id="serviceMethodLoggingPointcut" expression="execution(* com.ken.wms.common.service.Impl.*.*(..)) ||
          execution(* com.ken.wms.security.service.Impl.*.*(..))"/>
         <aop:aspect id="serviceLoggingAspect" ref="serviceLogging">
-            <aop:before method="loggingServiceException" pointcut-ref="serviceMethodLoggingPointcut"/>
+            <aop:after-throwing method="loggingServiceException" pointcut-ref="serviceMethodLoggingPointcut"
+                                throwing="throwable"/>
+            <aop:before method="loggingMethodInvoke" pointcut-ref="serviceMethodLoggingPointcut"/>
         </aop:aspect>
     </aop:config>
 

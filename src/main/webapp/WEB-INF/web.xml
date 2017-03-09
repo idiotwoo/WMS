@@ -32,11 +32,6 @@
         <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
     </listener>
 
-    <!-- 配置session LIstener -->
-    <!--<listener>-->
-        <!--<listener-class>com.ken.wms.security.listener.AccountSessionListener</listener-class>-->
-    <!--</listener>-->
-
     <!-- 配置 Shiro -->
     <!--Shiro filter is define in the spring application context -->
     <filter>
@@ -67,6 +62,10 @@
     <error-page>
         <error-code>404</error-code>
         <location>/errorPage/404Error.html</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/errorPage/500Error.html</location>
     </error-page>
 
 </web-app>
