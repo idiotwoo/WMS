@@ -16,7 +16,7 @@ import java.util.Date;
 
 /**
  * 用户Session监听器
- * 当用户session注销时，等级用户账户登出的时间
+ * 当用户session注销时，记录用户账户登出的时间
  *
  * @author Ken
  * @since 2017/3/4.
@@ -49,6 +49,7 @@ public class AccountSessionListener implements HttpSessionListener, ApplicationC
             accessRecord.setUserName((String) session.getAttribute("userName"));
             accessRecord.setAccessType("登出");
             accessRecord.setAccessTime(new Date());
+            accessRecord.setAccessIP("-");
 
             accessRecordMapper.insertAccessRecord(accessRecord);
         }

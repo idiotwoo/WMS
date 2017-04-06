@@ -5,7 +5,7 @@
 
 <mapper namespace="com.ken.wms.dao.StockOutMapper">
 	
-	<resultMap type="com.ken.wms.domain.StockOut" id="stockOut">
+	<resultMap type="com.ken.wms.domain.StockOutDO" id="stockOutDO">
 		<id property="id" column="STOCKOUT_ID"/>
 		<result property="customerID" column="STOCKOUT_CUSTOMER_ID"/>
 		<result property="customerName" column="STOCKOUT_CUSTOMER_NAME"/>
@@ -17,7 +17,7 @@
 		<result property="repositoryID" column="STOCKOUT_REPOSITORY_ID"/>
 	</resultMap>
 	
-	<select id="selectAll" resultMap="stockOut">
+	<select id="selectAll" resultMap="stockOutDO">
 		select
 			r.RECORD_ID as STOCKOUT_ID,
 			r.RECORD_CUSTOMERID as STOCKOUT_CUSTOMER_ID,
@@ -35,7 +35,7 @@
 			r.RECORD_GOODID = g.GOOD_ID
 	</select>
 	
-	<select id="selectByCustomerId" resultMap="stockOut">
+	<select id="selectByCustomerId" resultMap="stockOutDO">
 		select
 			r.RECORD_ID as STOCKOUT_ID,
 			r.RECORD_CUSTOMERID as STOCKOUT_CUSTOMER_ID,
@@ -54,7 +54,7 @@
 			r.RECORD_CUSTOMERID = #{customerId}
 	</select>
 	
-	<select id="selectByGoodId" resultMap="stockOut">
+	<select id="selectByGoodId" resultMap="stockOutDO">
 		select
 			r.RECORD_ID as STOCKOUT_ID,
 			r.RECORD_CUSTOMERID as STOCKOUT_CUSTOMER_ID,
@@ -73,7 +73,7 @@
 			r.RECORD_GOODID = #{goodId}
 	</select>
 	
-	<select id="selectById" resultMap="stockOut">
+	<select id="selectById" resultMap="stockOutDO">
 		select
 			r.RECORD_ID as STOCKOUT_ID,
 			r.RECORD_CUSTOMERID as STOCKOUT_CUSTOMER_ID,
@@ -92,7 +92,7 @@
 			r.RECORD_ID = #{id}
 	</select>
 	
-	<select id="selectByRepositoryID" resultMap="stockOut">
+	<select id="selectByRepositoryID" resultMap="stockOutDO">
 		select
 			r.RECORD_ID as STOCKOUT_ID,
 			r.RECORD_CUSTOMERID as STOCKOUT_CUSTOMER_ID,
@@ -109,6 +109,33 @@
 			r.RECORD_CUSTOMERID = c.CUSTOMER_ID and
 			r.RECORD_GOODID = g.GOOD_ID and
 			r.RECORD_REPOSITORYID = 1007
+	</select>
+
+	<select id="selectByRepositoryIDAndDate" resultMap="stockOutDO">
+        select
+            r.RECORD_ID as STOCKOUT_ID,
+            r.RECORD_CUSTOMERID as STOCKOUT_CUSTOMER_ID,
+            c.CUSTOMER_NAME as STOCKOUT_CUSTOMER_NAME,
+            r.RECORD_GOODID as STOCKOUT_GOOD_ID,
+            g.GOOD_NAME as STOCKOUT_GOOD_NAME,
+            r.RECORD_NUMBER as STOCKOUT_NUMBER,
+            r.RECORD_TIME as STOCKOUT_TIME,
+            r.RECORD_PERSON as STOCKOUT_PERSON,
+            r.RECORD_REPOSITORYID as STOCKOUT_REPOSITORY_ID
+        from
+            wms_record_out r,wms_goods g,wms_customer c
+        where
+            r.RECORD_CUSTOMERID = c.CUSTOMER_ID and
+            r.RECORD_GOODID = g.GOOD_ID
+            <if test="repositoryID > 0">
+                and r.RECORD_REPOSITORYID = #{repositoryID}
+            </if>
+            <if test="startDate != null">
+                and r.RECORD_TIME >= #{startDate}
+            </if>
+            <if test="endDate != null">
+                <![CDATA[and r.RECORD_TIME <= #{endDate}]]>
+            </if>
 	</select>
 		
 	<insert id="insert">

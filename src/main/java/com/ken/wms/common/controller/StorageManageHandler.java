@@ -120,7 +120,7 @@ public class StorageManageHandler {
         // 初始化 Response
         Response responseContent = responseUtil.newResponseInstance();
 
-        List<Storage> rows = null;
+        List<Storage> rows;
         long total = 0;
 
         // query
@@ -179,65 +179,65 @@ public class StorageManageHandler {
         return responseContent.generateResponse();
     }
 
-    /**
-     * 货物入库操作
-     *
-     * @param supplierID   供应商ID
-     * @param goodsID      货物ID
-     * @param repositoryID 仓库ID
-     * @param number       入库数目
-     * @param request      http 请求
-     * @return 返回一个map，key为result的值表示操作是否成功
-     */
-    @RequestMapping(value = "increaseStorageAdmin", method = RequestMethod.POST)
-    public
-    @ResponseBody
-    Map<String, Object> increaseStorage(@RequestParam("supplierID") Integer supplierID,
-                                        @RequestParam("goodsID") Integer goodsID, @RequestParam("repositoryID") Integer repositoryID,
-                                        @RequestParam("number") long number, HttpServletRequest request) throws StockRecordManageServiceException {
-        // 初始化 Response
-        Response responseContent = responseUtil.newResponseInstance();
+//    /**
+//     * 货物入库操作
+//     *
+//     * @param supplierID   供应商ID
+//     * @param goodsID      货物ID
+//     * @param repositoryID 仓库ID
+//     * @param number       入库数目
+//     * @param request      http 请求
+//     * @return 返回一个map，key为result的值表示操作是否成功
+//     */
+//    @RequestMapping(value = "increaseStorageAdmin", method = RequestMethod.POST)
+//    public
+//    @ResponseBody
+//    Map<String, Object> increaseStorage(@RequestParam("supplierID") Integer supplierID,
+//                                        @RequestParam("goodsID") Integer goodsID, @RequestParam("repositoryID") Integer repositoryID,
+//                                        @RequestParam("number") long number, HttpServletRequest request) throws StockRecordManageServiceException {
+//        // 初始化 Response
+//        Response responseContent = responseUtil.newResponseInstance();
+//
+//        HttpSession session = request.getSession();
+//        String personInCharge = (String) session.getAttribute("userName");
+//
+//        String result = stockRecordManageService.stockInOperation(supplierID, goodsID, repositoryID, number, personInCharge) ?
+//                Response.RESPONSE_RESULT_SUCCESS : Response.RESPONSE_RESULT_ERROR;
+//
+//        // 设置 Response
+//        responseContent.setResponseResult(result);
+//        return responseContent.generateResponse();
+//    }
 
-        HttpSession session = request.getSession();
-        String personInCharge = (String) session.getAttribute("userName");
-
-        String result = stockRecordManageService.stockInOperation(supplierID, goodsID, repositoryID, number, personInCharge) ?
-                Response.RESPONSE_RESULT_SUCCESS : Response.RESPONSE_RESULT_ERROR;
-
-        // 设置 Response
-        responseContent.setResponseResult(result);
-        return responseContent.generateResponse();
-    }
-
-    /**
-     * 货物出库操作
-     *
-     * @param customerID   客户ID
-     * @param goodsID      货物ID
-     * @param repositoryID 仓库ID
-     * @param number       出库数量
-     * @param request      http请求
-     * @return 返回一个map，key为result的值表示操作是否成功
-     */
-    @RequestMapping(value = "decreaseStorageAdmin", method = RequestMethod.POST)
-    public
-    @ResponseBody
-    Map<String, Object> decreaseStorage(@RequestParam("customerID") Integer customerID,
-                                        @RequestParam("goodsID") Integer goodsID, @RequestParam("repositoryID") Integer repositoryID,
-                                        @RequestParam("number") long number, HttpServletRequest request) throws StockRecordManageServiceException {
-        // 初始化 Response
-        Response responseContent = responseUtil.newResponseInstance();
-
-        HttpSession session = request.getSession();
-        String personInCharge = (String) session.getAttribute("userName");
-
-        String result = stockRecordManageService.stockOutOperation(customerID, goodsID, repositoryID, number, personInCharge) ?
-                Response.RESPONSE_RESULT_SUCCESS : Response.RESPONSE_RESULT_ERROR;
-
-        // 设置 Response
-        responseContent.setResponseResult(result);
-        return responseContent.generateResponse();
-    }
+//    /**
+//     * 货物出库操作
+//     *
+//     * @param customerID   客户ID
+//     * @param goodsID      货物ID
+//     * @param repositoryID 仓库ID
+//     * @param number       出库数量
+//     * @param request      http请求
+//     * @return 返回一个map，key为result的值表示操作是否成功
+//     */
+//    @RequestMapping(value = "decreaseStorageAdmin", method = RequestMethod.POST)
+//    public
+//    @ResponseBody
+//    Map<String, Object> decreaseStorage(@RequestParam("customerID") Integer customerID,
+//                                        @RequestParam("goodsID") Integer goodsID, @RequestParam("repositoryID") Integer repositoryID,
+//                                        @RequestParam("number") long number, HttpServletRequest request) throws StockRecordManageServiceException {
+//        // 初始化 Response
+//        Response responseContent = responseUtil.newResponseInstance();
+//
+//        HttpSession session = request.getSession();
+//        String personInCharge = (String) session.getAttribute("userName");
+//
+//        String result = stockRecordManageService.stockOutOperation(customerID, goodsID, repositoryID, number, personInCharge) ?
+//                Response.RESPONSE_RESULT_SUCCESS : Response.RESPONSE_RESULT_ERROR;
+//
+//        // 设置 Response
+//        responseContent.setResponseResult(result);
+//        return responseContent.generateResponse();
+//    }
 
     /**
      * 添加一条库存信息

@@ -10,8 +10,8 @@ import com.ken.wms.dao.StockInMapper;
 import com.ken.wms.dao.StockOutMapper;
 import com.ken.wms.dao.StorageMapper;
 import com.ken.wms.domain.Goods;
-import com.ken.wms.domain.StockIn;
-import com.ken.wms.domain.StockOut;
+import com.ken.wms.domain.StockInDO;
+import com.ken.wms.domain.StockOutDO;
 import com.ken.wms.domain.Storage;
 import com.ken.wms.exception.GoodsManageServiceException;
 import org.apache.ibatis.exceptions.PersistenceException;
@@ -261,13 +261,13 @@ public class GoodsManageServiceImpl implements GoodsManageService {
 
         try {
             // 检查该货物是否有入库信息
-            List<StockIn> stockInRecord = stockInMapper.selectByGoodID(goodsId);
-            if (stockInRecord != null && !stockInRecord.isEmpty())
+            List<StockInDO> stockInDORecord = stockInMapper.selectByGoodID(goodsId);
+            if (stockInDORecord != null && !stockInDORecord.isEmpty())
                 return false;
 
             // 检查该货物是否有出库信息
-            List<StockOut> stockOutRecord = stockOutMapper.selectByGoodId(goodsId);
-            if (stockOutRecord != null && !stockOutRecord.isEmpty())
+            List<StockOutDO> stockOutDORecord = stockOutMapper.selectByGoodId(goodsId);
+            if (stockOutDORecord != null && !stockOutDORecord.isEmpty())
                 return false;
 
             // 检查该货物是否有存储信息

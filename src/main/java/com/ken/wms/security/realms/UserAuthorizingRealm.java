@@ -80,6 +80,7 @@ public class UserAuthorizingRealm extends AuthorizingRealm {
                         accessRecord.setUserName((String) session.getAttribute("userName"));
                         accessRecord.setAccessType("登入");
                         accessRecord.setAccessTime(new Date());
+                        accessRecord.setAccessIP(session.getHost());
 
                         accessRecordMapper.insertAccessRecord(accessRecord);
                     }

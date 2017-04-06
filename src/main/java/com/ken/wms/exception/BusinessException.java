@@ -19,6 +19,10 @@ public class BusinessException extends Exception{
         this.exceptionDesc = exceptionDesc;
     }
 
+    BusinessException(String exceptionDesc){
+        this.exceptionDesc = exceptionDesc;
+    }
+
     BusinessException(){}
 
     public String getExceptionDesc() {

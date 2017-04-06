@@ -23,10 +23,12 @@ public class AnyOfRolesAuthorizationFilter extends RolesAuthorizationFilter{
 
         if (rolesArray == null || rolesArray.length == 0){
             // no roles specified, so nothing to check - allow access
+//            System.out.println("no roles");
             return true;
         }
 
         for (String role : rolesArray){
+//            System.out.println(role);
             if (subject.hasRole(role)){
                 return true;
             }

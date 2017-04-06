@@ -287,7 +287,7 @@ function stockoutOperation(){
 
 		$.ajax({
 			type : 'POST',
-			url : 'storageManage/decreaseStorageAdmin',
+			url : 'stockRecordManage/stockOut',
 			dataType : 'json',
 			content : 'application/json',
 			data : data,

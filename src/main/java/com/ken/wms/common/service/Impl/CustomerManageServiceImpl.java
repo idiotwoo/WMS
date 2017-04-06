@@ -8,7 +8,7 @@ import com.ken.wms.common.util.ExcelUtil;
 import com.ken.wms.dao.CustomerMapper;
 import com.ken.wms.dao.StockOutMapper;
 import com.ken.wms.domain.Customer;
-import com.ken.wms.domain.StockOut;
+import com.ken.wms.domain.StockOutDO;
 import com.ken.wms.exception.CustomerManageServiceException;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -256,7 +256,7 @@ public class CustomerManageServiceImpl implements CustomerManageService {
 
         try {
             // 查询该客户是否有出库记录
-            List<StockOut> records = stockOutMapper.selectByCustomerId(customerId);
+            List<StockOutDO> records = stockOutMapper.selectByCustomerId(customerId);
             if (records != null && records.size() > 0) {
                 return false;
             } else {

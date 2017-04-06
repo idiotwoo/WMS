@@ -150,5 +150,6 @@ create table wms_access_record
     USER_ID int not null,
     USER_NAME varchar(50) not null,
     ACCESS_TYPE varchar(30) not null,
-    ACCESS_TIME datetime not null
+    ACCESS_TIME datetime not null,
+    ACCESS_IP varchar(45) not null
 );

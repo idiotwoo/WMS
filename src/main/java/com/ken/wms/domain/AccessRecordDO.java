@@ -10,11 +10,36 @@ import java.util.Date;
  */
 public class AccessRecordDO {
 
+    /**
+     * 登入登出记录ID
+     * 仅当该记录从数据库取出时有效
+     */
     private Integer id;
+
+    /**
+     * 登陆用户ID
+     */
     private Integer userID;
+
+    /**
+     * 登陆用户名
+     */
     private String userName;
+
+    /**
+     * 记录类型，登入或登出
+     */
     private String accessType;
+
+    /**
+     * 登入或登出时间
+     */
     private Date accessTime;
+
+    /**
+     * 用户登入或登出对应的IP地址
+     */
+    private String accessIP;
 
     public Integer getId() {
         return id;
@@ -26,6 +51,10 @@ public class AccessRecordDO {
 
     public String getUserName() {
         return userName;
+    }
+
+    public String getAccessIP() {
+        return accessIP;
     }
 
     public String getAccessType() {
@@ -56,6 +85,10 @@ public class AccessRecordDO {
         this.accessTime = accessTime;
     }
 
+    public void setAccessIP(String accessIP) {
+        this.accessIP = accessIP;
+    }
+
     @Override
     public String toString() {
         return "AccessRecordDO{" +
@@ -64,6 +97,7 @@ public class AccessRecordDO {
                 ", userName='" + userName + '\'' +
                 ", accessType='" + accessType + '\'' +
                 ", accessTime=" + accessTime +
+                ", accessIP='" + accessIP + '\'' +
                 '}';
     }
 }

@@ -6,7 +6,7 @@ import com.ken.wms.common.service.Interface.SupplierManageService;
 import com.ken.wms.common.util.ExcelUtil;
 import com.ken.wms.dao.StockInMapper;
 import com.ken.wms.dao.SupplierMapper;
-import com.ken.wms.domain.StockIn;
+import com.ken.wms.domain.StockInDO;
 import com.ken.wms.domain.Supplier;
 import com.ken.wms.exception.SupplierManageServiceException;
 import org.apache.ibatis.exceptions.PersistenceException;
@@ -257,7 +257,7 @@ public class SupplierManageServiceImpl implements SupplierManageService {
     public boolean deleteSupplier(Integer supplierId) {
 
         // 查询该供应商是否有入库记录
-        List<StockIn> records = stockInMapper.selectBySupplierId(supplierId);
+        List<StockInDO> records = stockInMapper.selectBySupplierId(supplierId);
         if (records == null || records.size() > 0)
             return false;
 

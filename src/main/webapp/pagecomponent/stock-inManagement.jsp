@@ -293,7 +293,7 @@ function stockInOption(){
 
 		$.ajax({
 			type : 'POST',
-			url : 'storageManage/increaseStorageAdmin',
+			url : 'stockRecordManage/stockIn',
 			dataType : 'json',
 			content : 'application/json',
 			data : data,

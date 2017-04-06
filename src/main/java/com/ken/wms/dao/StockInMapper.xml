@@ -5,7 +5,7 @@
 
 <mapper namespace="com.ken.wms.dao.StockInMapper">
 	
-	<resultMap type="com.ken.wms.domain.StockIn" id="stockIn">
+	<resultMap type="com.ken.wms.domain.StockInDO" id="stockInDO">
 		<id property="id" column="STOCKIN_ID"/>
 		<result property="supplierID" column="STOCKIN_SUPPLIER_ID"/>
 		<result property="supplierName" column="STOCKIN_SUPPLIER_NAME"/>
@@ -17,7 +17,7 @@
 		<result property="repositoryID" column="STOCKIN_REPOSITORY_ID"/>
 	</resultMap>
 	
-	<select id="selectAll" resultMap="stockIn">
+	<select id="selectAll" resultMap="stockInDO">
 		select
 			r.RECORD_ID as STOCKIN_ID,
 			r.RECORD_SUPPLIERID as STOCKIN_SUPPLIER_ID,
@@ -35,7 +35,7 @@
 			r.RECORD_GOODID = g.GOOD_ID
 	</select>
 	
-	<select id="selectBySupplierId" resultMap="stockIn">
+	<select id="selectBySupplierId" resultMap="stockInDO">
 		select
 			r.RECORD_ID as STOCKIN_ID,
 			r.RECORD_SUPPLIERID as STOCKIN_SUPPLIER_ID,
@@ -54,7 +54,7 @@
 			r.RECORD_SUPPLIERID = #{supplierID}
 	</select>
 	
-	<select id="selectByGoodID" resultMap="stockIn">
+	<select id="selectByGoodID" resultMap="stockInDO">
 		select
 			r.RECORD_ID as STOCKIN_ID,
 			r.RECORD_SUPPLIERID as STOCKIN_SUPPLIER_ID,
@@ -73,7 +73,7 @@
 			r.RECORD_GOODID = #{goodID}
 	</select>
 	
-	<select id="selectByID" resultMap="stockIn">
+	<select id="selectByID" resultMap="stockInDO">
 		select
 			r.RECORD_ID as STOCKIN_ID,
 			r.RECORD_SUPPLIERID as STOCKIN_SUPPLIER_ID,
@@ -92,7 +92,7 @@
 			r.RECORD_ID = #{id}
 	</select>
 	
-	<select id="selectByRepositoryID" resultMap="stockIn">
+	<select id="selectByRepositoryID" resultMap="stockInDO">
 		select
 			r.RECORD_ID as STOCKIN_ID,
 			r.RECORD_SUPPLIERID as STOCKIN_SUPPLIER_ID,
@@ -109,6 +109,33 @@
 			r.RECORD_SUPPLIERID = s.SUPPLIER_ID and
 			r.RECORD_GOODID = g.GOOD_ID and
 			r.RECORD_REPOSITORYID = #{repositoryID}
+	</select>
+
+	<select id="selectByRepositoryIDAndDate" resultMap="stockInDO">
+        select
+            r.RECORD_ID as STOCKIN_ID,
+            r.RECORD_SUPPLIERID as STOCKIN_SUPPLIER_ID,
+            s.SUPPLIER_NAME as STOCKIN_SUPPLIER_NAME,
+            r.RECORD_GOODID as STOCKIN_GOOD_ID,
+            g.GOOD_NAME as STOCKIN_GOOD_NAME,
+            r.RECORD_NUMBER as STOCKIN_NUMBER,
+            r.RECORD_TIME as STOCKIN_TIME,
+            r.RECORD_PERSON as STOCKIN_PERSON,
+            r.RECORD_REPOSITORYID as STOCKIN_REPOSITORY_ID
+        from
+            wms_record_in r,wms_goods g,wms_supplier s
+        where
+            r.RECORD_SUPPLIERID = s.SUPPLIER_ID and
+            r.RECORD_GOODID = g.GOOD_ID
+        <if test="repositoryID > 0">
+            and r.RECORD_REPOSITORYID = #{repositoryID}
+        </if>
+        <if test="startDate != null">
+            and r.RECORD_TIME >= #{startDate}
+        </if>
+        <if test="endDate != null">
+            <![CDATA[and r.RECORD_TIME <= #{endDate}]]>
+        </if>
 	</select>
 	
 	<insert id="insert">

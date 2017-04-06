@@ -8,7 +8,7 @@ package com.ken.wms.exception;
  */
 public class StockRecordManageServiceException extends BusinessException {
 
-    StockRecordManageServiceException(){
+    public StockRecordManageServiceException(){
         super();
     }
 
@@ -16,8 +16,12 @@ public class StockRecordManageServiceException extends BusinessException {
         super(e);
     }
 
-    StockRecordManageServiceException(Exception e, String exceptionDesc){
+    public StockRecordManageServiceException(Exception e, String exceptionDesc){
         super(e, exceptionDesc);
+    }
+
+    public StockRecordManageServiceException(String exceptionDesc){
+        super(exceptionDesc);
     }
 
 }

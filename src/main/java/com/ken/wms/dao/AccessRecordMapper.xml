@@ -9,7 +9,7 @@
     </resultMap>
 
     <insert id="insertAccessRecord">
-        insert into wms_access_record(USER_ID, USER_NAME, ACCESS_TYPE, ACCESS_TIME)
-        values(#{userID}, #{userName}, #{accessType}, #{accessTime})
+        insert into wms_access_record(USER_ID, USER_NAME, ACCESS_TYPE, ACCESS_TIME, ACCESS_IP)
+        values(#{userID}, #{userName}, #{accessType}, #{accessTime}, #{accessIP})
     </insert>
 </mapper>
